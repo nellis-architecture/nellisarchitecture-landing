@@ -75,7 +75,47 @@
 	picture img {
 		height: auto;
 	}
+
+	/* Only with JS (the script below): a lazy image shows the picture LQIP background,
+	   then fades in on load or error. The priority image is eager: it never fades. */
+	.js picture img[loading="lazy"] {
+		transition: opacity 400ms;
+	}
+
+	.js picture img[loading="lazy"]:not(.is-loaded) {
+		opacity: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.js picture img[loading="lazy"] {
+			transition: none;
+		}
+	}
 </style>
+<script id="nellis-images-js">
+	(function imagesFade() {
+		'use strict';
+
+		const d = document;
+		const mark = (img) => img.classList.add('is-loaded');
+		const scan = (node) => {
+			if (node.tagName === 'IMG') {
+				if (node.complete) mark(node);
+			} else if (node.querySelectorAll) {
+				node.querySelectorAll('img').forEach((img) => img.complete && mark(img));
+			}
+		};
+		const onDone = (e) => e.target.tagName === 'IMG' && mark(e.target);
+		d.documentElement.classList.add('js');
+		d.addEventListener('load', onDone, true);
+		d.addEventListener('error', onDone, true);
+		d.addEventListener('DOMContentLoaded', () => {
+			scan(d);
+			new MutationObserver((list) => list.forEach((m) => m.addedNodes.forEach(scan)))
+				.observe(d.body, { childList: true, subtree: true });
+		});
+	}());
+</script>
 
 
 
