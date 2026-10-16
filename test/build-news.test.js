@@ -38,6 +38,40 @@ test('inlineMd renders images before links, bold before italics', () => {
   assert.equal(inlineMd('**b** and *i*'), '<strong>b</strong> and <em>i</em>');
 });
 
+test('inlineMd keeps emphasis markup out of the image alt', () => {
+  assert.equal(inlineMd('![a *b* c](/a.jpg)'), FALLBACK('/a.jpg', 'a *b* c'));
+  assert.equal(inlineMd('![a **b** c](/a.jpg)'), FALLBACK('/a.jpg', 'a **b** c'));
+});
+
+test('inlineMd does not let a link break out of the image alt', () => {
+  const html = inlineMd('![x [y](z)](q" onerror="alert(1))');
+  assert.equal(html, `${FALLBACK('z', 'x [y')}](q" onerror="alert(1))`);
+  assert.equal(html.match(/<img\b/g).length, 1);
+  assert.doesNotMatch(html, /<[^>]*\sonerror=/);
+  assert.doesNotMatch(html, /<a\b/);
+});
+
+test('inlineMd escapes link hrefs and keeps emphasis out of them', () => {
+  assert.equal(inlineMd('[t](/a?x=1&y="2")'), '<a href="/a?x=1&amp;y=&quot;2&quot;">t</a>');
+  assert.equal(inlineMd('[t](/a*b*c)'), '<a href="/a*b*c">t</a>');
+});
+
+test('inlineMd renders a line with image, link, bold and italic as before', () => {
+  assert.equal(
+    inlineMd('![alt](/a.jpg) see [**site**](https://x.com/p) and *i*'),
+    `${FALLBACK('/a.jpg', 'alt')} see <a href="https://x.com/p"><strong>site</strong></a>`
+      + ' and <em>i</em>',
+  );
+});
+
+test('inlineMd keeps safe link schemes and drops the link of other schemes', () => {
+  ['https://x.com', 'http://x.com', 'mailto:a@b.c', 'tel:+123', '/p/', '#top', 'p/q']
+    .forEach((h) => assert.equal(inlineMd(`[t](${h})`), `<a href="${h}">t</a>`));
+  const js = ['java', 'script:'].join('');
+  [`${js}void0`, `${js.toUpperCase()}x`, 'java\tscript:x', ' data:text/html,x', 'vbscript:x']
+    .forEach((h) => assert.equal(inlineMd(`[t](${h})`), 't'));
+});
+
 test('mdToHtml renders each block type', () => {
   const md = [
     '## Heading', '#### Small', '---', '- one\n- two', '> quote',

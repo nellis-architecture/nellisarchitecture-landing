@@ -75,16 +75,27 @@ function parseFrontMatter(src, file = '') {
 }
 
 /* manifest: build/images.json. The images go through picture(); the markdown keeps the
-   original URLs. */
+   original URLs. Finished markup (images, link start tags) waits as a \u0000n\u0000 token,
+   so the later rules do not change its attributes. Link schemes other than http(s), mailto
+   and tel lose the link and keep the text. */
+const SAFE_HREF = /^(?:https?:|mailto:|tel:|[^:]*(?:[/?#]|$))/i;
+
+/* eslint-disable no-control-regex -- NUL marks the tokens */
 function inlineMd(s, manifest = {}) {
-  return s
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => picture({
+  const done = [];
+  const keep = (html) => `\u0000${done.push(html) - 1}\u0000`;
+  return s.replace(/\u0000/g, '')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => keep(picture({
       src, alt, slot: 'post',
-    }, manifest))
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    }, manifest)))
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m, text, href) => (
+      SAFE_HREF.test(href.replace(/[\u0000- ]/g, ''))
+        ? `${keep(`<a href="${escAttr(href)}">`)}${text}</a>` : text))
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/\u0000(\d+)\u0000/g, (m, i) => done[i]);
 }
+/* eslint-enable no-control-regex */
 
 function blockToHtml(b, manifest) {
   if (/^#{2,4}\s/.test(b)) {
