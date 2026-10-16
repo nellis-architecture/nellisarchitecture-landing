@@ -406,3 +406,11 @@ test('the build is current and idempotent: news pages and news.json match a new 
     else assert.match(data.picture, /^<picture /, data.slug);
   });
 });
+
+test('inlineMd: image in link text, forged tokens dropped, entity schemes escaped', () => {
+  const linked = inlineMd('[![a](b)](c)');
+  assert.ok(linked.startsWith('<a href="c">') && linked.endsWith('</a>'), linked);
+  assert.ok(!linked.includes('\u0000'), linked);
+  assert.equal(inlineMd('x \u00000\u0000 y'), 'x 0 y');
+  assert.equal(inlineMd('[t](javascript&colon;x)'), '<a href="javascript&amp;colon;x">t</a>');
+});
