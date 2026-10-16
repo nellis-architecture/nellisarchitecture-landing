@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {
-  parseRules, parseFixed, fixedFroms, onDisk, validate, autoNewsRules, mergeRules,
+  parseRules, parseFixed, fixedFroms, hitsFixed, onDisk, validate, autoNewsRules, mergeRules,
   render,
 } = require('../build/lib/redirects');
 const { pruneNews, writeRedirects } = require('../build-news');
@@ -190,7 +190,17 @@ test('build/redirects.txt keeps the old WordPress URLs', () => {
   has('/news/:slug/feed', '/news/:slug/');
   ['tag', 'category', 'author'].forEach((k) => has(`/news/${k}/*`, '/news/'));
   ['sitemap_index', 'post-sitemap', 'page-sitemap', 'category-sitemap', 'post_tag-sitemap',
-    'author-sitemap'].forEach((name) => has(`/${name}.xml`, '/sitemap.xml'));
+    'author-sitemap', 'wp-sitemap'].forEach((name) => has(`/${name}.xml`, '/sitemap.xml'));
+  has('/page/*', '/');
+  has('/page', '/');
+});
+
+test('old WordPress URLs with no value stay 404 (card A76j6HTh)', () => {
+  ['/news/feed', '/news/page/2/', '/category/x/', '/tag/x/', '/author/x/', '/news/x/embed/',
+    '/wp-json/', '/xmlrpc.php', '/wp-login.php'].forEach((from) => {
+    assert.equal(hitsFixed(from, FROMS), undefined, from);
+  });
+  assert.ok(hitsFixed('/page/2/', FROMS));
 });
 
 test('the generated _redirects keeps the host limits and the order', () => {

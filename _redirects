@@ -26,8 +26,12 @@
 /post_tag-sitemap.xml/ /sitemap.xml 301
 /author-sitemap.xml /sitemap.xml 301
 /author-sitemap.xml/ /sitemap.xml 301
+/wp-sitemap.xml /sitemap.xml 301
+/wp-sitemap.xml/ /sitemap.xml 301
+/page / 301
 /news/:slug/feed /news/:slug/ 301
 /news/:slug/feed/ /news/:slug/ 301
 /news/tag/* /news/ 301
 /news/category/* /news/ 301
 /news/author/* /news/ 301
+/page/* / 301

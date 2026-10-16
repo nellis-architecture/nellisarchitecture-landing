@@ -41,3 +41,9 @@
 /post_tag-sitemap.xml/ /sitemap.xml 301
 /author-sitemap.xml /sitemap.xml 301
 /author-sitemap.xml/ /sitemap.xml 301
+/wp-sitemap.xml /sitemap.xml 301
+/wp-sitemap.xml/ /sitemap.xml 301
+
+# WordPress Home paging (card A76j6HTh): /page/N/ served Home with canonical /.
+/page/* / 301
+/page / 301

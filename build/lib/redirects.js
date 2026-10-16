@@ -118,6 +118,7 @@ module.exports = {
   parseRules,
   parseFixed,
   fixedFroms,
+  hitsFixed,
   onDisk,
   validate,
   autoNewsRules,
