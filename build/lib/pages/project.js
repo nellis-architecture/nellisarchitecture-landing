@@ -7,7 +7,7 @@ const {
 const { DOMAIN, INDEX } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
 const {
-  picture, zoomSrc, readManifest, SLOTS,
+  picture, zoomSrc, readManifest, SLOTS, heroVideo, preloadLink,
 } = require('../images');
 
 /* eslint-disable @stylistic/max-len -- raw theme SVG, as in the overlay */
@@ -36,8 +36,7 @@ function img(src, alt, priority, manifest) {
 function hero(src, name, manifest) {
   if (isVideo(src)) {
     return `${' '.repeat(8)}<div class="currentProject-heroImg">`
-      + '<video autoplay muted loop playsinline>'
-      + `<source src="${escAttr(src)}" type="video/mp4" /></video></div>`;
+      + `${heroVideo(src, manifest).html}</div>`;
   }
   return `${' '.repeat(8)}<div class="currentProject-heroImg varVideo">`
     + `${img(src, name, true, manifest)}</div>`;
@@ -214,6 +213,8 @@ function render(entry, { site, newsHref, manifest = readManifest() }) {
   const url = DOMAIN + entry.url;
   const headHtml = head({
     BEFORE: '',
+    PRELOAD: isVideo(p.first_img_video)
+      ? preloadLink(heroVideo(p.first_img_video, manifest).href) : '',
     OG_IMAGE: ogImage(p),
     TITLE: escText(pageTitle),
     ROBOTS: INDEX,

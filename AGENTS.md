@@ -61,6 +61,7 @@ The site replaces a live WordPress site. Search ranking must survive the migrati
 - CMS redirects → `content/redirects.json`. Wildcard or fixed rules → `build/redirects.txt` (never status 404). Deny rules (404) → `.assetsignore` (an ignored path answers 404).
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.
 - Never delete or rename files in `wp-content/uploads/`. Pages and external sites link to them.
+- A hero video needs a `<name>-poster.jpg` next to the `<name>.mp4`. Make it from frame 0 with [FFmpeg](https://ffmpeg.org/): `ffmpeg -i <name>.mp4 -frames:v 1 -q:v 2 <name>-poster.jpg`. Then run `npm run images`. Without the poster, the build shows the video without a poster.
 - Run `npm run images` after a new upload, then commit the variants (`wp-content/variants/` and `build/images.json`).
 - The Worker publishes the repo root. A new internal root file or folder needs a line in `.assetsignore`. A new public root file or folder needs an entry in the `SITE` allow-list in `test/assets-deny.test.js`. Root `*.html` pages need neither.
 - Decap CMS commits to the `backend.branch` of `admin/config.yml` on the remote (`master`). Pull before you work. Rebase local commits before a push.

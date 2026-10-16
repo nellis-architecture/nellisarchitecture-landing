@@ -232,7 +232,8 @@ test('head without OG_IMAGE renders exactly the old head', () => {
     SCHEMA: '{}',
   };
   const old = fill(loadPartial('head').replace('{{OG_IMAGE}}', OLD_OG)
-    .replace('{{EARLY_SCRIPT}}', '').replace('{{IMAGES_CSS}}', loadPartial('images-css')), values);
+    .replace('{{EARLY_SCRIPT}}', '').replace('{{PRELOAD}}', '')
+    .replace('{{IMAGES_CSS}}', loadPartial('images-css')), values);
   assert.equal(head(values), old);
 });
 

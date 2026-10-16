@@ -280,7 +280,7 @@ const VIDEO_IMG = (src) => '<div class="NewsImg">\n            '
   + `<source src="${src}" type="video/mp4" /></video>\n          </div>`;
 
 test('renderPost shows an mp4 hero as a video, not as an img', () => {
-  const src = `${UP}/2025/07/One-Year-Anniversary-Video-For-Website.mp4`;
+  const src = `${UP}/2025/07/no-poster.mp4`;
   const html = renderPost(TEMPLATE, post({ hero: src }), '');
   assert.ok(html.includes(VIDEO_IMG(src)));
   assert.doesNotMatch(html, /<img src="[^"]*\.mp4"/);
@@ -343,11 +343,13 @@ test('newsImg: an image hero is the priority picture, a video stays a video', ()
   assert.equal(newsImg({}, MANIFEST), newsImg({}));
 });
 
-test('each real post: one priority image (the hero) or none; the CSS is in the head', () => {
+test('each real post: a priority hero image, a poster preload or none; CSS in the head', () => {
   POSTS.forEach((p) => {
     const html = renderPost(TEMPLATE, p, '', MANIFEST);
     const want = imageHero(p) ? 1 : 0;
-    assert.equal(html.split('fetchpriority="high"').length - 1, want, p.slug);
+    const poster = p.hero && !imageHero(p) ? 1 : 0;
+    assert.equal(html.split('fetchpriority="high"').length - 1, want + poster, p.slug);
+    assert.equal(html.split('rel="preload"').length - 1, poster, p.slug);
     assert.equal(html.split('loading="eager"').length - 1, want, p.slug);
     if (want) {
       const hero = html.split('<div class="NewsImg">')[1].split('</div>')[0];

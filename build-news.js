@@ -37,7 +37,9 @@ const { imageSize } = require('./build/lib/image-size');
 const { escAttr, isVideo, loadPartial } = require('./build/lib/html');
 const { sitekey } = require('./build/lib/chrome');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
-const { ensureVariants, readManifest, picture } = require('./build/lib/images');
+const {
+  ensureVariants, readManifest, picture, heroVideo, preloadLink,
+} = require('./build/lib/images');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -231,10 +233,7 @@ function heroPicture(p, manifest) {
 
 function newsImg(p, manifest = {}) {
   if (!p.hero) return '<div class="NewsImg" style="display: none;">\n          </div>';
-  const inner = isVideo(p.hero)
-    ? '<video autoplay muted loop playsinline>'
-      + `<source src="${escAttr(p.hero)}" type="video/mp4" /></video>`
-    : heroPicture(p, manifest);
+  const inner = isVideo(p.hero) ? heroVideo(p.hero, manifest).html : heroPicture(p, manifest);
   return `<div class="NewsImg">\n            ${inner}\n          </div>`;
 }
 
@@ -246,6 +245,8 @@ function renderPost(template, p, list, manifest = {}) {
 
   return template
     .replaceAll('{{SEO_TITLE}}', esc(p.seo_title || `${p.title} | Nellis Architecture`))
+    .replaceAll('{{PRELOAD}}', p.hero && isVideo(p.hero)
+      ? preloadLink(heroVideo(p.hero, manifest).href) : '')
     .replaceAll('{{ROBOTS}}', p.noindex ? NOINDEX : INDEX)
     .replaceAll('{{META_DESC}}', esc(p.description || ''))
     .replace(/\{\{SLUG\}\}/g, p.slug)

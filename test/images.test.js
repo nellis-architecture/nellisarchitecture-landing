@@ -427,3 +427,100 @@ test('make-images deletes nothing when wp-content/variants is a symbolic link', 
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+async function posterRoot() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'images-poster-'));
+  fs.mkdirSync(path.join(dir, 'wp-content', 'uploads', '2025'), { recursive: true });
+  const jpg = await sharp({
+    create: {
+      width: 40, height: 30, channels: 3, background: '#808080',
+    },
+  }).jpeg().toBuffer();
+  ['2025/v-poster.jpg', '2025/a&b"-poster.jpg'].forEach((f) => {
+    fs.writeFileSync(path.join(dir, 'wp-content', 'uploads', f), jpg);
+  });
+  return dir;
+}
+
+test('posterOf finds <name>-poster.jpg next to an upload video, else null', async () => {
+  const dir = await posterRoot();
+  try {
+    const want = 'wp-content/uploads/2025/v-poster.jpg';
+    assert.equal(images.posterOf('/wp-content/uploads/2025/v.mp4', dir), want);
+    const abs = 'https://nellisarchitecture.com/wp-content/uploads/2025/v.mp4';
+    assert.equal(images.posterOf(abs, dir), want);
+    assert.equal(images.posterOf('/wp-content/uploads/2025/none.mp4', dir), null);
+    assert.equal(images.posterOf('/wp-content/uploads/2025/v-poster.png', dir), null);
+    assert.equal(images.posterOf('/wp-content/themes/v.mp4', dir), null);
+    assert.equal(images.posterOf('/wp-content/uploads/x/../2025/v.mp4', dir), null);
+    assert.equal(images.posterOf('/wp-content/uploads/2025\\v.mp4', dir), null);
+    assert.equal(images.posterOf('/wp-content/uploads/2025/v.mp4'), null);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('usedImages adds the poster of a video named in the project data and the news', async () => {
+  const dir = await posterRoot();
+  try {
+    fs.mkdirSync(path.join(dir, 'content', 'news'), { recursive: true });
+    fs.mkdirSync(path.join(dir, 'data'));
+    fs.writeFileSync(
+      path.join(dir, 'data', 'projects.json'),
+      '{"first_img_video":"\\/wp-content\\/uploads\\/2025\\/v.mp4"}',
+    );
+    fs.writeFileSync(
+      path.join(dir, 'content', 'news', 'a.md'),
+      'hero: "/wp-content/uploads/2025/none.mp4"',
+    );
+    assert.deepEqual(images.usedImages(dir), [
+      'wp-content/uploads/2025/v-poster.jpg',
+    ]);
+    fs.writeFileSync(
+      path.join(dir, 'content', 'news', 'a.md'),
+      'hero: "https://nellisarchitecture.com/wp-content/uploads/2025/v.mp4"',
+    );
+    fs.rmSync(path.join(dir, 'data', 'projects.json'));
+    assert.deepEqual(images.usedImages(dir), ['wp-content/uploads/2025/v-poster.jpg']);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('heroVideo: poster variant, poster original or no poster; preloadLink', async () => {
+  const dir = await posterRoot();
+  const tail = (src) => `<source src="${src}" type="video/mp4" /></video>`;
+  try {
+    const poster = 'wp-content/uploads/2025/v-poster.jpg';
+    const manifest = {
+      [poster]: images.manifestEntry({
+        width: 1920, height: 1080, alpha: false, hash: 'abcdef12', lqip: 'x',
+      }),
+    };
+    const variant = '/wp-content/variants/2025/v-poster-abcdef12-1600.jpg';
+    assert.deepEqual(images.heroVideo('/wp-content/uploads/2025/v.mp4', manifest, dir), {
+      html: `<video autoplay muted loop playsinline poster="${variant}"`
+        + ` width="1920" height="1080">${tail('/wp-content/uploads/2025/v.mp4')}`,
+      href: variant,
+    });
+    const odd = '/wp-content/uploads/2025/a&b".mp4';
+    const original = '/wp-content/uploads/2025/a&b%22-poster.jpg';
+    assert.deepEqual(images.heroVideo(odd, {}, dir), {
+      html: `<video autoplay muted loop playsinline poster="${original.replace('&', '&amp;')}"`
+        + ` width="40" height="30">${tail('/wp-content/uploads/2025/a&amp;b&quot;.mp4')}`,
+      href: original,
+    });
+    const none = images.heroVideo('/wp-content/uploads/2025/none.mp4', manifest, dir);
+    assert.deepEqual(none, {
+      html: `<video autoplay muted loop playsinline>${tail('/wp-content/uploads/2025/none.mp4')}`,
+      href: '',
+    });
+    assert.equal(images.preloadLink(''), '');
+    assert.equal(
+      images.preloadLink('/a&b.jpg'),
+      '  <link rel="preload" as="image" href="/a&amp;b.jpg" fetchpriority="high">\n',
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

@@ -3,8 +3,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {
-  walk, readManifest, rewriteImages, smallSrc, toUploadPath, SLOTS,
+  walk, readManifest, rewriteImages, smallSrc, toUploadPath, SLOTS, posterOf,
 } = require('../build/lib/images');
+const { isVideo } = require('../build/lib/html');
+const { loadProjects } = require('../build/lib/projects');
+const { loadPosts } = require('../build-news');
 
 const ROOT = path.join(__dirname, '..');
 const rel = (f) => path.relative(ROOT, f).split(path.sep).join('/');
@@ -42,11 +45,12 @@ test('every content image has srcset, sizes, width and height, or is the sized f
   });
 });
 
-test('each page has one priority image; a video hero page and the hand-kept files none', () => {
+test('each page has one priority image or poster preload; the hand-kept files none', () => {
   PAGES.forEach((file) => {
     const html = read(file);
     const video = html.includes('<div class="currentProject-heroImg"><video');
-    assert.equal(html.split('fetchpriority="high"').length - 1, video ? 0 : 1, file);
+    assert.equal(html.split('fetchpriority="high"').length - 1, 1, file);
+    assert.equal(html.split('rel="preload"').length - 1, video ? 1 : 0, file);
     assert.equal(html.split('loading="eager"').length - 1, video ? 0 : 1, file);
   });
   HAND_KEPT.forEach((file) => assert.ok(!read(file).includes('fetchpriority'), file));
@@ -98,5 +102,47 @@ test('each picture has its final box before the image loads', () => {
       assert.ok(width && attr(img, 'height'), `${file}: no size ${img}`);
       assert.match(tag, new RegExp(`^<picture style="max-width:${width}px[;"]`), `${file}: ${tag}`);
     });
+  });
+});
+
+const AYLA = 'projects/architecture/ayla/index.html';
+const ANNIVERSARY = 'news/one-year-anniversary-at-nellis-architecture-a-journey-of-vision-craft-'
+  + 'and-growth/index.html';
+const POSTER = /^\/wp-content\/variants\/2025\/07\/[\w-]+-poster-[0-9a-f]{8}-1600\.jpg$/;
+
+test('a video hero page shows the poster at its size and preloads the same URL', () => {
+  [AYLA, ANNIVERSARY].forEach((file) => {
+    const html = read(file);
+    const video = html.match(/<video\b[^>]*>/)[0];
+    const poster = attr(video, 'poster');
+    assert.match(poster, POSTER, file);
+    assert.equal(attr(video, 'width'), '1920', file);
+    assert.equal(attr(video, 'height'), '1080', file);
+    assert.match(video, /^<video autoplay muted loop playsinline /, file);
+    assert.doesNotMatch(video, /preload=/, file);
+    const head = html.split('</head>')[0];
+    const link = `<link rel="preload" as="image" href="${poster}" fetchpriority="high">`;
+    assert.ok(head.includes(link), file);
+  });
+});
+
+test('an image hero page and an image hero post have no preload', () => {
+  const imageHero = (f) => !read(f).includes('<video');
+  const pages = [...PAGES, ...NEWS].filter(imageHero);
+  assert.ok(pages.includes('projects/architecture/zoya/index.html'));
+  pages.forEach((file) => assert.ok(!read(file).includes('rel="preload"'), file));
+});
+
+test('every video hero has a poster file and a manifest entry: run ffmpeg, npm run images', () => {
+  const manifest = readManifest(ROOT);
+  const heroes = [
+    ...loadProjects(ROOT).map((e) => e.p.first_img_video),
+    ...loadPosts(path.join(ROOT, 'content', 'news')).map((p) => p.hero),
+  ].filter((src) => src && isVideo(src));
+  assert.ok(heroes.length >= 2);
+  heroes.forEach((src) => {
+    const poster = posterOf(src);
+    assert.ok(poster, `${src}: no <name>-poster.jpg`);
+    assert.ok(manifest[poster], `${poster}: no manifest entry`);
   });
 });

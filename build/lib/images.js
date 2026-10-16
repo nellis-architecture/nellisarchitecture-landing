@@ -29,6 +29,10 @@ const REF = new RegExp(
   `${DOMAIN}wp-content/uploads/[^"'\\s()<>,\\\\]+?\\.(?:jpe?g|png|webp)(?![\\w.-])`,
   'gi',
 );
+const MP4 = new RegExp(
+  `${DOMAIN}wp-content/uploads/[^"'\\s()<>,\\\\]+?\\.mp4(?![\\w.-])`,
+  'gi',
+);
 const VREF = new RegExp(
   `${DOMAIN}wp-content/variants/[^"'\\s()<>,\\\\]+?-[0-9a-f]{8}-\\d+\\.(?:avif|jpg|png)`,
   'g',
@@ -109,6 +113,13 @@ function toUploadPath(url) {
 
 const uploadUrl = (p) => encodeURI(`/${p}`);
 
+/* A video upload -> the upload path of "<name>-poster.jpg" next to it, when the file exists. */
+function posterOf(videoUrl, root = ROOT) {
+  const video = toUploadPath(videoUrl);
+  const p = video && `${video.replace(/\.[^./]+$/, '')}-poster.jpg`;
+  return p && inside(p, UPLOADS) && fs.existsSync(path.join(root, p)) ? p : null;
+}
+
 /* An upload or variant URL -> its "wp-content/uploads/..." key, else null.
    A variant maps by name: the hash picks one of two uploads with the same base name. */
 function originalOf(url, manifest = {}) {
@@ -181,6 +192,7 @@ function usedImages(root) {
     const text = fs.readFileSync(file, 'utf8').replace(/\\\//g, '/');
     (text.match(REF) || []).forEach((ref) => used.add(toUploadPath(ref)));
     (text.match(VREF) || []).forEach((ref) => used.add(originalOf(ref, manifest)));
+    (text.match(MP4) || []).forEach((ref) => used.add(posterOf(ref, root)));
   });
   used.delete(null);
   return [...used].sort();
@@ -271,6 +283,9 @@ function smallSrc(src, manifest) {
   return uploadUrl(variantName(p, e.hash, e.widths[ext][0], ext));
 }
 
+/* The img src width: the largest variant up to 1600 px. */
+const mainWidth = (e, ext) => e.widths[ext].filter((w) => w <= 1600).at(-1) || e.widths[ext][0];
+
 const srcset = (p, e, ext) => e.widths[ext]
   .map((w) => `${uploadUrl(variantName(p, e.hash, w, ext))} ${w}w`).join(', ');
 
@@ -299,7 +314,7 @@ function picture({
       + '</picture>';
   }
   const ext = fallbackOf(e);
-  const main = e.widths[ext].filter((w) => w <= 1600).at(-1) || e.widths[ext][0];
+  const main = mainWidth(e, ext);
   /* max-width: the file width, as the old <img> of the original. No placeholder behind a
      transparent image: it would show through. */
   const style = ` style="max-width:${e.width}px${e.alpha ? ''
@@ -310,6 +325,35 @@ function picture({
     + ` srcset="${escAttr(srcset(p, e, ext))}" sizes="${sizes}"`
     + ` width="${e.width}" height="${e.height}"${tail}</picture>`;
 }
+
+/* A hero video. With "<name>-poster.jpg" next to it: the poster (the 1600 px variant, else the
+   original) and its size, so the box and the first paint do not wait for the video.
+   href: the poster URL for the head preload, '' without a poster. */
+function heroVideo(src, manifest = {}, root = ROOT) {
+  const p = posterOf(src, root);
+  const e = p && manifest[p];
+  let href = '';
+  let size = null;
+  if (e) {
+    const ext = fallbackOf(e);
+    href = uploadUrl(variantName(p, e.hash, mainWidth(e, ext), ext));
+    size = e;
+  } else if (p) {
+    href = uploadUrl(p);
+    size = imageSize(path.join(root, p));
+  }
+  const wh = size ? ` width="${size.width}" height="${size.height}"` : '';
+  const poster = href ? ` poster="${escAttr(href)}"${wh}` : '';
+  return {
+    html: `<video autoplay muted loop playsinline${poster}>`
+      + `<source src="${escAttr(src)}" type="video/mp4" /></video>`,
+    href,
+  };
+}
+
+/* The head line that starts the poster download first; '' without a poster. */
+const preloadLink = (href) => (href
+  ? `  <link rel="preload" as="image" href="${escAttr(href)}" fetchpriority="high">\n` : '');
 
 /* The page priority image: the first lazy image in html gets eager and fetchpriority. */
 function prioritize(html) {
@@ -362,6 +406,9 @@ module.exports = {
   zoomSrc,
   smallSrc,
   picture,
+  posterOf,
+  heroVideo,
+  preloadLink,
   prioritize,
   rewriteImages,
   rewriteHandKept,

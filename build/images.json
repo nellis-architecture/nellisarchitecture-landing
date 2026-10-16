@@ -4167,6 +4167,48 @@
     },
     "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACQBACdASoQABQAPu1iqU2ppaOiMAgBMB2JZgCdIIjDcSs9ZUmxBaVy/Phl7rgA/oap1JYiV0Iwy6RD7N9LP+G7YaTIHdwQGw3fXesBoE4JkLYhY6ysj5tIiESSSyi0fUWeHVy1RKYGJPX/CoJsnPN4FHYwJPvXAO2zzBJQyuGNwAAA"
   },
+  "wp-content/uploads/2025/07/New-Export-REDUCED-SIZE-poster.jpg": {
+    "width": 1920,
+    "height": 1080,
+    "alpha": false,
+    "hash": "de3c3b85",
+    "widths": {
+      "avif": [
+        320,
+        640,
+        960,
+        1600,
+        1920
+      ],
+      "jpg": [
+        640,
+        1600,
+        1920
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAAAQAgCdASoQAAkAA4BaJYwCdAEPAuyQGfrAAP1TduGzRSQjvlr6RyWptupUuebymwoJv7mJAowrNL4CTIxFmiylXkj1dK+C6m70AA=="
+  },
+  "wp-content/uploads/2025/07/One-Year-Anniversary-Video-For-Website-poster.jpg": {
+    "width": 1920,
+    "height": 1080,
+    "alpha": false,
+    "hash": "f21732cf",
+    "widths": {
+      "avif": [
+        320,
+        640,
+        960,
+        1600,
+        1920
+      ],
+      "jpg": [
+        640,
+        1600,
+        1920
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADQAQCdASoQAAkAA4BaJYgAAu0McE7wAAD+8SDuD7j12C7uZB9fsXcLkWClalS1rnO3/qqnr79AAA=="
+  },
   "wp-content/uploads/2025/07/Penthouse-11.jpg": {
     "width": 1024,
     "height": 1280,
