@@ -77,7 +77,7 @@ Change the source file, then run the commands. Never edit a generated file by ha
 | The filter and news shim (the WordPress AJAX calls) | `js/static-backend.js` | `npm run lint && npm test && npm run test:browser` |
 | The project switch on a project page | `js/project-switch.js` | `npm run lint && npm test && npm run test:browser` |
 | The contact and the brief form in the browser | `js/forms.js` | `npm run lint && npm test && npm run test:browser` |
-| The form endpoints, the uploads, the CMS login | `worker/*.js` | `npm run lint && npm test`, then `npx wrangler dev` for the live route ([development.md → Hosting](docs/workflow/development.md#hosting--cloudflare-workers)) |
+| The form endpoints, the uploads, the CMS login | `worker/*.js` | `npm run lint && npm test`, then `npx wrangler dev` to test the endpoints locally ([development.md → Hosting](docs/workflow/development.md#hosting--cloudflare-workers)) |
 | A theme script (burger, modal, swiper, fancybox) | `wp-content/themes/nellis/assets/JS/` | `npm run test:browser` (theme code is not linted) |
 
 ### Look
