@@ -75,9 +75,9 @@ Change the source file, then run the commands. Never edit a generated file by ha
 | Change | Edit | Then run |
 |---|---|---|
 | The filter and news shim (the WordPress AJAX calls) | `js/static-backend.js` | `npm run lint && npm test && npm run test:browser` |
-| The project switch on a project page | `js/project-switch.js` | the same |
-| The contact and the brief form in the browser | `js/forms.js` | the same |
-| The form endpoints, the uploads, the CMS login | `worker/*.js` | `npm run lint && npm test`, then a deploy to test the live route |
+| The project switch on a project page | `js/project-switch.js` | `npm run lint && npm test && npm run test:browser` |
+| The contact and the brief form in the browser | `js/forms.js` | `npm run lint && npm test && npm run test:browser` |
+| The form endpoints, the uploads, the CMS login | `worker/*.js` | `npm run lint && npm test`, then `npx wrangler dev` for the live route ([development.md → Hosting](docs/workflow/development.md#hosting--cloudflare-workers)) |
 | A theme script (burger, modal, swiper, fancybox) | `wp-content/themes/nellis/assets/JS/` | `npm run test:browser` (theme code is not linted) |
 
 ### Look
@@ -91,7 +91,7 @@ Change the source file, then run the commands. Never edit a generated file by ha
 
 ### Check the change in a browser
 
-`npm run test:browser` serves the site on <http://localhost:8000> and runs the visitor flows at 1440 and 390. `npm run test:browser-visible` shows the browser. `BROWSER=safari` runs the WebKit engine. See [Testing](#testing).
+`npm run test:browser` runs the visitor flows. `npm run test:browser-visible` shows the browser. The bindings are in [development.md → Commands](docs/workflow/development.md#commands). See [Testing](#testing).
 
 Each test file owns a flow:
 
