@@ -57,7 +57,7 @@ class MockXHR {
   }
 }
 
-function load(gridHtml, { thumbSizes = null, file = null, realXHR: RealXHR = MockXHR } = {}) {
+function load(gridHtml, { thumbSizes = null, file = null } = {}) {
   const listeners = {};
   const reals = [];
   const grid = {
@@ -67,7 +67,7 @@ function load(gridHtml, { thumbSizes = null, file = null, realXHR: RealXHR = Moc
   const fetched = [];
   const window = {
     XMLHttpRequest: function mockRealXHR() {
-      return new RealXHR(reals);
+      return new MockXHR(reals);
     },
     fetch: (url) => {
       fetched.push(url);
@@ -162,6 +162,15 @@ test('a completed upload copies the state, then fires onreadystatechange and onl
   assert.deepEqual(seen, ['state 4 201', 'onload load']);
   assert.equal(xhr.responseText, 'stored');
   assert.equal(xhr.response, 'stored');
+});
+
+test('the pass-through shim leaves statusText undefined', () => {
+  const { xhr, real } = putXHR();
+  real.statusText = 'Created';
+  xhr.send('bytes');
+  real.respond(201, 'stored');
+  assert.equal(xhr.status, 201);
+  assert.equal(xhr.statusText, undefined);
 });
 
 test('a 413 answer fires onload, not onerror, and the status reads 413', () => {
