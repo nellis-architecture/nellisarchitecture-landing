@@ -80,7 +80,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Plain JavaScript. No TypeScript. No framework.
 - Build scripts run on Node with zero runtime dependencies. Add a dependency only when a card needs it. Dev tools go in `devDependencies`.
 - Browser code runs without a bundler. Keep the existing theme scripts working.
-- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/make-images.js`, `build/lib/**/*.js`, `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `worker/**`, `test/`, `eslint.config.mjs`. Add new own files to the config.
+- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/make-images.js`, `build/lib/**/*.js`, `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `worker/**`, `test/`, `browser/**`, `eslint.config.mjs`. Add new own files to the config.
 - Build scripts: synchronous `fs` calls and `console` output are allowed (`n/no-sync`, `no-console` off).
 - Browser scripts: `'use strict'` inside the IIFE (`strict: function`). Underscore fields are allowed for shim internals (`no-underscore-dangle` off).
 - Build scripts export their pure functions and run only when called directly (`require.main === module`), so tests can import them.
@@ -117,6 +117,7 @@ The goal is easy reading. Many readers are not native English speakers. Clear te
 - Cover our own code with unit tests.
 - Every bug fix must include a unit test that reproduces the failing case. The test must fail without the fix and pass with the fix. Cover the failing and edge cases, not just the happy path.
 - After a change to the build or the templates, run the build and check the generated diff. Only the expected files may change.
+- Browser tests (`browser/`): `npm run test:browser`. Local only, not CI. See [development.md → Commands](docs/workflow/development.md#commands).
 
 ## Documentation
 

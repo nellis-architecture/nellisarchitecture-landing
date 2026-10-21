@@ -62,6 +62,8 @@ At Review, write a review scenario on the card. The operator uses it to review t
    - CMS behaviour: test on a temporary copy of the repo. Never change the real content.
 4. Mark each test that needs the deploy or a CMS login as **pending**. Run the deploy tests in Shipping. The operator runs the CMS login tests.
 
+Review also runs `npm run test:browser` and attaches the output to the card.
+
 ## Bindings
 
 ### Task board — Trello
@@ -115,6 +117,7 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 - Local CMS: also run `npm run cms` ([decap-server](https://www.npmjs.com/package/decap-server), port 8081), then open <http://localhost:8000/admin/> and click Login (no password). The CMS writes straight to the files in your working copy. There is no editorial workflow and no commit. Run the build and commit yourself. Decap uses the local backend only on `localhost` (`local_backend: true` in `admin/config.yml`).
 - Lint: `npm run lint` ([ESLint](https://eslint.org/) with [eslint-config-airbnb-extended](https://www.npmjs.com/package/eslint-config-airbnb-extended), config in `eslint.config.mjs`). Fix style: `npm run format`.
 - Unit tests: `npm test` ([node:test](https://nodejs.org/api/test.html), files in `test/`).
+- Browser tests: `npm run test:browser` ([playwright-core](https://playwright.dev/), files in `browser/`). Local only, not CI. It starts `serve` on port 8000 and the local Chromium browser (Brave or Google Chrome, never Safari; `NELLIS_BROWSER` overrides the binary), runs `browser/` with `node --test`, then stops both. A failure saves a screenshot to `~/nellis-browser-tests/<run-id>/`.
 - **Checks** (Test state and before a push): `npm run lint && npm test && npm run build`, then `git status`. Only the expected files may change.
 - Screenshots (review scenario): a headless Chromium browser, for example [Brave](https://brave.com/) or Chrome: `"<browser>" --headless=new --hide-scrollbars --window-size=1440,900 --virtual-time-budget=8000 --screenshot=<file>.png <url>`. Make the file small before you attach it: `sips -s format jpeg -s formatOptions 40 -Z 1000 <file>.png --out <file>.jpg` (macOS).
 - Attach a file to a card: `POST /1/cards/<shortLink>/attachments` with `-F file=@<path>` ([Trello REST API](https://developer.atlassian.com/cloud/trello/rest/api-group-cards/#api-cards-id-attachments-post)).

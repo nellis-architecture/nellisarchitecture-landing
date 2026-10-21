@@ -3,6 +3,7 @@ import { configs, plugins } from 'eslint-config-airbnb-extended';
 
 const nodeFiles = [
   'build-news.js', 'build/make-images.js', 'build/lib/**/*.js', 'infra/**/*.js', 'test/**/*.js',
+  'browser/**/*.js',
   'eslint.config.mjs',
 ];
 const browserFiles = ['js/**/*.js'];
@@ -25,6 +26,8 @@ export default [
       '!js/forms.js',
       '!test/',
       '!test/**',
+      '!browser/',
+      '!browser/**',
       '!worker/',
       '!worker/**',
     ],
@@ -50,6 +53,7 @@ export default [
   {
     files: [
       'build-news.js', 'build/make-images.js', 'build/lib/**/*.js', 'infra/**/*.js', 'test/**/*.js',
+      'browser/**/*.js',
     ],
     languageOptions: {
       sourceType: 'commonjs', ecmaVersion: 2022, parserOptions: { ecmaVersion: 2022 },
@@ -58,6 +62,15 @@ export default [
   {
     files: ['build/make-images.js'],
     rules: { 'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }] },
+  },
+  {
+    files: ['browser/**/*.js'],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
+    rules: {
+      'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      // page.evaluate bodies run in the browser, not in Node
+      'n/no-unsupported-features/node-builtins': 'off',
+    },
   },
   {
     files: browserFiles,
