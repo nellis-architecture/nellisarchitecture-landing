@@ -66,6 +66,43 @@ The site replaces a live WordPress site. Search ranking must survive the migrati
 - The Worker publishes the repo root. A new internal root file or folder needs a line in `.assetsignore`. A new public root file or folder needs an entry in the `SITE` allow-list in `test/assets-deny.test.js`. Root `*.html` pages need neither.
 - Decap CMS commits to the `backend.branch` of `admin/config.yml` on the remote (`master`). Pull before you work. Rebase local commits before a push.
 
+## Change the site
+
+Change the source file, then run the commands. Never edit a generated file by hand (see [Content & SEO](#content--seo)). The commands are in [development.md → Commands](docs/workflow/development.md#commands).
+
+### Behaviour
+
+| Change | Edit | Then run |
+|---|---|---|
+| The filter and news shim (the WordPress AJAX calls) | `js/static-backend.js` | `npm run lint && npm test && npm run test:browser` |
+| The project switch on a project page | `js/project-switch.js` | the same |
+| The contact and the brief form in the browser | `js/forms.js` | the same |
+| The form endpoints, the uploads, the CMS login | `worker/*.js` | `npm run lint && npm test`, then a deploy to test the live route |
+| A theme script (burger, modal, swiper, fancybox) | `wp-content/themes/nellis/assets/JS/` | `npm run test:browser` (theme code is not linted) |
+
+### Look
+
+| Change | Edit | Then run |
+|---|---|---|
+| A style | `wp-content/themes/nellis/assets/scss/main.css` (plain CSS; there is no SCSS build, the folder name is historical) | `npm run test:browser` |
+| The markup of a generated page | `build/lib/partials/*.html`, `build/lib/pages/*.js`, `build/news-template.html` | `npm run build`, check the generated diff, then `npm run test:browser` |
+| The markup of a filter list | `data/filters/*.html` (hand-kept) | `npm run test:browser` |
+| An image | the plain `<img>` or the `minImg` value | `npm run images`, then `npm run build` |
+
+### Check the change in a browser
+
+`npm run test:browser` serves the site on <http://localhost:8000> and runs the visitor flows at 1440 and 390. `npm run test:browser-visible` shows the browser. `BROWSER=safari` runs the WebKit engine. See [Testing](#testing).
+
+Each test file owns a flow:
+
+- `browser/home.js` — the Home grid, the sidebar filters, the remembered filter, the old `/#proj=<Name>` and `/#<category>` URLs.
+- `browser/projects.js` — a project page: the thumbnail column, the open project, the sidebar filter.
+- `browser/pages.js` — the `/projects/` hub, the category pages, the menu links, and the sweep of every page for JS errors and horizontal overflow.
+- `browser/news.js` — the `/news/` index, a post, the switcher, the sidebar.
+- `browser/forms.js` — the contact form and the brief: the submit, the honeypot, the 5 MB guard, the file slots.
+
+A change to a flow changes its test in the same commit. A new flow gets a new test.
+
 ## Code style
 
 The code style is important for this project. We decide what style to use, then we stick to the style. Create eslint rules to enforce the style.

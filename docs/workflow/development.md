@@ -43,6 +43,7 @@ Human gates: Review sign-off, push, Done, Closed, and an Architect BR sign-off o
 ## Board conventions
 
 - Every card move has a comment: `<from> → <to>: <reason>`. Add the evidence: plan summary, verdict, commit hash, or check output tail.
+- Trello does not render Markdown tables. Write a list, or a preformatted ASCII table in a code block.
 - A design or a decision goes on the card (description or comment). No separate decision files.
 - A BLOCK comment lists each finding on one line: `location · what to change · why`.
 - One card, one change. Split big cards in grooming.
@@ -52,7 +53,7 @@ Human gates: Review sign-off, push, Done, Closed, and an Architect BR sign-off o
 
 At Review, write a review scenario on the card. The operator uses it to review the change.
 
-1. Write a table. Each row is one test: what to do, where to check, and the expected result.
+1. Write the scenario as a list (Trello does not render Markdown tables, see [Board conventions](#board-conventions)). Each item is one test: what to do, where to check, and the expected result.
    - Where: local preview, <https://landing.nellisarchitecture.workers.dev> (after the push), the CMS, or the live site for comparison.
    - Cover each acceptance criterion. Include the failing and edge cases, not only the happy path.
 2. Run each test that you can run before the push. Write the result for each test on the card.
