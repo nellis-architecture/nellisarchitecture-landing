@@ -1,30 +1,51 @@
-/* Browser test runner: serves the repo on :8000, launches a local Chromium
-   browser through playwright-core, runs the browser/ tests with node --test,
-   then stops both. Local only, not CI. NELLIS_BROWSER overrides the browser. */
+/* Browser test runner: serves the repo on :8000, launches a local browser
+   through playwright-core, runs the browser/ tests with node --test,
+   then stops both. Local only, not CI.
+   BROWSER picks the browser: brave, chrome, safari (the WebKit build that
+   Playwright downloads, not Safari.app) or the absolute path of a Chromium
+   browser binary. Unset: the installed Brave or Google Chrome.
+   HEADED=1 launches the browser visibly. */
 const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const http = require('node:http');
 const os = require('node:os');
 const path = require('node:path');
-const { chromium } = require('playwright-core');
+const { chromium, webkit } = require('playwright-core');
 
 const ROOT = path.join(__dirname, '..');
 const BASE = 'http://localhost:8000';
 const SERVE = path.join(ROOT, 'node_modules', 'serve', 'build', 'main.js');
-const BROWSERS = [
-  '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-];
+const CHROMIUM = {
+  brave: '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+  chrome: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+};
+const USAGE = 'BROWSER takes brave, chrome, safari (or webkit), or the absolute'
+  + ' path of a Chromium browser binary. Unset: the installed Brave or Google Chrome.';
 
-function browserPath() {
-  const candidates = process.env.NELLIS_BROWSER
-    ? [process.env.NELLIS_BROWSER] : BROWSERS;
+/* The playwright-core engine for BROWSER and HEADED, with its launch options. */
+function pickBrowser() {
+  const headless = process.env.HEADED !== '1';
+  const value = (process.env.BROWSER || '').trim();
+  const keyword = value.toLowerCase();
+  if (keyword === 'safari' || keyword === 'webkit') {
+    if (!fs.existsSync(webkit.executablePath())) {
+      throw new Error('The Playwright WebKit build is not installed. Install it with:'
+        + '\n  npx playwright-core install webkit');
+    }
+    return { engine: webkit, type: 'webkit', options: { headless } };
+  }
+  if (value && !CHROMIUM[keyword] && !path.isAbsolute(value)) {
+    throw new Error(`Unknown BROWSER: ${value}. ${USAGE}`);
+  }
+  const candidates = value ? [CHROMIUM[keyword] || value] : Object.values(CHROMIUM);
   const found = candidates.find((bin) => fs.existsSync(bin));
   if (!found) {
-    throw new Error('No Chromium browser found. Install Brave or Google Chrome,'
-      + ' or set NELLIS_BROWSER to the browser binary.');
+    const why = value ? `No browser at ${candidates[0]}.` : 'No Chromium browser found.';
+    throw new Error(`${why} ${USAGE}`);
   }
-  return found;
+  return {
+    engine: chromium, type: 'chromium', options: { headless, executablePath: found },
+  };
 }
 
 function ping() {
@@ -74,6 +95,7 @@ async function main() {
     throw new Error('Port 8000 is already in use. Stop the process that uses it'
       + ' (for example npm run serve) and run npm run test:browser again.');
   }
+  const browser = pickBrowser();
   const shots = path.join(
     os.homedir(),
     'nellis-browser-tests',
@@ -83,40 +105,39 @@ async function main() {
   const server = spawn(process.execPath, [SERVE, '-l', '8000'], { cwd: ROOT, stdio: 'ignore' });
   let browserServer = null;
   let tests = null;
-  const stop = () => {
-    if (browserServer && browserServer.process()) browserServer.process().kill('SIGTERM');
+  const gone = (proc) => (proc.exitCode === null
+    ? new Promise((resolve) => {
+      proc.on('exit', resolve);
+    }) : Promise.resolve());
+  /* Signals cannot wait: kill the browser hard, then let the loop drain. */
+  const abort = (code) => {
     if (tests) tests.kill('SIGTERM');
+    if (browserServer) browserServer.kill();
     server.kill('SIGTERM');
+    process.exitCode = code;
   };
-  process.on('SIGINT', () => {
-    stop();
-    process.exitCode = 130;
-  });
-  process.on('SIGTERM', () => {
-    stop();
-    process.exitCode = 143;
-  });
+  process.on('SIGINT', () => abort(130));
+  process.on('SIGTERM', () => abort(143));
   try {
     await untilReady(Date.now() + 15000);
-    browserServer = await chromium.launchServer({ executablePath: browserPath() });
+    browserServer = await browser.engine.launchServer(browser.options);
     const code = await runTests({
       ...process.env,
       NELLIS_BASE: BASE,
       NELLIS_WS: browserServer.wsEndpoint(),
+      NELLIS_ENGINE: browser.type,
       NELLIS_SHOTS: shots,
     }, (child) => {
       tests = child;
     });
     return code;
   } finally {
-    stop();
-    const gone = (proc) => (proc.exitCode === null
-      ? new Promise((resolve) => {
-        proc.on('exit', resolve);
-      }) : Promise.resolve());
-    const procs = [server];
-    if (browserServer && browserServer.process()) procs.push(browserServer.process());
-    await Promise.all(procs.map(gone));
+    if (tests) tests.kill('SIGTERM');
+    server.kill('SIGTERM');
+    /* close() stops the browser and its ws server; the ws server would
+       otherwise keep this process alive. */
+    if (browserServer) await browserServer.close().catch(() => {});
+    await gone(server);
   }
 }
 

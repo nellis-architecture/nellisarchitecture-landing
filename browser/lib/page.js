@@ -1,10 +1,13 @@
 /* Shared browser-test helper: one connection to the browser server of run.js
-   (NELLIS_WS), pages at NELLIS_BASE, API and Turnstile stubs, error collection,
-   the horizontal-overflow check and failure screenshots (NELLIS_SHOTS). */
+   (NELLIS_WS, engine NELLIS_ENGINE), pages at NELLIS_BASE, API and Turnstile
+   stubs, error collection, the horizontal-overflow check and failure
+   screenshots (NELLIS_SHOTS). */
 const assert = require('node:assert/strict');
 const { after } = require('node:test');
 const path = require('node:path');
-const { chromium } = require('playwright-core');
+const { chromium, webkit } = require('playwright-core');
+
+const ENGINES = { chromium, webkit };
 
 const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
@@ -59,7 +62,10 @@ function answerApi(route, request, apiCalls) {
 
 let shared = null;
 function connect() {
-  if (!shared) shared = chromium.connect(process.env.NELLIS_WS);
+  if (!shared) {
+    const engine = ENGINES[process.env.NELLIS_ENGINE] || chromium;
+    shared = engine.connect(process.env.NELLIS_WS);
+  }
   return shared;
 }
 
@@ -96,6 +102,9 @@ async function visit(pathname, viewport = DESKTOP) {
     /* Known site bug, reported: main.css has url("../img/newN.png'?>") — a leftover
        PHP tag — so /studio/ and /people/ 404 the .nd1/.nd2 decor images. */
     if (/%3E$/.test(from) && /new\d\.png/.test(from)) return;
+    /* WebKit denies the speculation-rule prefetch of footer.html over plain http;
+       Chromium allows it on localhost. The live site is HTTPS, so this is local. */
+    if (msg.text() === 'Prefetch request denied: URL must be secure (HTTPS)') return;
     errors.push(`console: ${msg.text()}`);
   });
   await page.goto(BASE + pathname, { waitUntil: 'domcontentloaded' });
