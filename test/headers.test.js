@@ -27,6 +27,23 @@ const parse = (text) => {
   return rules;
 };
 
+/* Two patterns can both match one path when the text before the first "*" of one is a
+   prefix of the other's. Enough here: every pattern in this file is "/" or "/x/...". */
+const prefixOf = (pattern) => pattern.split('*')[0];
+const canOverlap = (a, b) => prefixOf(a).startsWith(prefixOf(b))
+  || prefixOf(b).startsWith(prefixOf(a));
+
+/* Cloudflare joins a header that two matching rules both set, so one header name may
+   appear on only one of the patterns that a single path can match. */
+const assertNoJoinedHeader = (rules) => {
+  const patterns = [...rules.keys()];
+  patterns.forEach((a, i) => patterns.slice(i + 1).forEach((b) => {
+    if (!canOverlap(a, b)) return;
+    const shared = [...rules.get(a).keys()].filter((name) => rules.get(b).has(name));
+    assert.deepEqual(shared, [], `_headers: ${a} and ${b} both set ${shared.join(', ')}`);
+  }));
+};
+
 test('parse rejects a header line without indent or colon', () => {
   assert.throws(() => parse('/*\n  X-Frame-Options SAMEORIGIN\n'));
   assert.throws(() => parse('  X-Frame-Options: SAMEORIGIN\n'));
@@ -46,10 +63,48 @@ test('_headers sets the security headers on every path', () => {
   assert.equal(all.get('x-robots-tag'), 'noindex', 'noindex stays until the DNS cutover (card 9)');
 });
 
-test('_headers caches /wp-content/* for one year, immutable', () => {
-  const uploads = parse(read('_headers')).get('/wp-content/*');
-  assert.ok(uploads, '_headers: missing /wp-content/* rule');
-  const cache = uploads.get('cache-control');
-  assert.match(cache, /max-age=31536000/);
-  assert.match(cache, /immutable/);
+test('_headers caches uploads and variants for one year, immutable', () => {
+  const rules = parse(read('_headers'));
+  ['/wp-content/uploads/*', '/wp-content/variants/*'].forEach((pattern) => {
+    const rule = rules.get(pattern);
+    assert.ok(rule, `_headers: missing ${pattern} rule`);
+    assert.match(rule.get('cache-control'), /max-age=31536000/, pattern);
+    assert.match(rule.get('cache-control'), /immutable/, pattern);
+  });
+});
+
+test('_headers makes themes and plugins revalidate', () => {
+  const rules = parse(read('_headers'));
+  ['/wp-content/themes/*', '/wp-content/plugins/*'].forEach((pattern) => {
+    const rule = rules.get(pattern);
+    assert.ok(rule, `_headers: missing ${pattern} rule`);
+    const cache = rule.get('cache-control');
+    assert.equal(cache, 'public, max-age=0, must-revalidate', pattern);
+    assert.doesNotMatch(cache, /immutable/, pattern);
+  });
+});
+
+test('_headers has a Cache-Control rule for every directory in wp-content/', () => {
+  const names = fs.readdirSync(path.join(root, 'wp-content'), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+  assert.ok(names.length > 0, 'wp-content/ holds no directory');
+  const rules = parse(read('_headers'));
+  names.forEach((name) => {
+    const rule = rules.get(`/wp-content/${name}/*`);
+    assert.ok(rule, `_headers: missing /wp-content/${name}/* rule`);
+    assert.ok(rule.get('cache-control'), `_headers: /wp-content/${name}/* sets no Cache-Control`);
+  });
+});
+
+test('_headers never sets one header name on two patterns that can match one path', () => {
+  assertNoJoinedHeader(parse(read('_headers')));
+});
+
+test('canOverlap and assertNoJoinedHeader', () => {
+  assert.equal(canOverlap('/*', '/wp-content/themes/*'), true);
+  assert.equal(canOverlap('/wp-content/uploads/*', '/wp-content/themes/*'), false);
+  assert.throws(() => assertNoJoinedHeader(parse(
+    '/wp-content/*\n  Cache-Control: a\n/wp-content/themes/*\n  Cache-Control: b\n',
+  )));
 });
