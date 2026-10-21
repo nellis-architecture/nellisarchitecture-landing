@@ -99,9 +99,6 @@ async function visit(pathname, viewport = DESKTOP) {
     if (msg.type() !== 'error') return;
     const from = msg.location().url || '';
     if (from && !from.startsWith(BASE)) return; // stubbed external, for example GA
-    /* Known site bug, reported: main.css has url("../img/newN.png'?>") — a leftover
-       PHP tag — so /studio/ and /people/ 404 the .nd1/.nd2 decor images. */
-    if (/%3E$/.test(from) && /new\d\.png/.test(from)) return;
     /* The speculationrules block in footer.html prefetches every same-origin link.
        WebKit denies that prefetch over plain http; Chromium allows it on localhost.
        The live site is HTTPS, so this is local. */

@@ -6952,7 +6952,7 @@ header {
 }
 
 .nd1 {
-  background: url("../img/new1.png'?>");
+  background: url("../img/new1.png");
   background-size: cover;
   width: 216px;
   height: 124px;
@@ -6961,13 +6961,13 @@ header {
 .nd2 {
   width: 304px;
   height: 72px;
-  background: url("../img/new2.png'?>");
+  background: url("../img/new2.png");
   background-size: cover;
 }
 
 @media (max-width: 600px) {
   .new--decor {
-    background: url("../img/new3.png'?>");
+    background: url("../img/new3.png");
     background-size: cover;
     height: auto;
     width: 100%;
