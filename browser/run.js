@@ -19,26 +19,32 @@ const CHROMIUM = {
   brave: '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
   chrome: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
 };
+const WEBKIT = ['safari', 'webkit'];
 const USAGE = 'BROWSER takes brave, chrome, safari (or webkit), or the absolute'
   + ' path of a Chromium browser binary. Unset: the installed Brave or Google Chrome.';
 
-/* The playwright-core engine for BROWSER and HEADED, with its launch options. */
-function pickBrowser() {
-  const headless = process.env.HEADED !== '1';
-  const value = (process.env.BROWSER || '').trim();
+const exists = (bin) => fs.existsSync(bin);
+
+/* The playwright-core engine for BROWSER and HEADED, with its launch options.
+   `isThere` stands in for the file system, so tests need no real browser. */
+function pickBrowser(env = process.env, isThere = exists) {
+  const headless = env.HEADED !== '1';
+  const value = (env.BROWSER || '').trim();
   const keyword = value.toLowerCase();
-  if (keyword === 'safari' || keyword === 'webkit') {
-    if (!fs.existsSync(webkit.executablePath())) {
+  if (WEBKIT.includes(keyword)) {
+    if (!isThere(webkit.executablePath())) {
       throw new Error('The Playwright WebKit build is not installed. Install it with:'
         + '\n  npx playwright-core install webkit');
     }
     return { engine: webkit, type: 'webkit', options: { headless } };
   }
-  if (value && !CHROMIUM[keyword] && !path.isAbsolute(value)) {
+  /* hasOwn: BROWSER=constructor must not find Object.prototype. */
+  const known = Object.hasOwn(CHROMIUM, keyword);
+  if (value && !known && !path.isAbsolute(value)) {
     throw new Error(`Unknown BROWSER: ${value}. ${USAGE}`);
   }
-  const candidates = value ? [CHROMIUM[keyword] || value] : Object.values(CHROMIUM);
-  const found = candidates.find((bin) => fs.existsSync(bin));
+  const candidates = value ? [known ? CHROMIUM[keyword] : value] : Object.values(CHROMIUM);
+  const found = candidates.find((bin) => isThere(bin));
   if (!found) {
     const why = value ? `No browser at ${candidates[0]}.` : 'No Chromium browser found.';
     throw new Error(`${why} ${USAGE}`);
@@ -47,6 +53,9 @@ function pickBrowser() {
     engine: chromium, type: 'chromium', options: { headless, executablePath: found },
   };
 }
+
+/* A child that a signal killed closes with code null. That is a failure. */
+const exitCode = (code) => code ?? 1;
 
 function ping() {
   return new Promise((resolve) => {
@@ -86,7 +95,7 @@ function runTests(env, set) {
       cwd: ROOT, stdio: 'inherit', env,
     });
     set(child);
-    child.on('close', (code) => resolve(code || 0));
+    child.on('close', (code) => resolve(exitCode(code)));
   });
 }
 
@@ -141,9 +150,15 @@ async function main() {
   }
 }
 
-main().then((code) => {
-  if (process.exitCode === undefined) process.exitCode = code;
-}, (error) => {
-  console.error(error.message);
-  process.exitCode = 1;
-});
+module.exports = {
+  CHROMIUM, WEBKIT, USAGE, pickBrowser, exitCode,
+};
+
+if (require.main === module) {
+  main().then((code) => {
+    if (process.exitCode === undefined) process.exitCode = code;
+  }, (error) => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+}
