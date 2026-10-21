@@ -90,6 +90,10 @@
     this.status = 0;
     this.responseText = '';
     this.onreadystatechange = null;
+    this.onload = null;
+    this.onerror = null;
+    /* A stub that accepts handlers; open() replaces it with the real one. */
+    this.upload = {};
     this._real = null;
     this._headers = [];
   }
@@ -108,6 +112,7 @@
       this._ajax = false;
       this._real = new REAL_XHR();
       this._real.open(method, url, ...rest);
+      this.upload = this._real.upload;
     }
   };
   ShimXHR.prototype.setRequestHeader = function setRequestHeader(k, v) {
@@ -116,12 +121,25 @@
   ShimXHR.prototype.send = function send(body) {
     const self = this;
     if (this._real) {
-      this._real.onreadystatechange = function onReadyStateChange() {
+      const copy = () => {
         self.readyState = self._real.readyState;
         self.status = self._real.status;
         self.responseText = self._real.responseText;
         self.response = self._real.response;
+      };
+      this._real.onreadystatechange = function onReadyStateChange() {
+        copy();
         if (self.onreadystatechange) self.onreadystatechange();
+      };
+      /* load fires for every answer that arrived, also 413: forms.js reads the
+         status in onload to say why the upload failed. error is a network
+         failure only. Copy first, so the handler reads the real status. */
+      this._real.onload = function onLoad(event) {
+        copy();
+        if (self.onload) self.onload(event);
+      };
+      this._real.onerror = function onError(event) {
+        if (self.onerror) self.onerror(event);
       };
       this._real.send(body);
       return;

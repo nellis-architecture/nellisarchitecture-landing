@@ -63,32 +63,24 @@ VIEWPORTS.forEach(([label, viewport]) => {
     });
   });
 
-  /* js/static-backend.js replaces window.XMLHttpRequest with a shim that has no
-     .upload and never calls .onload, so js/forms.js upload() throws on the real
-     site too. Unskip when the shim forwards real XHRs (site bug, reported). */
-  const SKIP_FILES = 'js/static-backend.js XHR shim lacks upload/onload (site bug)';
-  test(
-    `forms: the brief modal posts, then uploads the files (${label})`,
-    { skip: SKIP_FILES },
-    async () => {
-      const v = await visit('/contact/', viewport);
-      await check(v, `forms-brief-${label}`, async () => {
-        const seen = [];
-        dialogs(v.page, seen);
-        await openBrief(v.page);
-        await fillContact(v.page, BRIEF);
-        await v.page.setInputFiles(`${BRIEF} input[type="file"]`, FILES.small.slice(0, 2));
-        await v.page.locator(`${BRIEF} [type="submit"]`).click();
-        await until(() => seen.includes(SENT));
-        assert.deepEqual(v.apiCalls, [
-          'POST /api/message',
-          'PUT /api/upload/key0',
-          'PUT /api/upload/key1',
-          'POST /api/message/test-message/send',
-        ]);
-      });
-    },
-  );
+  test(`forms: the brief modal posts, then uploads the files (${label})`, async () => {
+    const v = await visit('/contact/', viewport);
+    await check(v, `forms-brief-${label}`, async () => {
+      const seen = [];
+      dialogs(v.page, seen);
+      await openBrief(v.page);
+      await fillContact(v.page, BRIEF);
+      await v.page.setInputFiles(`${BRIEF} input[type="file"]`, FILES.small.slice(0, 2));
+      await v.page.locator(`${BRIEF} [type="submit"]`).click();
+      await until(() => seen.includes(SENT));
+      assert.deepEqual(v.apiCalls, [
+        'POST /api/message',
+        'PUT /api/upload/key0',
+        'PUT /api/upload/key1',
+        'POST /api/message/test-message/send',
+      ]);
+    });
+  });
 
   test(`forms: a file over 5 MB is rejected, nothing is sent (${label})`, async () => {
     const v = await visit('/contact/', viewport);
