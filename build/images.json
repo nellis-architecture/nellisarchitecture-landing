@@ -7561,6 +7561,25 @@
     },
     "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoQAAkAA4BaJQBOgBmSSu+8AAD2noQTC1dpWizWI1DABRRrPHcXj/v2rdd2qcjQ4LaGvUaLLaoYqeHZz97lAAAA"
   },
+  "wp-content/uploads/2026/06/1-1024x576.jpg": {
+    "width": 1024,
+    "height": 576,
+    "alpha": false,
+    "hash": "cc8e2af2",
+    "widths": {
+      "avif": [
+        320,
+        640,
+        960,
+        1024
+      ],
+      "jpg": [
+        640,
+        1024
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAkAA4BaJYwCdH8AF/f2WnQAAP3jPjKbak/ApEfAyfY6c064nXUHbrR1oz1QUw3sRXkk/s968/wfrzlputdvS+4bT9h/v/GAAA=="
+  },
   "wp-content/uploads/2026/06/1-scaled.jpg": {
     "width": 2560,
     "height": 1440,
@@ -9726,5 +9745,24 @@
       ]
     },
     "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAACQBACdASoQABQAPu1iqU2ppaOiMAgBMB2JQBOmUI7gBH/jQIsVovj9ZqwujGwA/m++Nj7Yig7dk1eox0fmNI8CF9hqAkbiHUxgAkGP7S8Ns1NkAh2wMByxydu++V+SlXmvdp3AgWQpF6kc8lPkoqgJyiGwwAAA"
+  },
+  "wp-content/uploads/2026/10/Photo-31-07-2026-10-16-58-AM-1024x576.jpg": {
+    "width": 1024,
+    "height": 576,
+    "alpha": false,
+    "hash": "7d4f4342",
+    "widths": {
+      "avif": [
+        320,
+        640,
+        960,
+        1024
+      ],
+      "jpg": [
+        640,
+        1024
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQAAkAA4BaJZQAOAADcGmBBVqLYADid8H8PRRFb2WuIxizUq3GFPL/i95mdml+Hvwe0/luD1o4sWurPCLBlJBTR1bga0+NbwAAAA=="
   }
 }

@@ -2,8 +2,8 @@ import globals from 'globals';
 import { configs, plugins } from 'eslint-config-airbnb-extended';
 
 const nodeFiles = [
-  'build-news.js', 'build/make-images.js', 'build/lib/**/*.js', 'infra/**/*.js', 'test/**/*.js',
-  'browser/**/*.js',
+  'build-news.js', 'build/make-images.js', 'build/live-check.js', 'build/lib/**/*.js',
+  'infra/**/*.js', 'test/**/*.js', 'browser/**/*.js',
   'eslint.config.mjs',
 ];
 const browserFiles = ['js/**/*.js'];
@@ -15,6 +15,7 @@ export default [
       '!build-news.js',
       '!build/',
       '!build/make-images.js',
+      '!build/live-check.js',
       '!build/lib/',
       '!build/lib/**',
       '!eslint.config.mjs',
@@ -52,8 +53,8 @@ export default [
   },
   {
     files: [
-      'build-news.js', 'build/make-images.js', 'build/lib/**/*.js', 'infra/**/*.js', 'test/**/*.js',
-      'browser/**/*.js',
+      'build-news.js', 'build/make-images.js', 'build/live-check.js', 'build/lib/**/*.js',
+      'infra/**/*.js', 'test/**/*.js', 'browser/**/*.js',
     ],
     languageOptions: {
       sourceType: 'commonjs', ecmaVersion: 2022, parserOptions: { ecmaVersion: 2022 },
