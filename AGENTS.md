@@ -15,21 +15,21 @@ Durable working agreements. Hold to these agreements regardless of tools.
 - **Abstract the design, concretise the execution:** specs are tool-neutral and vendor-neutral. A person or any agent can follow a spec. *Bindings* (the harness, the board, the exact commands) are named and concrete, in one place. Do not genericise the bindings.
 - **Name bindings, do not wrap them:** when a choice is tool-specific (Claude Code, Trello, Cloudflare, npm), state the tool as the current binding. Do not build an abstraction layer for tools we do not use.
 - **Abstraction, not at the cost of performance:** refuse indirection and adapters added for hypothetical futures (YAGNI). The shortest path wins.
+- **Minimal by default:** this is a very simple site. Take the shortest path that meets the acceptance criteria of the card. Do not add a property, a field, an option, a flag, a setting, a helper or an abstraction that the card does not ask for. Do not build for a future card. Reuse or delete what exists before you add something new. When two designs both meet the criteria, ship the smaller one and write the reason on the card.
 - **Portable hosting:** the site MUST stay portable between static hosts. Cloudflare Workers is the current host, not a fixed choice; Netlify, Cloudflare Pages or AWS Amplify can replace it. Use broadly available technologies and open standards: plain HTML, CSS and JS, HTTP caching, standard image formats and `<img>`/`<picture>` attributes. Do not add a feature that only one host offers (for example Cloudflare Images, KV or Durable Objects). Keep each host-specific binding we already use (`wrangler.jsonc`, `_redirects`, `_headers`, `.assetsignore`, the Worker routes for the forms and the CMS login, R2 for the form files, Turnstile for the spam check) in one place, with a known replacement on the other hosts (see [Hosting — Cloudflare Workers](docs/workflow/development.md#hosting--cloudflare-workers)). Choose the industry-standard option before a CDN or a vendor service.
 - **Infrastructure as code:** keep all infrastructure in code in this repo, so that a person or an agent can make an environment again with few steps. Only bootstrap steps may stay manual: for example the move of the DNS nameservers, the link from GitHub to the host, an account or an API token. Write each bootstrap step in one place. After the bootstrap, code makes and changes everything: the host config, the build settings and variables, storage buckets, spam protection, DNS records and email routing. A dashboard change is not a final state.
 - **Simple site, consistent site:** this is a simple static site. Consistency and performance come first. SEO drives the content; agents keep everything consistent. Do not add scope, options or follow-up ideas. Choose the simplest option that matches the existing patterns and continue. Ask the operator only when a choice changes content, a public URL or cost.
 
 ## Decisions
 
-Discuss every decision.
-Record each decision on its Trello card (description or comment). Do not create separate decision files.
-The operator (human stakeholder) does not sign off each design. After a bar-raiser PASS at **Architect BR**, move the card on to **In Progress** and continue to **Review** without a stop. Stop and ask the operator only when a serious decision is open, or when the work brings an effort or an outcome that the operator does not know about (for example a change to content, a public URL, cost or scope).
+Decide every design and implementation question yourself. Record each decision on its Trello card (description or comment). Do not create separate decision files.
+The operator (human stakeholder) does not sign off each design. After a bar-raiser PASS at **Architect BR**, move the card on to **In Progress** and continue to **Review** without a stop. Ask the operator only when a choice changes content, a public URL or cost, or when the work brings an effort or an outcome that the operator does not know about. Do not ask the operator to confirm a card, a plan or a design.
 
 ## Task execution
 
 Always plan before implementing. Describe what will be done. Then do.
 Be brief when describing. No need to explain unless asked.
-Do not jump to conclusions or actions. Always ask.
+Do not ask the operator what to do next. Choose the most minimal option that meets the acceptance criteria (see [Minimal by default](#principles)), write the choice on the card, and continue.
 Before planning a big feature or phase, decompose it into cards on the Trello board (see [docs/workflow/grooming.md](docs/workflow/grooming.md)).
 
 **How we work — workflows** (tool-neutral specs; each spec names its own tool bindings):

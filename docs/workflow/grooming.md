@@ -8,7 +8,7 @@ Driver: `/groom <card-url>` ([.claude/commands/groom.md](../../.claude/commands/
 
 - **Product owner** — owns product, content and SEO cards. The operator plays this role.
 - **Tech lead** — owns `debt` and `infra` cards. The operator plays this role.
-- **Project manager (agent)** — prepares the card and lists open decisions. Never decides.
+- **Project manager (agent)** — prepares the card, decides each design and implementation question, and records the decision on the card. Escalates only a choice that changes content, a public URL or cost.
 
 ## Ready
 
@@ -25,10 +25,10 @@ A card is ready when it has all of these:
 2. If the card is ready, say so. Stop.
 3. Write the user story and the acceptance criteria. Use the [README](../../README.md), the code, and the live sites. Keep it minimal.
 4. Propose labels.
-5. List each open decision and its owner (product owner or tech lead).
+5. Decide each open question yourself. Write the decision and the reason on the card. Escalate a question only when its answer changes content, a public URL or cost, and wait for that one answer.
 6. Write the result to the card description. Add a summary comment.
-7. **HALT.** The operator confirms the card is ready.
-8. On confirm, move the card to **To do** with a comment.
+7. Move the card to **To do** with a comment.
+8. Start the pipeline: [development.md](development.md).
 
 ## Labels
 
