@@ -1,6 +1,7 @@
 const { escText, escAttr } = require('./html');
 
 const DOMAIN = 'https://nellisarchitecture.com';
+const LOGO = `${DOMAIN}/wp-content/uploads/2025/02/logo.png`;
 const INDEX = "<meta name='robots' content='index, follow, max-image-preview:large, "
   + "max-snippet:-1, max-video-preview:-1' />";
 const NOINDEX = '<meta name="robots" content="noindex">';
@@ -27,5 +28,5 @@ function seoTokens(content, page) {
 }
 
 module.exports = {
-  DOMAIN, INDEX, NOINDEX, pageUrl, seoTokens,
+  DOMAIN, INDEX, LOGO, NOINDEX, pageUrl, seoTokens,
 };

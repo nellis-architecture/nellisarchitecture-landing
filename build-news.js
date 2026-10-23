@@ -26,7 +26,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { writePages } = require('./build/lib/pages');
 const {
-  pageUrl, DOMAIN, INDEX, NOINDEX,
+  pageUrl, DOMAIN, INDEX, LOGO, NOINDEX,
 } = require('./build/lib/seo');
 const redirects = require('./build/lib/redirects');
 const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
@@ -182,7 +182,7 @@ function loadPosts(dir, manifest = {}) {
   return posts.sort((a, b) => (b.dateObj - a.dateObj) || (idNum(b) - idNum(a)));
 }
 
-function articleSchema(p) {
+function articleSchema(p, imageUrl) {
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -190,11 +190,11 @@ function articleSchema(p) {
         '@type': 'Article',
         headline: p.title,
         description: p.description || '',
+        image: imageUrl,
         datePublished: p.dateObj.toISOString(),
-        dateModified: p.dateObj.toISOString(),
         mainEntityOfPage: `${DOMAIN}/news/${p.slug}/`,
         author: { '@type': 'Organization', name: 'Nellis Architecture' },
-        publisher: { '@type': 'Organization', name: 'Nellis Architecture' },
+        publisher: { '@type': 'Organization', name: 'Nellis Architecture', logo: LOGO },
       },
       {
         '@type': 'BreadcrumbList',
@@ -259,7 +259,7 @@ function renderPost(template, p, list, manifest = {}) {
     .replaceAll('{{OG_IMAGE_HEIGHT}}', img.height)
     .replaceAll('{{OG_IMAGE_TYPE}}', img.type)
     .replaceAll('{{READ_TIME}}', readingTime(p.html))
-    .replaceAll('{{SCHEMA}}', articleSchema(p))
+    .replaceAll('{{SCHEMA}}', articleSchema(p, img.url))
     .replaceAll('{{NEWS_IMG}}', newsImg(p, manifest))
     .replaceAll('{{IMAGES_CSS}}', loadPartial('images-css'))
     .replaceAll('{{TITLE}}', p.title)
@@ -429,6 +429,7 @@ module.exports = {
   idNum,
   sitemap,
   loadPosts,
+  articleSchema,
   renderPost,
   newsImg,
   newsJsonEntry,

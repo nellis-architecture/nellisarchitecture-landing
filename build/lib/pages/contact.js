@@ -4,9 +4,10 @@ const {
 const {
   head, top, contactForm, affiliations, footer,
 } = require('../chrome');
-const { DOMAIN, pageUrl, seoTokens } = require('../seo');
+const {
+  DOMAIN, LOGO, pageUrl, seoTokens,
+} = require('../seo');
 
-const LOGO = `${DOMAIN}/wp-content/uploads/2025/02/logo.png`;
 const SAME_AS = [
   'https://www.instagram.com/nellis.architecture/',
   'https://www.linkedin.com/company/nellis-architecture/',

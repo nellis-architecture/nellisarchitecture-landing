@@ -5,12 +5,13 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap, loadPosts,
-  renderPost, readingTime, newsImg, newsJsonEntry, newsList,
+  renderPost, readingTime, newsImg, newsJsonEntry, newsList, articleSchema,
 } = require('../build-news');
 const { readManifest, SLOTS } = require('../build/lib/images');
 const { escAttr } = require('../build/lib/html');
 const { rss } = require('../build/lib/feed');
-const { INDEX, NOINDEX } = require('../build/lib/seo');
+const { INDEX, LOGO, NOINDEX } = require('../build/lib/seo');
+const contact = require('../build/lib/pages/contact');
 
 test('parseFrontMatter reads plain and quoted values', () => {
   const src = '---\ntitle: "A \\"quoted\\" title"\nslug: my-post\n---\n\nBody text\n';
@@ -225,6 +226,42 @@ test('renderPost breadcrumb schema links News to /news/', () => {
   assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
     [1, 'Home', `${SITE}/`], [2, 'News', `${SITE}/news/`], [3, 'P', undefined],
   ]);
+});
+
+test('articleSchema emits the image and the publisher logo and no dateModified', () => {
+  const ld = articleSchema(post({}), `${UP}/2025/12/25-questions.jpg`);
+  const article = JSON.parse(ld)['@graph'][0];
+  assert.equal(article.image, `${UP}/2025/12/25-questions.jpg`);
+  assert.equal(article.publisher.logo, LOGO);
+  assert.doesNotMatch(ld, /dateModified/);
+});
+
+test('the schema image follows the hero: a local image, an unreadable one and none', () => {
+  const minis = `${SITE}/wp-content/themes/nellis/assets/img/minis.png`;
+  const hero = `${UP}/2025/12/25-questions.jpg`;
+  [[hero, hero], [`${UP}/missing.jpg`, minis], [undefined, minis]].forEach(([h, want]) => {
+    const html = renderPost(TEMPLATE, post({ hero: h }), '');
+    const ld = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+    assert.equal(JSON.parse(ld)['@graph'][0].image, want, h);
+  });
+});
+
+test('every real post puts its og:image in the schema and no dateModified', () => {
+  loadPosts(path.join(ROOT, 'content', 'news')).forEach((p) => {
+    const html = renderPost(TEMPLATE, p, '');
+    const ld = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+    const article = JSON.parse(ld)['@graph'][0];
+    assert.equal(article.image, meta(html, 'og:image')[0], p.slug);
+    assert.equal(article.publisher.logo, LOGO, p.slug);
+    assert.doesNotMatch(ld, /dateModified/, p.slug);
+  });
+});
+
+test('the news publisher logo and the /contact/ LocalBusiness logo are one URL', () => {
+  const biz = JSON.parse(contact.schema(`${SITE}/contact/`, 'n', 'd', 'e@x'))['@graph']
+    .find((n) => n['@type'] === 'LocalBusiness');
+  const article = JSON.parse(articleSchema(post({}), 'x'))['@graph'][0];
+  assert.equal(article.publisher.logo, biz.logo);
 });
 
 test('readingTime counts plain-text words at 200 per minute, at least 1 minute', () => {
