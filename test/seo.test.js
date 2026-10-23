@@ -1,8 +1,11 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
-const { seoTokens, pageUrl } = require('../build/lib/seo');
+const {
+  LOGO, ORGANIZATION, SAME_AS, pageUrl, seoTokens, withOrganization,
+} = require('../build/lib/seo');
 const { PAGES, renderPages } = require('../build/lib/pages');
 // eslint-disable-next-line import-x/no-useless-path-segments -- Home page module
 const index = require('../build/lib/pages/index');
@@ -14,6 +17,8 @@ const read = (name) => JSON.parse(
   fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
 );
 const pageOf = (name) => PAGES.find((p) => p.content === name);
+const count = (s, sub) => s.split(sub).length - 1;
+const ldRaw = (html) => html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
 const INDEX_ROBOTS = "<meta name='robots' content='index, follow, max-image-preview:large, "
   + "max-snippet:-1, max-video-preview:-1' />";
 
@@ -119,5 +124,69 @@ test('og:image of the pages exists on disk', () => {
     assert.ok(m, file);
     assert.ok(m[1].startsWith(DOMAIN), file);
     assert.ok(fs.existsSync(path.join(ROOT, m[1].slice(DOMAIN.length))), m[1]);
+  });
+});
+
+test('the Organization node carries exactly the six business properties', () => {
+  assert.deepEqual(Object.keys(ORGANIZATION), ['@type', '@id', 'name', 'url', 'logo', 'sameAs']);
+  assert.equal(ORGANIZATION['@id'], `${DOMAIN}/#organization`);
+  assert.equal(ORGANIZATION.name, 'Nellis Architecture');
+  assert.equal(ORGANIZATION.url, `${DOMAIN}/`);
+  assert.equal(ORGANIZATION.logo, LOGO);
+  assert.deepEqual(ORGANIZATION.sameAs, SAME_AS);
+  assert.ok(!('telephone' in ORGANIZATION));
+  assert.ok(!('description' in ORGANIZATION));
+});
+
+test('SAME_AS is the three social profiles and has one home in build code', () => {
+  assert.deepEqual(SAME_AS, [
+    'https://www.instagram.com/nellis.architecture/',
+    'https://www.linkedin.com/company/nellis-architecture/',
+    'https://www.youtube.com/@NellisArchitecture',
+  ]);
+  const hits = execFileSync(
+    'git',
+    ['grep', '-l', SAME_AS[0], '--', 'build/*.js', 'build-news.js'],
+    { cwd: ROOT, encoding: 'utf8' },
+  );
+  assert.deepEqual(hits.trim().split('\n'), ['build/lib/seo.js']);
+});
+
+test('withOrganization appends one node and keeps the Yoast escaping', () => {
+  const literal = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage"}]}';
+  const out = withOrganization(literal);
+  assert.ok(out.startsWith(`${literal.slice(0, -2)},{"@type":"Organization"`));
+  assert.ok(out.endsWith(']}'));
+  assert.deepEqual(JSON.parse(out)['@graph'], [{ '@type': 'WebPage' }, ORGANIZATION]);
+  assert.ok(out.includes('"@id":"https:\\/\\/nellisarchitecture.com\\/#organization"'));
+  assert.ok(!out.includes('://'));
+});
+
+test('Home, /studio/ and /people/ append the node to the Yoast graph', () => {
+  const pages = renderPages(ROOT, '/news/n/');
+  ['index.html', 'studio/index.html', 'people/index.html'].forEach((file) => {
+    const { html } = pages.find((p) => p.file === file);
+    const raw = ldRaw(html);
+    const graph = JSON.parse(raw)['@graph'];
+    assert.deepEqual(graph.map((n) => n['@type']), [
+      'WebPage', 'BreadcrumbList', 'WebSite', 'Organization',
+    ], file);
+    assert.deepEqual(graph[3], ORGANIZATION, file);
+    assert.equal(count(raw, '"@type":"Organization"'), 1, file);
+    assert.ok(!raw.includes('://'), file);
+    assert.ok(raw.startsWith('{"@context":"https:\\/\\/schema.org"'), file);
+  });
+});
+
+test('no other registry page carries the node', () => {
+  const four = ['index.html', 'studio/index.html', 'people/index.html', 'projects/index.html'];
+  renderPages(ROOT, '/news/n/').forEach((p) => {
+    assert.equal(ldRaw(p.html).includes('"@type":"Organization"'), four.includes(p.file), p.file);
+  });
+});
+
+test('the build is current and idempotent: the registry pages match a new render', () => {
+  renderPages(ROOT, '/news/').forEach((p) => {
+    assert.equal(fs.readFileSync(path.join(ROOT, p.file), 'utf8'), p.html, p.file);
   });
 });

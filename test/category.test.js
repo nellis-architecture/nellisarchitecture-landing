@@ -7,6 +7,7 @@ const { PAGES, renderPages } = require('../build/lib/pages');
 const { loadProjects, CATEGORY_KEYS, inCategory } = require('../build/lib/projects');
 const { sitemap } = require('../build-news');
 const { originalOf, readManifest } = require('../build/lib/images');
+const { ORGANIZATION } = require('../build/lib/seo');
 
 const ROOT = path.join(__dirname, '..');
 const DOMAIN = 'https://nellisarchitecture.com';
@@ -112,7 +113,8 @@ test('category page keeps a custom canonical and supports noindex', () => {
 test('category JSON-LD is a CollectionPage with a Home › category breadcrumb', () => {
   const html = render(fixture({ title: 'T' }));
   const json = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
-  const [pageNode, crumbs] = JSON.parse(json)['@graph'];
+  const graph = JSON.parse(json)['@graph'];
+  const [pageNode, crumbs] = graph;
   const url = `${DOMAIN}/projects/landscape/`;
   assert.equal(pageNode['@type'], 'CollectionPage');
   assert.equal(pageNode.url, url);
@@ -124,6 +126,8 @@ test('category JSON-LD is a CollectionPage with a Home › category breadcrumb',
   assert.ok(html.includes('<a href="/projects/">Projects</a> <span aria-hidden="true">›</span>\n'
     + '                    <span aria-current="page">Landscape</span>'));
   assert.ok(!html.includes('aria-label="Categories"'));
+  assert.equal(graph.length, 2);
+  assert.ok(!json.includes('"@type":"Organization"'));
 });
 
 test('sitemap lists the hub and the 4 category pages once at priority 0.7', () => {
@@ -176,11 +180,14 @@ test('the hub crumb ends at Projects and its JSON-LD has Home › Projects', () 
     + '                    <span aria-current="page">Projects</span>\n                </nav>'));
   assert.ok(!html.includes('<a href="/projects/">Projects</a>'));
   const json = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
-  const [pageNode, crumbs] = JSON.parse(json)['@graph'];
+  const graph = JSON.parse(json)['@graph'];
+  const [pageNode, crumbs, org] = graph;
   assert.equal(pageNode.url, `${DOMAIN}/projects/`);
   assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
     [1, 'Home', `${DOMAIN}/`], [2, 'Projects', undefined],
   ]);
+  assert.equal(graph.length, 3);
+  assert.deepEqual(org, ORGANIZATION);
 });
 
 test('the hub head has its own SEO tags and an absolute og:image', () => {

@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const contact = require('../build/lib/pages/contact');
+const { SAME_AS } = require('../build/lib/seo');
 const { PAGES, renderPages } = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
 const { sitemap } = require('../build-news');
@@ -71,6 +72,7 @@ test('the JSON-LD has the ContactPage, the breadcrumb and the LocalBusiness', ()
   assert.equal(biz.address.addressCountry, 'AE');
   assert.ok(content.address.startsWith(biz.address.streetAddress));
   assert.ok(!('telephone' in biz));
+  assert.deepEqual(biz.sameAs, SAME_AS);
 });
 
 test('schema escapes < so CMS text cannot close the script tag', () => {

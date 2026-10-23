@@ -6,7 +6,9 @@ const {
 const {
   head, top, affiliations, footer,
 } = require('../chrome');
-const { DOMAIN, pageUrl, seoTokens } = require('../seo');
+const {
+  DOMAIN, ORGANIZATION, pageUrl, seoTokens,
+} = require('../seo');
 const {
   CATEGORIES, CATEGORY_KEYS, categoryHref, inCategory,
 } = require('../projects');
@@ -110,6 +112,7 @@ function schema(url, name, desc, cat, label) {
           ...tail,
         ],
       },
+      ...(cat === HUB ? [ORGANIZATION] : []),
     ],
   }).replace(/</g, '\\u003c');
 }

@@ -5,14 +5,9 @@ const {
   head, top, contactForm, affiliations, footer,
 } = require('../chrome');
 const {
-  DOMAIN, LOGO, pageUrl, seoTokens,
+  DOMAIN, LOGO, SAME_AS, pageUrl, seoTokens,
 } = require('../seo');
 
-const SAME_AS = [
-  'https://www.instagram.com/nellis.architecture/',
-  'https://www.linkedin.com/company/nellis-architecture/',
-  'https://www.youtube.com/@NellisArchitecture',
-];
 // Shortcut: the schema address parts are fixed here; content.address is not split.
 // Upgrade: CMS fields for the address parts, once the office moves.
 const POSTAL = {
