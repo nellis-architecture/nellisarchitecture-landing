@@ -231,6 +231,12 @@ test('renderPost breadcrumb schema links News to /news/', () => {
 test('articleSchema emits the image and the publisher logo and no dateModified', () => {
   const ld = articleSchema(post({}), `${UP}/2025/12/25-questions.jpg`);
   const article = JSON.parse(ld)['@graph'][0];
+  assert.deepEqual(Object.keys(article), [
+    '@type', 'headline', 'description', 'image',
+    'datePublished', 'mainEntityOfPage', 'author', 'publisher',
+  ]);
+  assert.equal(article.datePublished, '2025-12-22T00:00:00.000Z');
+  assert.deepEqual(article.author, { '@type': 'Organization', name: 'Nellis Architecture' });
   assert.equal(article.image, `${UP}/2025/12/25-questions.jpg`);
   assert.equal(article.publisher.logo, LOGO);
   assert.doesNotMatch(ld, /dateModified/);
