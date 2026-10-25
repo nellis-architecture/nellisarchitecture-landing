@@ -98,7 +98,6 @@ function schema(url, name, desc, cat, label) {
         url,
         name,
         description: desc,
-        isPartOf: { '@id': `${DOMAIN}/#website` },
         breadcrumb: { '@id': `${url}#breadcrumb` },
         inLanguage: 'en-US',
       },

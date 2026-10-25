@@ -129,6 +129,7 @@ test('project page has its own title, description, canonical and one og:image', 
   assert.ok(!html.includes('{{'));
   const ld = JSON.parse(html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1]);
   assert.deepEqual(ld['@graph'].map((n) => n['@type']), ['WebPage', 'BreadcrumbList']);
+  assert.equal(ld['@graph'][0].isPartOf, undefined);
   assert.equal(ld['@graph'][0].url, url);
 });
 

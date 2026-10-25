@@ -119,7 +119,7 @@ test('category JSON-LD is a CollectionPage with a Home › category breadcrumb',
   assert.equal(pageNode['@type'], 'CollectionPage');
   assert.equal(pageNode.url, url);
   assert.equal(pageNode.name, 'T');
-  assert.deepEqual(pageNode.isPartOf, { '@id': `${DOMAIN}/#website` });
+  assert.equal(pageNode.isPartOf, undefined);
   assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
     [1, 'Home', `${DOMAIN}/`], [2, 'Projects', `${DOMAIN}/projects/`], [3, 'Landscape', undefined],
   ]);

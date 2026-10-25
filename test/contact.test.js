@@ -63,7 +63,7 @@ test('the JSON-LD has the ContactPage, the breadcrumb and the LocalBusiness', ()
   const types = graph.map((n) => n['@type']);
   assert.deepEqual(types, ['ContactPage', 'BreadcrumbList', 'LocalBusiness']);
   assert.equal(graph[0]['@id'], URL);
-  assert.equal(graph[0].isPartOf['@id'], 'https://nellisarchitecture.com/#website');
+  assert.equal(graph[0].isPartOf, undefined);
   const biz = graph[2];
   assert.equal(biz['@id'], 'https://nellisarchitecture.com/#localbusiness');
   assert.equal(biz.email, site.forms.contact.email);
