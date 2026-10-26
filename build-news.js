@@ -25,6 +25,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { readSite, writePages } = require('./build/lib/pages');
+const { writePreview } = require('./build/lib/preview');
 const {
   pageUrl, DOMAIN, INDEX, LOGO, NOINDEX,
 } = require('./build/lib/seo');
@@ -418,6 +419,7 @@ function build(manifest = readManifest(ROOT)) {
   const projects = loadProjects(ROOT);
   const pages = writePages(ROOT, newsHref, projects, posts, manifest);
   writeProjects(ROOT, projects, newsHref, manifest);
+  writePreview(ROOT, manifest, newsHref);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson, null, 2));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages, projects));
