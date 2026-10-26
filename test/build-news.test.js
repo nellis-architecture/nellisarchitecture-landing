@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {
-  parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap, loadPosts,
+  parseFrontMatter, inlineMd, mdToHtml, parseDate, monthIndex, esc, idNum, sitemap, loadPosts,
   renderPost, readingTime, newsImg, newsJsonEntry, newsList, articleSchema,
 } = require('../build-news');
 const { readManifest, SLOTS } = require('../build/lib/images');
@@ -458,4 +458,49 @@ test('inlineMd: image in link text, forged tokens dropped, entity schemes escape
   assert.ok(!linked.includes('\u0000'), linked);
   assert.equal(inlineMd('x \u00000\u0000 y'), 'x 0 y');
   assert.equal(inlineMd('[t](javascript&colon;x)'), '<a href="javascript&amp;colon;x">t</a>');
+});
+
+test('parseDate reads 3-letter month names and Sept in any case', () => {
+  const iso = (s) => parseDate(s).toISOString();
+  assert.equal(iso('Aug 11, 2026'), '2026-08-11T00:00:00.000Z');
+  assert.equal(iso('aug 14, 2026'), '2026-08-14T00:00:00.000Z');
+  assert.equal(iso('JAN 2, 2026'), '2026-01-02T00:00:00.000Z');
+  assert.equal(iso('Sep 10, 2026'), '2026-09-10T00:00:00.000Z');
+  assert.equal(iso('Sept 10, 2026'), '2026-09-10T00:00:00.000Z');
+  assert.equal(iso('Dec 31, 2025'), '2025-12-31T00:00:00.000Z');
+  assert.equal(iso('May 6, 2026'), '2026-05-06T00:00:00.000Z');
+  const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
+    'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  months.forEach((m, i) => {
+    [m, m.toUpperCase(), m[0].toUpperCase() + m.slice(1)].forEach((name) => {
+      assert.equal(parseDate(`${name} 2, 2026`).getUTCMonth(), i, name);
+    });
+  });
+  ['Augu', 'Septe', 'Ju'].forEach((name) => {
+    assert.equal(parseDate(`${name} 2, 2026`).toISOString(), '2026-01-02T00:00:00.000Z', name);
+  });
+});
+
+test('every real post date names a known month', () => {
+  loadPosts(path.join(ROOT, 'content', 'news')).forEach((p) => {
+    const m = (p.date || '').match(/([A-Za-z]+)\s+\d{1,2},\s*\d{4}/);
+    assert.ok(m, p.slug);
+    assert.ok(monthIndex(m[1]) > -1, p.slug);
+  });
+});
+
+test('the two short-month posts get August dates and sort in date order', () => {
+  const posts = loadPosts(path.join(ROOT, 'content', 'news'));
+  const at = (slug) => posts.findIndex((p) => p.slug === slug);
+  const retail = 'luxury-commercial-architecture-the-psychology-of-premium-retail-design';
+  const dubai = 'why-international-clients-continue-to-choose-dubai-'
+    + 'for-bespoke-residential-architecture';
+  assert.equal(posts[at(retail)].dateObj.toISOString(), '2026-08-11T00:00:00.000Z');
+  assert.equal(posts[at(dubai)].dateObj.toISOString(), '2026-08-14T00:00:00.000Z');
+  const order = [
+    'how-dubais-climate-shapes-every-decision-a-luxury-architect-makes', dubai, retail,
+    'designing-oceanfront-homes-that-feel-private',
+  ].map(at);
+  assert.ok(order.every((i) => i > -1), String(order));
+  assert.deepEqual(order, [...order].sort((a, b) => a - b));
 });

@@ -47,6 +47,13 @@ const MONTHS = [
   'january', 'february', 'march', 'april', 'may', 'june',
   'july', 'august', 'september', 'october', 'november', 'december',
 ];
+/* A full month name or its 3-letter short form (Aug), plus Sept; any case. -1 if unknown. */
+function monthIndex(name) {
+  const lower = name.toLowerCase();
+  if (MONTHS.includes(lower)) return MONTHS.indexOf(lower);
+  if (lower === 'sept') return 8;
+  return MONTHS.findIndex((m) => m.slice(0, 3) === lower);
+}
 const ARROW_SVG = '<svg width="15" height="9" viewBox="0 0 15 9" fill="none" '
   + 'xmlns="http://www.w3.org/2000/svg"><path d="M14.3536 4.85355C14.5488 4.65829 14.5488 '
   + '4.34171 14.3536 4.14645L11.1716 0.964466C10.9763 0.769204 10.6597 0.769204 10.4645 '
@@ -132,7 +139,7 @@ function mdToHtml(md, manifest = {}) {
 function parseDate(s) {
   const m = (s || '').match(/([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})/);
   if (!m) return new Date(0);
-  const month = Math.max(MONTHS.indexOf(m[1].toLowerCase()), 0);
+  const month = Math.max(monthIndex(m[1]), 0);
   return new Date(Date.UTC(+m[3], month, +m[2]));
 }
 
@@ -425,6 +432,7 @@ module.exports = {
   inlineMd,
   mdToHtml,
   parseDate,
+  monthIndex,
   esc,
   idNum,
   sitemap,
