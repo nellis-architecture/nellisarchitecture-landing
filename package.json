@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node build-news.js",
     "images": "node build/make-images.js",
+    "check:live": "node build/live-check.js",
     "serve": "serve -l 8000",
     "lint": "eslint .",
     "format": "eslint . --fix",

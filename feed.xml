@@ -5,8 +5,15 @@
   <atom:link href="https://nellisarchitecture.com/feed/" rel="self" type="application/rss+xml" />
   <link>https://nellisarchitecture.com/</link>
   <description></description>
-  <lastBuildDate>Fri, 14 Aug 2026 00:00:00 GMT</lastBuildDate>
+  <lastBuildDate>Thu, 10 Sep 2026 00:00:00 GMT</lastBuildDate>
   <language>en-US</language>
+  <item>
+    <title>Aurea On Site: Protecting the Design as It Becomes Real</title>
+    <link>https://nellisarchitecture.com/news/aurea-on-site-protecting-the-design-as-it-becomes-real/</link>
+    <guid isPermaLink="true">https://nellisarchitecture.com/news/aurea-on-site-protecting-the-design-as-it-becomes-real/</guid>
+    <pubDate>Thu, 10 Sep 2026 00:00:00 GMT</pubDate>
+    <description></description>
+  </item>
   <item>
     <title>How Dubai Climate Shapes Every Decision a Luxury Architect Makes</title>
     <link>https://nellisarchitecture.com/news/how-dubais-climate-shapes-every-decision-a-luxury-architect-makes/</link>
@@ -69,13 +76,6 @@
     <guid isPermaLink="true">https://nellisarchitecture.com/news/smart-home-automation-dubai/</guid>
     <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
     <description>Not all smart home technology belongs in a luxury villa. A guide to what genuinely improves how a home performs, and what architects in Dubai consider before any system is specified.</description>
-  </item>
-  <item>
-    <title>Designing for Balance, What Traditional Chinese Architecture Teaches Modern UAE Homes</title>
-    <link>https://nellisarchitecture.com/news/traditional-chinese-architecture-modern-uae-homes/</link>
-    <guid isPermaLink="true">https://nellisarchitecture.com/news/traditional-chinese-architecture-modern-uae-homes/</guid>
-    <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
-    <description>How traditional Chinese architecture principles of flow, balance and spatial harmony influence luxury residential design in Dubai and the UAE.</description>
   </item>
 </channel>
 </rss>
