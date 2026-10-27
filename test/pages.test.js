@@ -352,3 +352,16 @@ test('no partial and no news template has a fixed footer email or copyright year
     assert.doesNotMatch(html, /Nellis Architecture \d{4}/, f);
   });
 });
+
+test('every footer links Privacy policy to /privacy/ and Got skills to the skills email', () => {
+  const site = readSite();
+  const [entry] = loadProjects(ROOT);
+  const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
+  pages.push([entry.url, project.render(entry, { site, newsHref: '/news/' })]);
+  pages.forEach(([name, html]) => {
+    assert.ok(!html.includes('href="/#">Privacy policy'), name);
+    const skills = [...html.matchAll(/Got skills\?<\/span>[\s\S]*?mailto:([^"]+)"/g)];
+    assert.ok(skills.length > 0, name);
+    skills.forEach((m) => assert.equal(m[1], site.forms.skills.email, name));
+  });
+});

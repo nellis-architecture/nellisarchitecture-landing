@@ -31,7 +31,6 @@ const CLOSED_PROJECT = {
 function render(content, {
   site, newsHref, page, projects,
 }) {
-  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = emailTokens(site);
   return [
     head({ ...HEAD, EARLY_SCRIPT: earlyScript(projects), ...seoTokens(content, page) }),
     top(content.h1, site),
@@ -45,7 +44,7 @@ function render(content, {
         ...emailTokens(site),
         YEAR: year(),
         CURRENT_PROJECT: fill(loadPartial('current-project'), {
-          ...CLOSED_PROJECT, CONTACT_EMAIL_HREF, CONTACT_EMAIL, YEAR: year(),
+          ...CLOSED_PROJECT, ...emailTokens(site), YEAR: year(),
         }),
       })),
     }),
