@@ -134,6 +134,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Do not over-engineer.
 - When we agree on a new convention or pattern, add the convention here as a rule (keep this list current).
 - After each task, create a checkpoint (git commit). Run the project's checks (see [Bindings](docs/workflow/development.md#bindings)). Move the card to the next pipeline state (usually **Dev BR** after Test). Then stop for the bar-raiser or human review. Do not leave an implemented change in **To do** or **In Progress**.
+- Work on `master`. Do not create a branch for a card: an unmerged branch deploys nothing, and the card that reports such work as shipped is wrong. Merge a stray branch back into `master` (see [Repository](docs/workflow/development.md#repository)).
 - Do not push to the remote after committing. Commit locally as checkpoints. Push in batches when multiple changes reach the shipping stage, and the operator decides the changes are ready to ship. Only `git push` when operator explicitly asks. A push to `master` deploys to Cloudflare (workers.dev) through Workers Builds (see [Cloudflare limits](docs/workflow/development.md#cloudflare-limits)).
 
 ## Writing style

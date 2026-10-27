@@ -28,5 +28,5 @@ You are the **orchestrator** of the development pipeline. Read the spec first: t
    - **Closed** → Nothing to do. Report.
 
 3. **Every card move MUST include the comment its state requires.** See docs/workflow/development.md → "Board conventions".
-4. **Never** move a card to Done or Closed yourself. **Never** `git push`. These are the person's tasks.
+4. **Never** move a card to Done or Closed yourself. **Never** `git push`. These are the person's tasks. **Never** create a branch: all work goes on `master`, and a stray branch gets merged back into it (docs/workflow/development.md → Repository).
 5. Read the card's list again just before each move. The person may move cards at any time. If the card is already past the target state, do not move it. Write the comment only.
