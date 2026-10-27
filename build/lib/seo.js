@@ -25,6 +25,22 @@ const yoastOrganization = (follow) => JSON.stringify(organization(follow)).repla
 const withOrganization = (schema, follow) => `${schema.slice(0, -2)},`
   + `${yoastOrganization(follow)}]}`;
 
+/* The editor's extra ld+json block: re-serialized, `<` escaped, so </script> cannot close it. */
+function customSchema(raw, file) {
+  if (!raw || !raw.trim()) return '';
+  let v;
+  try {
+    v = JSON.parse(raw);
+  } catch (e) {
+    throw new Error(`${file}: schema is not valid JSON (${e.message})`);
+  }
+  if (v === null || typeof v !== 'object') {
+    throw new Error(`${file}: schema must be a JSON object or array`);
+  }
+  const json = JSON.stringify(v).replace(/</g, '\\u003c');
+  return `\t<script type="application/ld+json">${json}</script>\n`;
+}
+
 /* Head tokens from the page's `seo` object. The slug is fixed in the PAGES registry. */
 function seoTokens(content, page) {
   const seo = content.seo || {};
@@ -41,9 +57,19 @@ function seoTokens(content, page) {
     CANONICAL: escAttr(url),
     OG_URL: escAttr(url),
     ROBOTS: seo.noindex ? NOINDEX : INDEX,
+    SCHEMA_EXTRA: customSchema(seo.schema, `content/pages/${page.content}.json`),
   };
 }
 
 module.exports = {
-  DOMAIN, INDEX, LOGO, NOINDEX, organization, pageUrl, sameAs, seoTokens, withOrganization,
+  DOMAIN,
+  INDEX,
+  LOGO,
+  NOINDEX,
+  customSchema,
+  organization,
+  pageUrl,
+  sameAs,
+  seoTokens,
+  withOrganization,
 };

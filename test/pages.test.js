@@ -3,7 +3,9 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { bodyLines } = require('../build/lib/pages/privacy');
+const privacy = require('../build/lib/pages/privacy');
+
+const { bodyLines } = privacy;
 const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
 const project = require('../build/lib/pages/project');
@@ -466,4 +468,26 @@ test('no page and no news template has an empty phone link', () => {
   const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
   pages.push(['news-template.html', news]);
   pages.forEach(([name, html]) => assert.ok(!html.includes('href="tel:"'), name));
+});
+
+test('a CMS schema adds one block after the generated one; project pages stay unchanged', () => {
+  const read = (name) => JSON.parse(
+    fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
+  );
+  const site = readSite(ROOT);
+  const content = read('privacy');
+  const page = { slug: 'privacy', content: 'privacy' };
+  const plain = privacy.render(content, { site, newsHref: '/news/', page });
+  const html = privacy.render(
+    { ...content, seo: { ...content.seo, schema: '{"a":"</script>"}' } },
+    { site, newsHref: '/news/', page },
+  );
+  const block = '\t<script type="application/ld+json">{"a":"\\u003c/script>"}</script>\n';
+  assert.ok(html.includes(`</script>\n${block}\t<!-- / Yoast SEO plugin. -->`));
+  assert.equal(html.replace(block, ''), plain);
+  const [entry] = loadProjects(ROOT);
+  const out = project.render(entry, { site, newsHref: '/news/n/' });
+  assert.equal(out.match(/application\/ld\+json/g).length, 1);
+  assert.ok(!out.includes('{{'));
+  assert.ok(out.includes('</script>\n\t<!-- / Yoast SEO plugin. -->'));
 });

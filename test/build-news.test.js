@@ -581,3 +581,53 @@ test('fillSite puts the site.json emails in every mailto link and the build year
   assert.ok(html.includes(`© Nellis Architecture ${new Date().getUTCFullYear()}`));
   assert.ok(!html.includes('{{'));
 });
+
+const SCHEMA_FM = (value) => `---\ntitle: "T"\nschema: ${value}\nslug: s\n---\nbody`;
+
+test('parseFrontMatter reads a `|-` block scalar with a blank line and a key after it', () => {
+  const { fm, body } = parseFrontMatter(SCHEMA_FM('|-\n  {\n    "a": "b c",\n\n    "d": 1\n  }'));
+  assert.equal(fm.schema, '{\n  "a": "b c",\n\n  "d": 1\n}');
+  assert.equal(fm.title, 'T');
+  assert.equal(fm.slug, 's');
+  assert.equal(body, 'body');
+  assert.equal(parseFrontMatter(SCHEMA_FM('|+\n  {}\n\n')).fm.schema, '{}');
+});
+
+test('parseFrontMatter reads a folded `>-` block scalar as the same JSON as `|-`', () => {
+  const long = 'A long description line that is longer than eighty characters, so yaml folds';
+  const literal = parseFrontMatter(SCHEMA_FM(
+    `|-\n  {\n    "@type": "Thing",\n\n    "description": "${long} it here"\n  }`,
+  )).fm.schema;
+  /* As yaml@1.10.2 (Decap) writes it: a fold at a space, a blank line, more-indented lines. */
+  const folded = parseFrontMatter(SCHEMA_FM(
+    `>-\n  {"@type": "Thing", "description": "${long}\n  it here"\n\n  }`,
+  )).fm;
+  const indented = parseFrontMatter(SCHEMA_FM(
+    `>-\n  {\n    "@type": "Thing",\n\n    "description": "${long} it here"\n  }`,
+  )).fm.schema;
+  assert.deepEqual(JSON.parse(folded.schema), JSON.parse(literal));
+  assert.deepEqual(JSON.parse(indented), JSON.parse(literal));
+  assert.equal(JSON.parse(folded.schema).description, `${long} it here`);
+  assert.equal(folded.slug, 's');
+});
+
+test('parseFrontMatter keeps a quoted "|" value as text', () => {
+  const { fm } = parseFrontMatter('---\ntitle: "|"\nslug: s\n---\n');
+  assert.equal(fm.title, '|');
+  assert.equal(fm.slug, 's');
+});
+
+test('renderPost adds the custom schema right after the generated block', () => {
+  const yoast = /<script type="application\/ld\+json" class="yoast-schema-graph">.*<\/script>\n/;
+  const plain = renderPost(TEMPLATE, post({ filename: 'f' }), '');
+  assert.ok(!plain.includes('{{SCHEMA_EXTRA}}'));
+  assert.equal(plain.match(/application\/ld\+json/g).length, 1);
+  const html = renderPost(TEMPLATE, post({ filename: 'f', schema: '{"a":"$& $\' x"}' }), '');
+  const block = '\t<script type="application/ld+json">{"a":"$& $\' x"}</script>\n';
+  assert.ok(html.includes(`${html.match(yoast)[0]}${block}\t<!-- / Yoast SEO plugin. -->`));
+  assert.equal(html.replace(block, ''), plain);
+  assert.throws(
+    () => renderPost(TEMPLATE, post({ filename: 'f', schema: '"s"' }), ''),
+    /content\/news\/f\.md: schema must be a JSON object or array/,
+  );
+});

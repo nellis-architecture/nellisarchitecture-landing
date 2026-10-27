@@ -49,6 +49,7 @@ collections:
           - { label: "Dubai Lifestyle & Trends", value: "dubai-lifestyle-trends" }
           - { label: "Studio News & Culture", value: "studio-news-culture" }
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
+      - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
       - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google. Also shows as the excerpt on /news/." }
       - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, required: false, hint: "On: Google does not show the article, and the sitemap does not list it. The article stays on the site and in the news list." }
       # Cloudflare allows 25 MiB per asset; Decap refuses a file with size > max_file_size.
@@ -127,6 +128,7 @@ collections:
               - { label: "Meta description", name: "description", widget: "text", hint: "150–160 characters shown under the title in Google." }
               - { label: "Canonical URL", name: "canonical", widget: "string", required: false, pattern: ['^$|^https://nellisarchitecture\.com/', "Leave empty, or start with https://nellisarchitecture.com/"], hint: "Leave empty to use the page URL." }
               - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, hint: "On: Google does not show the page, and the sitemap does not list it." }
+              - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
       - name: "privacy"
         label: "Privacy"
         file: "content/pages/privacy.json"

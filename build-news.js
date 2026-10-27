@@ -27,7 +27,7 @@ const path = require('node:path');
 const { readSite, writePages } = require('./build/lib/pages');
 const { writePreview } = require('./build/lib/preview');
 const {
-  pageUrl, DOMAIN, INDEX, LOGO, NOINDEX,
+  customSchema, pageUrl, DOMAIN, INDEX, LOGO, NOINDEX,
 } = require('./build/lib/seo');
 const redirects = require('./build/lib/redirects');
 const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
@@ -78,13 +78,28 @@ function parseFrontMatter(src, file = '') {
   const m = src.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!m) throw new Error(`bad front matter: ${file}`);
   const fm = {};
-  m[1].split('\n').forEach((line) => {
-    const kv = line.match(/^([a-z_]+):\s*("(?:[^"\\]|\\.)*"|.*)$/);
-    if (!kv) return;
-    let v = kv[2].trim();
-    if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1).replace(/\\"/g, '"');
-    fm[kv[1]] = v;
-  });
+  const lines = m[1].split('\n');
+  for (let i = 0; i < lines.length; i += 1) {
+    const kv = lines[i].match(/^([a-z_]+):\s*("(?:[^"\\]|\\.)*"|.*)$/);
+    if (kv) {
+      let v = kv[2].trim();
+      /* Block scalar (Decap writes `|-`, or `>-` past 80 chars). Only `schema` uses it, as
+         JSON: `>` joins with a space, the blank lines drop, and the end is trimmed. */
+      const block = v.match(/^([|>])[-+]?$/);
+      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1).replace(/\\"/g, '"');
+      if (block) {
+        const rest = [];
+        while (i + 1 < lines.length && /^(\s|$)/.test(lines[i + 1])) {
+          i += 1;
+          rest.push(lines[i]);
+        }
+        const indent = (rest.find((l) => l.trim()) || '').match(/^\s*/)[0].length;
+        const text = rest.map((l) => l.slice(indent));
+        v = (block[1] === '|' ? text.join('\n') : text.filter((l) => l.trim()).join(' ')).trimEnd();
+      }
+      fm[kv[1]] = v;
+    }
+  }
   return { fm, body: m[2].trim() };
 }
 
@@ -287,7 +302,8 @@ function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
     .replaceAll('{{NEWSLIST}}', list)
     .replaceAll('{{TURNSTILE_SITEKEY}}', sitekey())
     .replaceAll('{{NAV}}', () => navPost(site.nav))
-    .replaceAll('{{FOLLOW}}', () => follow(site.follow));
+    .replaceAll('{{FOLLOW}}', () => follow(site.follow))
+    .replaceAll('{{SCHEMA_EXTRA}}', () => customSchema(p.schema, `content/news/${p.filename}.md`));
 }
 
 function fillSite(template, site) {
