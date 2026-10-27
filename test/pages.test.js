@@ -386,3 +386,19 @@ test('readSite trims the labels and the links, so no raw value reaches a rendere
   assert.deepEqual(site.follow, [{ label: 'I', link: 'https://e.com/' }]);
   fs.rmSync(dir, { recursive: true });
 });
+
+const NO_RESULT = '<span class="noResult">No result</span>';
+
+function assertNoResult(html, name) {
+  assert.equal(count(html, 'noResult'), 1, name);
+  assert.equal(count(html, NO_RESULT), 1, name);
+}
+
+test('every page carries one well-formed "No result" span in the nav search', () => {
+  renderPages(ROOT, '/news/', undefined, POSTS).forEach((p) => assertNoResult(p.html, p.file));
+  const [entry] = loadProjects(ROOT);
+  const site = readSite(ROOT);
+  assertNoResult(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
+  const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+  assertNoResult(news, 'news-template.html');
+});
