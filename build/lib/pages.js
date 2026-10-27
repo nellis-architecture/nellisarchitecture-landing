@@ -49,7 +49,8 @@ function readContent(root, name) {
   return JSON.parse(fs.readFileSync(path.join(root, 'content', 'pages', `${name}.json`), 'utf8'));
 }
 
-const isPath = (p) => typeof p === 'string' && /^\/[^\s]*$/.test(p) && !p.includes('..');
+const isPath = (p) => typeof p === 'string' && /^\/[^\s]*$/.test(p)
+  && !p.includes('..') && !p.includes('//');
 const isUrl = (p) => typeof p === 'string' && /^https?:\/\/[^\s]+$/.test(p);
 
 function validateSite(site) {
@@ -77,8 +78,18 @@ function validateSite(site) {
   return errors;
 }
 
+/* The renderers emit the item values raw, so trim here: what validates is what ships. */
+const trimItem = (item) => (item === null || typeof item !== 'object' ? item : {
+  ...item,
+  label: typeof item.label === 'string' ? item.label.trim() : item.label,
+  link: typeof item.link === 'string' ? item.link.trim() : item.link,
+});
+
 function readSite(root) {
   const site = readContent(root, 'site');
+  ['nav', 'follow'].forEach((key) => {
+    if (Array.isArray(site[key])) site[key] = site[key].map(trimItem);
+  });
   const errors = validateSite(site);
   if (errors.length) throw new Error(`content/pages/site.json:\n${errors.join('\n')}`);
   return site;

@@ -174,6 +174,18 @@ test('news template links the nav News item and the News crumb to /news/', () =>
   assert.doesNotMatch(TEMPLATE, /href="index\.html"/);
 });
 
+test("renderPost keeps $& and $' literal in a nav label and a follow label", () => {
+  const site = {
+    nav: [{ label: "A $& B $' C", link: '/news/' }],
+    follow: [{ label: "F $& $'", link: 'https://e.com/' }],
+  };
+  const html = renderPost(TEMPLATE, post({ title: 'P' }), '', {}, site);
+  const wantNav = '<a href="/news/">A $&amp; B $\' C</a>';
+  const wantFollow = '<a target="_blank" href="https://e.com/">F $&amp; $\'</a>';
+  assert.ok(html.includes(wantNav), wantNav);
+  assert.ok(html.includes(wantFollow), wantFollow);
+});
+
 test('renderPost gives each post its own og:image, size and published time', () => {
   const a = renderPost(TEMPLATE, post({
     hero: `${UP}/2025/12/25-questions.jpg`,

@@ -33,7 +33,7 @@ const count = (s, sub) => s.split(sub).length - 1;
 const POSTS = loadPosts(path.join(ROOT, 'content', 'news'));
 
 test('renderPages writes each page to its folder and fills every token', () => {
-  const pages = renderPages(ROOT, '/news/x-$&/');
+  const pages = renderPages(ROOT, '/news/');
   assert.deepEqual(
     pages.map((p) => p.file),
     [
@@ -346,7 +346,7 @@ test('validateSite refuses an empty link', () => {
 });
 
 test('validateSite refuses a link that is not a path or an http(s) URL', () => {
-  ['projects/', 'ftp://x', '/a b/', '/x/../y/', 'mailto:a@b.c'].forEach((link) => {
+  ['projects/', '//x/', 'ftp://x', '/a b/', '/x/../y/', 'mailto:a@b.c'].forEach((link) => {
     assert.deepEqual(navErrors([{ label: 'X', link }]), NOT_A_LINK, link);
   });
 });
@@ -365,5 +365,19 @@ test('readSite throws one error that names content/pages/site.json and the item'
     message: 'content/pages/site.json:\nnav[2]: "label" is empty',
   });
   assert.deepEqual(readSite(ROOT).nav.length, 5);
+  fs.rmSync(dir, { recursive: true });
+});
+
+test('readSite trims the labels and the links, so no raw value reaches a renderer', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'site-'));
+  fs.mkdirSync(path.join(dir, 'content', 'pages'), { recursive: true });
+  const padded = siteOf({
+    nav: [{ label: ' X ', link: ' /projects/ ' }],
+    follow: [{ label: ' I ', link: ' https://e.com/ ' }],
+  });
+  fs.writeFileSync(path.join(dir, 'content', 'pages', 'site.json'), JSON.stringify(padded));
+  const site = readSite(dir);
+  assert.deepEqual(site.nav, [{ label: 'X', link: '/projects/' }]);
+  assert.deepEqual(site.follow, [{ label: 'I', link: 'https://e.com/' }]);
   fs.rmSync(dir, { recursive: true });
 });
