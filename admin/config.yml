@@ -86,6 +86,22 @@ collections:
                 hint: *site_hint
                 fields: *form_fields
               - { label: "Delete uploaded files after (days)", name: "file_days", widget: "number", value_type: "int", min: 1, max: 365, hint: "Days before uploaded files are deleted. Change the Privacy page text too." }
+          - label: "Menu"
+            name: "nav"
+            widget: "list"
+            summary: "{{fields.label}} → {{fields.link}}"
+            hint: "The menu of every page, in this order. Drag an item to move it. A link starts with / or https://."
+            fields:
+              - { label: "Label", name: "label", widget: "string", hint: "Text of the menu item." }
+              - { label: "Link", name: "link", widget: "string", pattern: ['^(/|https?://)', "Start with / or https://."], hint: "For example /projects/." }
+          - label: "Follow"
+            name: "follow"
+            widget: "list"
+            summary: "{{fields.label}} → {{fields.link}}"
+            hint: "The Follow: links of the footer, and the sameAs URLs of the Organization and LocalBusiness schema. Drag an item to move it."
+            fields:
+              - { label: "Label", name: "label", widget: "string", hint: "Text of the link." }
+              - { label: "Link", name: "link", widget: "string", pattern: ['^https?://', "Start with http:// or https://."], hint: "For example https://www.instagram.com/nellis.architecture/." }
       - name: "index"
         label: "Home"
         file: "content/pages/index.json"

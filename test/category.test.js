@@ -7,7 +7,7 @@ const { PAGES, renderPages } = require('../build/lib/pages');
 const { loadProjects, CATEGORY_KEYS, inCategory } = require('../build/lib/projects');
 const { sitemap } = require('../build-news');
 const { originalOf, readManifest } = require('../build/lib/images');
-const { ORGANIZATION } = require('../build/lib/seo');
+const { organization } = require('../build/lib/seo');
 
 const ROOT = path.join(__dirname, '..');
 const DOMAIN = 'https://nellisarchitecture.com';
@@ -187,7 +187,7 @@ test('the hub crumb ends at Projects and its JSON-LD has Home › Projects', () 
     [1, 'Home', `${DOMAIN}/`], [2, 'Projects', undefined],
   ]);
   assert.equal(graph.length, 3);
-  assert.deepEqual(org, ORGANIZATION);
+  assert.deepEqual(org, organization(site.follow));
 });
 
 test('the hub head has its own SEO tags and an absolute og:image', () => {

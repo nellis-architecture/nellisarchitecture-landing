@@ -4,7 +4,7 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const {
-  LOGO, ORGANIZATION, SAME_AS, pageUrl, seoTokens, withOrganization,
+  LOGO, organization, pageUrl, sameAs, seoTokens, withOrganization,
 } = require('../build/lib/seo');
 const { PAGES, renderPages } = require('../build/lib/pages');
 // eslint-disable-next-line import-x/no-useless-path-segments -- Home page module
@@ -16,6 +16,7 @@ const DOMAIN = 'https://nellisarchitecture.com';
 const read = (name) => JSON.parse(
   fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
 );
+const FOLLOW = read('site').follow;
 const pageOf = (name) => PAGES.find((p) => p.content === name);
 const count = (s, sub) => s.split(sub).length - 1;
 const ldRaw = (html) => html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
@@ -128,36 +129,37 @@ test('og:image of the pages exists on disk', () => {
 });
 
 test('the Organization node carries exactly the six business properties', () => {
-  assert.deepEqual(Object.keys(ORGANIZATION), ['@type', '@id', 'name', 'url', 'logo', 'sameAs']);
-  assert.equal(ORGANIZATION['@id'], `${DOMAIN}/#organization`);
-  assert.equal(ORGANIZATION.name, 'Nellis Architecture');
-  assert.equal(ORGANIZATION.url, `${DOMAIN}/`);
-  assert.equal(ORGANIZATION.logo, LOGO);
-  assert.deepEqual(ORGANIZATION.sameAs, SAME_AS);
-  assert.ok(!('telephone' in ORGANIZATION));
-  assert.ok(!('description' in ORGANIZATION));
+  const org = organization(FOLLOW);
+  assert.deepEqual(Object.keys(org), ['@type', '@id', 'name', 'url', 'logo', 'sameAs']);
+  assert.equal(org['@id'], `${DOMAIN}/#organization`);
+  assert.equal(org.name, 'Nellis Architecture');
+  assert.equal(org.url, `${DOMAIN}/`);
+  assert.equal(org.logo, LOGO);
+  assert.deepEqual(org.sameAs, sameAs(FOLLOW));
+  assert.ok(!('telephone' in org));
+  assert.ok(!('description' in org));
 });
 
-test('SAME_AS is the three social profiles and has one home in build code', () => {
-  assert.deepEqual(SAME_AS, [
+test('sameAs is the three social profiles and has one home in the content', () => {
+  assert.deepEqual(sameAs(FOLLOW), [
     'https://www.instagram.com/nellis.architecture/',
     'https://www.linkedin.com/company/nellis-architecture/',
     'https://www.youtube.com/@NellisArchitecture',
   ]);
   const hits = execFileSync(
     'git',
-    ['grep', '-l', SAME_AS[0], '--', 'build/*.js', 'build-news.js'],
+    ['grep', '-l', sameAs(FOLLOW)[0], '--', 'build', 'build-news.js', 'content'],
     { cwd: ROOT, encoding: 'utf8' },
   );
-  assert.deepEqual(hits.trim().split('\n'), ['build/lib/seo.js']);
+  assert.deepEqual(hits.trim().split('\n'), ['content/pages/site.json']);
 });
 
 test('withOrganization appends one node and keeps the Yoast escaping', () => {
   const literal = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage"}]}';
-  const out = withOrganization(literal);
+  const out = withOrganization(literal, FOLLOW);
   assert.ok(out.startsWith(`${literal.slice(0, -2)},{"@type":"Organization"`));
   assert.ok(out.endsWith(']}'));
-  assert.deepEqual(JSON.parse(out)['@graph'], [{ '@type': 'WebPage' }, ORGANIZATION]);
+  assert.deepEqual(JSON.parse(out)['@graph'], [{ '@type': 'WebPage' }, organization(FOLLOW)]);
   assert.ok(out.includes('"@id":"https:\\/\\/nellisarchitecture.com\\/#organization"'));
   assert.ok(!out.includes('://'));
 });
@@ -171,7 +173,7 @@ test('Home, /studio/ and /people/ append the node to the Yoast graph', () => {
     assert.deepEqual(graph.map((n) => n['@type']), [
       'WebPage', 'BreadcrumbList', 'WebSite', 'Organization',
     ], file);
-    assert.deepEqual(graph[3], ORGANIZATION, file);
+    assert.deepEqual(graph[3], organization(FOLLOW), file);
     assert.equal(count(raw, '"@type":"Organization"'), 1, file);
     assert.ok(!raw.includes('://'), file);
     assert.ok(raw.startsWith('{"@context":"https:\\/\\/schema.org"'), file);

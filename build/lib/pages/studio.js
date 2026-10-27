@@ -3,7 +3,7 @@ const {
 } = require('../html');
 const { picture } = require('../images');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, navSite, footer,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 
@@ -13,8 +13,8 @@ const HEAD = {
   BEFORE: '',
   OG_TYPE: 'article',
   MODIFIED_TIME: '2026-04-24T06:23:40+00:00',
-  SCHEMA: withOrganization('{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/","url":"https:\\/\\/nellisarchitecture.com\\/studio\\/","name":"Architecture Studio Dubai | Luxury Villa Design & Interiors","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T21:05:18+00:00","dateModified":"2026-04-24T06:23:40+00:00","description":"Discover Nellis Architecture Studio in Dubai. Experts in luxury villa design, master planning, interiors, and landscape architecture for high-end residential and investment projects.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/studio\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Architecture Studio Dubai"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}'),
 };
+const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/","url":"https:\\/\\/nellisarchitecture.com\\/studio\\/","name":"Architecture Studio Dubai | Luxury Villa Design & Interiors","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T21:05:18+00:00","dateModified":"2026-04-24T06:23:40+00:00","description":"Discover Nellis Architecture Studio in Dubai. Experts in luxury villa design, master planning, interiors, and landscape architecture for high-end residential and investment projects.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/studio\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Architecture Studio Dubai"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
 /* eslint-enable @stylistic/max-len */
 
 /* Quote text: each line break becomes <br>. */
@@ -45,17 +45,17 @@ function values(items, first, next, indent) {
 
 /* The intro photo is the page priority image. */
 function render(content, {
-  site, newsHref, page, manifest,
+  site, page, manifest,
 }) {
   const { intro, founder } = content;
   const pic = (img, slot, more) => picture({
     src: img.src, alt: img.alt, title: img.title, slot, ...more,
   }, manifest);
   return [
-    head({ ...HEAD, ...seoTokens(content, page) }),
+    head({ ...HEAD, SCHEMA: withOrganization(SCHEMA, site.follow), ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-studio'), {
-      NEWS_HREF: escAttr(newsHref),
+      NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  ', 8),
       INTRO_TITLE_ATTR: escAttr(intro.title),
       INTRO_TITLE: escText(intro.title),
@@ -79,7 +79,7 @@ function render(content, {
       FOUNDER_BIO: escText(founder.bio),
       FOUNDER_TEXT: escText(founder.text),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

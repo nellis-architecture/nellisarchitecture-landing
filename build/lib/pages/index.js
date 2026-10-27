@@ -1,6 +1,6 @@
-const { escAttr, fill, loadPartial } = require('../html');
+const { fill, loadPartial } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, navSite, follow, footer,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 const { earlyScript } = require('../projects');
@@ -12,8 +12,8 @@ const HEAD = {
   BEFORE: '',
   OG_TYPE: 'website',
   MODIFIED_TIME: '2026-04-23T11:09:57+00:00',
-  SCHEMA: withOrganization('{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture | Award-Winning Architectural Design Firm","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T22:04:15+00:00","dateModified":"2026-04-23T11:09:57+00:00","description":"Nellis Architecture is one of the best architecture firms in Dubai, delivering award-winning residential, commercial, and bespoke architectural design solutions.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}'),
 };
+const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture | Award-Winning Architectural Design Firm","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T22:04:15+00:00","dateModified":"2026-04-23T11:09:57+00:00","description":"Nellis Architecture is one of the best architecture firms in Dubai, delivering award-winning residential, commercial, and bespoke architectural design solutions.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
 /* eslint-enable @stylistic/max-len */
 
 /* The project overlay stays closed and empty on Home: each project has its own page. */
@@ -29,21 +29,30 @@ const CLOSED_PROJECT = {
 };
 
 function render(content, {
-  site, newsHref, page, projects,
+  site, page, projects,
 }) {
+  const followHtml = follow(site.follow);
   return [
-    head({ ...HEAD, EARLY_SCRIPT: earlyScript(projects), ...seoTokens(content, page) }),
+    head({
+      ...HEAD,
+      SCHEMA: withOrganization(SCHEMA, site.follow),
+      EARLY_SCRIPT: earlyScript(projects),
+      ...seoTokens(content, page),
+    }),
     top(content.h1, site),
     fill(loadPartial('page-index'), {
-      NEWS_HREF: escAttr(newsHref),
+      NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
       /* The first grid image is the page priority image. */
       PROJECTS: prioritize(fill(loadPartial('index-projects'), {
         CENTER_CLASS: '',
-        CURRENT_PROJECT: fill(loadPartial('current-project'), CLOSED_PROJECT),
+        FOLLOW: followHtml,
+        CURRENT_PROJECT: fill(loadPartial('current-project'), {
+          ...CLOSED_PROJECT, FOLLOW: followHtml,
+        }),
       })),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

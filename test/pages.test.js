@@ -1,12 +1,13 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const { bodyLines } = require('../build/lib/pages/privacy');
 const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
 const project = require('../build/lib/pages/project');
-const { renderPages } = require('../build/lib/pages');
+const { renderPages, readSite, validateSite } = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
 const { loadPosts } = require('../build-news');
 
@@ -31,7 +32,7 @@ const ROOT = path.join(__dirname, '..');
 const count = (s, sub) => s.split(sub).length - 1;
 const POSTS = loadPosts(path.join(ROOT, 'content', 'news'));
 
-test('renderPages writes each page to its folder and puts the News link in it', () => {
+test('renderPages writes each page to its folder and fills every token', () => {
   const pages = renderPages(ROOT, '/news/x-$&/');
   assert.deepEqual(
     pages.map((p) => p.file),
@@ -43,7 +44,6 @@ test('renderPages writes each page to its folder and puts the News link in it', 
     ],
   );
   pages.forEach((p) => {
-    assert.ok(p.html.includes('href="/news/x-$&amp;/"'), p.file);
     assert.ok(!p.html.includes('{{'), p.file);
   });
 });
@@ -66,8 +66,8 @@ test('every page links the nav Projects item to /projects/ and the logo to /', (
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
   assertNav(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
-  const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
-  assertNav(news, 'news-template.html');
+  const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
+  assertNav(news, `news/${POSTS[0].slug}/`);
 });
 
 const NAV_CONTACT = new RegExp('<a href="([^"]*)" class="(?:contactPage|nav-item)"[^>]*>'
@@ -86,8 +86,8 @@ test('every page links the nav Contact item to /contact/ with no click handler',
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
   assertContact(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
-  const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
-  assertContact(news, 'news-template.html');
+  const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
+  assertContact(news, `news/${POSTS[0].slug}/`);
 });
 
 test('renderPages output has no relative asset or page links', () => {
@@ -174,7 +174,7 @@ test('studio render puts each value in its places', () => {
     + 'alt="photo &quot;alt&quot;" decoding="async" loading="eager" fetchpriority="high"'));
   assert.ok(html.includes('src="/wp-content/uploads/pages/big.png"'));
   assert.equal(count(html, 'fetchpriority="high"'), 1);
-  assert.ok(html.includes('href="news/n/index.html" class="newsPage"'));
+  assert.ok(html.includes('href="/news/" class="newsPage"'));
   assert.ok(html.includes(`${' '.repeat(16)}<div class="partner">`));
   assert.ok(html.includes('"Quote"      </p>'));
 });
@@ -221,16 +221,12 @@ function peopleFixture(list) {
   };
 }
 
-const readSite = () => JSON.parse(
-  fs.readFileSync(path.join(ROOT, 'content', 'pages', 'site.json'), 'utf8'),
-);
-
 const person = (n) => ({
   name: `Name ${n}`, role: `Role ${n}`, photo: img(`p${n}`), bio: `Bio ${n}`,
 });
 
 test('people render puts each value in its places', () => {
-  const site = readSite();
+  const site = readSite(ROOT);
   const bio = 'Line one & $& "q"\n\nLine <two>';
   const list = [person(1), { ...person(2), name: 'Ann $&', bio }, person(3)];
   const html = people.render(peopleFixture(list), {
@@ -243,7 +239,7 @@ test('people render puts each value in its places', () => {
   assert.ok(html.includes('src="/wp-content/uploads/pages/team.png" '
     + 'alt="team &quot;alt&quot;" decoding="async" loading="eager" fetchpriority="high"'));
   assert.equal(count(html, 'fetchpriority="high"'), 1);
-  assert.ok(html.includes('href="news/n/index.html" class="newsPage"'));
+  assert.ok(html.includes('href="/news/" class="newsPage"'));
   assert.ok(html.includes(`\n${' '.repeat(14)}<div class="partner">`));
   assert.ok(!html.includes(`${' '.repeat(16)}<div class="partner">`));
   assert.equal(count(html, '<div class="accord__item">'), 3);
@@ -264,7 +260,7 @@ test('people renders items with the theme separator and nothing for an empty lis
 });
 
 test('people render works with no people', () => {
-  const site = readSite();
+  const site = readSite(ROOT);
   const html = people.render(peopleFixture([]), {
     site, newsHref: 'news/n/index.html', page: { slug: 'x' },
   });
@@ -274,7 +270,7 @@ test('people render works with no people', () => {
 });
 
 test('studio render adds a filled image title and nothing for an empty title', () => {
-  const opts = { site: readSite(), newsHref: 'n', page: { slug: 'x' } };
+  const opts = { site: readSite(ROOT), newsHref: 'n', page: { slug: 'x' } };
   const content = studioFixture();
   content.founder.photo.title = 'Founder "t"';
   content.intro.photo.title = 'Photo t';
@@ -291,7 +287,7 @@ test('studio render adds a filled image title and nothing for an empty title', (
 test('people render adds a filled person photo title', () => {
   const list = [{ ...person(1), photo: { ...img('p1'), title: 'P1 t' } }];
   const html = people.render(peopleFixture(list), {
-    site: readSite(), newsHref: 'n', page: { slug: 'x' },
+    site: readSite(ROOT), newsHref: 'n', page: { slug: 'x' },
   });
   assert.ok(html.includes('alt="p1 &quot;alt&quot;" title="P1 t" '));
 });
@@ -311,4 +307,63 @@ test('intro renders one <p> per paragraph and escapes text', () => {
     const matches = (re) => (html.match(re) || []).length;
     assert.equal(matches(/<div[\s>]/g), matches(/<\/div>/g));
   });
+});
+
+const OK_NAV = [{ label: 'Projects', link: '/projects/' }];
+const OK_FOLLOW = [{ label: 'Instagram', link: 'https://www.instagram.com/nellis.architecture/' }];
+const siteOf = (over) => ({ nav: OK_NAV, follow: OK_FOLLOW, ...over });
+
+const navErrors = (nav) => validateSite(siteOf({ nav }));
+const followErrors = (follow) => validateSite(siteOf({ follow }));
+const NOT_A_LINK = ['nav[0]: "link" must start with / or http(s)://'];
+const NOT_AN_OBJECT = ['nav[0]: expected an object with "label" and "link"'];
+
+test('validateSite accepts the site.json of the repo', () => {
+  assert.deepEqual(validateSite(readSite(ROOT)), []);
+  assert.deepEqual(validateSite(siteOf()), []);
+  assert.deepEqual(navErrors([{ label: ' X ', link: ' /projects/ ' }]), []);
+});
+
+test('validateSite refuses a missing or empty nav', () => {
+  assert.deepEqual(validateSite(siteOf({ nav: [] })), ['nav: expected a non-empty array']);
+  assert.deepEqual(validateSite(siteOf({ nav: 'x' })), ['nav: expected a non-empty array']);
+  assert.deepEqual(validateSite({ follow: OK_FOLLOW }), ['nav: expected a non-empty array']);
+});
+
+test('validateSite refuses a missing or empty follow', () => {
+  assert.deepEqual(validateSite(siteOf({ follow: [] })), ['follow: expected a non-empty array']);
+  assert.deepEqual(validateSite({ nav: OK_NAV }), ['follow: expected a non-empty array']);
+});
+
+test('validateSite refuses an empty label', () => {
+  assert.deepEqual(navErrors([{ label: ' ', link: '/x/' }]), ['nav[0]: "label" is empty']);
+  assert.deepEqual(followErrors([{ link: 'https://e.com/' }]), ['follow[0]: "label" is empty']);
+});
+
+test('validateSite refuses an empty link', () => {
+  assert.deepEqual(navErrors([{ label: 'X', link: ' ' }]), ['nav[0]: "link" is empty']);
+  assert.deepEqual(followErrors([{ label: 'X' }]), ['follow[0]: "link" is empty']);
+});
+
+test('validateSite refuses a link that is not a path or an http(s) URL', () => {
+  ['projects/', 'ftp://x', '/a b/', '/x/../y/', 'mailto:a@b.c'].forEach((link) => {
+    assert.deepEqual(navErrors([{ label: 'X', link }]), NOT_A_LINK, link);
+  });
+});
+
+test('validateSite refuses an item that is not an object', () => {
+  assert.deepEqual(navErrors([null]), NOT_AN_OBJECT);
+  assert.deepEqual(followErrors(['x']), ['follow[0]: expected an object with "label" and "link"']);
+});
+
+test('readSite throws one error that names content/pages/site.json and the item', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'site-'));
+  fs.mkdirSync(path.join(dir, 'content', 'pages'), { recursive: true });
+  const bad = siteOf({ nav: [...OK_NAV, ...OK_NAV, { label: ' ', link: '/x/' }] });
+  fs.writeFileSync(path.join(dir, 'content', 'pages', 'site.json'), JSON.stringify(bad));
+  assert.throws(() => readSite(dir), {
+    message: 'content/pages/site.json:\nnav[2]: "label" is empty',
+  });
+  assert.deepEqual(readSite(ROOT).nav.length, 5);
+  fs.rmSync(dir, { recursive: true });
 });

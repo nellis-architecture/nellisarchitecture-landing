@@ -33,5 +33,41 @@
       "email": "people@nellisarchitecture.com"
     },
     "file_days": 90
-  }
+  },
+  "nav": [
+    {
+      "label": "Projects",
+      "link": "/projects/"
+    },
+    {
+      "label": "Studio",
+      "link": "/studio/"
+    },
+    {
+      "label": "People",
+      "link": "/people/"
+    },
+    {
+      "label": "News",
+      "link": "/news/"
+    },
+    {
+      "label": "Contact",
+      "link": "/contact/"
+    }
+  ],
+  "follow": [
+    {
+      "label": "Instagram",
+      "link": "https://www.instagram.com/nellis.architecture/"
+    },
+    {
+      "label": "LinkedIn",
+      "link": "https://www.linkedin.com/company/nellis-architecture/"
+    },
+    {
+      "label": "YouTube",
+      "link": "https://www.youtube.com/@NellisArchitecture"
+    }
+  ]
 }

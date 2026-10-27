@@ -2,19 +2,17 @@ const { escText, escAttr } = require('./html');
 
 const DOMAIN = 'https://nellisarchitecture.com';
 const LOGO = `${DOMAIN}/wp-content/uploads/2025/02/logo.png`;
-const SAME_AS = [
-  'https://www.instagram.com/nellis.architecture/',
-  'https://www.linkedin.com/company/nellis-architecture/',
-  'https://www.youtube.com/@NellisArchitecture',
-];
-const ORGANIZATION = {
+/* `follow`: site.json — the CMS owns the social profile URLs. */
+const sameAs = (follow) => follow.map((f) => f.link);
+
+const organization = (follow) => ({
   '@type': 'Organization',
   '@id': `${DOMAIN}/#organization`,
   name: 'Nellis Architecture',
   url: `${DOMAIN}/`,
   logo: LOGO,
-  sameAs: SAME_AS,
-};
+  sameAs: sameAs(follow),
+});
 const INDEX = "<meta name='robots' content='index, follow, max-image-preview:large, "
   + "max-snippet:-1, max-video-preview:-1' />";
 const NOINDEX = '<meta name="robots" content="noindex">';
@@ -22,8 +20,10 @@ const NOINDEX = '<meta name="robots" content="noindex">';
 const pageUrl = (slug) => (slug ? `${DOMAIN}/${slug}/` : `${DOMAIN}/`);
 
 /* Splice, never merge: a re-stringify would rewrite the `\/` escapes of the Yoast literals. */
-const YOAST_ORGANIZATION = JSON.stringify(ORGANIZATION).replace(/\//g, '\\/');
-const withOrganization = (schema) => `${schema.slice(0, -2)},${YOAST_ORGANIZATION}]}`;
+const yoastOrganization = (follow) => JSON.stringify(organization(follow)).replace(/\//g, '\\/');
+
+const withOrganization = (schema, follow) => `${schema.slice(0, -2)},`
+  + `${yoastOrganization(follow)}]}`;
 
 /* Head tokens from the page's `seo` object. The slug is fixed in the PAGES registry. */
 function seoTokens(content, page) {
@@ -45,5 +45,5 @@ function seoTokens(content, page) {
 }
 
 module.exports = {
-  DOMAIN, INDEX, LOGO, NOINDEX, ORGANIZATION, SAME_AS, pageUrl, seoTokens, withOrganization,
+  DOMAIN, INDEX, LOGO, NOINDEX, organization, pageUrl, sameAs, seoTokens, withOrganization,
 };

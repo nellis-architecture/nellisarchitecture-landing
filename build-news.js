@@ -24,7 +24,7 @@
  */
 const fs = require('node:fs');
 const path = require('node:path');
-const { writePages } = require('./build/lib/pages');
+const { readSite, writePages } = require('./build/lib/pages');
 const {
   pageUrl, DOMAIN, INDEX, LOGO, NOINDEX,
 } = require('./build/lib/seo');
@@ -35,7 +35,7 @@ const { rss } = require('./build/lib/feed');
 const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
 const { escAttr, isVideo, loadPartial } = require('./build/lib/html');
-const { sitekey } = require('./build/lib/chrome');
+const { follow, navPost, sitekey } = require('./build/lib/chrome');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
 const {
   ensureVariants, readManifest, picture, heroVideo, preloadLink,
@@ -237,7 +237,7 @@ function newsImg(p, manifest = {}) {
   return `<div class="NewsImg">\n            ${inner}\n          </div>`;
 }
 
-function renderPost(template, p, list, manifest = {}) {
+function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
   const img = ogImage(p);
   const newsBtn = p.link
     ? `<a target="_blank" href="${p.link}" class="NewsBtn">MORE INFO ${ARROW_SVG}</a>`
@@ -267,7 +267,9 @@ function renderPost(template, p, list, manifest = {}) {
     .replaceAll('{{CONTENT}}', `\n${p.html}\n        `)
     .replaceAll('{{NEWS_BTN}}', newsBtn)
     .replaceAll('{{NEWSLIST}}', list)
-    .replaceAll('{{TURNSTILE_SITEKEY}}', sitekey());
+    .replaceAll('{{TURNSTILE_SITEKEY}}', sitekey())
+    .replaceAll('{{NAV}}', () => navPost(site.nav))
+    .replaceAll('{{FOLLOW}}', () => follow(site.follow));
 }
 
 function newsJsonEntry(p, manifest) {
@@ -352,8 +354,7 @@ function pruneProjects(root, list) {
 }
 
 function writeProjects(root, list, newsHref, manifest) {
-  const siteFile = path.join(root, 'content', 'pages', 'site.json');
-  const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
+  const site = readSite(root);
   list.forEach((e) => {
     const outDir = path.join(root, e.url);
     fs.mkdirSync(outDir, { recursive: true });
@@ -386,6 +387,7 @@ function build(manifest = readManifest(ROOT)) {
     return;
   }
   const list = newsList(posts);
+  const site = readSite(ROOT);
 
   /* ---------- per-post page ---------- */
   const template = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
@@ -393,7 +395,10 @@ function build(manifest = readManifest(ROOT)) {
   posts.forEach((p) => {
     const outDir = path.join(ROOT, 'news', p.slug);
     fs.mkdirSync(outDir, { recursive: true });
-    fs.writeFileSync(path.join(outDir, 'index.html'), renderPost(template, p, list, manifest));
+    fs.writeFileSync(
+      path.join(outDir, 'index.html'),
+      renderPost(template, p, list, manifest, site),
+    );
     newsJson[p.id] = newsJsonEntry(p, manifest);
   });
 

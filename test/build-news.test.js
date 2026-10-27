@@ -151,13 +151,6 @@ test('loadPosts refuses a slug that is not lowercase letters, digits and dashes'
   fs.rmSync(dir, { recursive: true });
 });
 
-test('news template links the nav News item and the News crumb to /news/', () => {
-  const html = fs.readFileSync(path.join(__dirname, '..', 'build', 'news-template.html'), 'utf8');
-  assert.ok(html.includes('<a href="/news/">News</a>\n              </li>'));
-  assert.ok(html.includes('<a href="/">Home</a> <span>/</span> <a href="/news/">News</a>'));
-  assert.doesNotMatch(html, /href="index\.html"/);
-});
-
 test('news template has no feed link', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'build', 'news-template.html'), 'utf8');
   assert.doesNotMatch(html, /href=["'][^"']*feed\//);
@@ -172,6 +165,13 @@ const SITE = 'https://nellisarchitecture.com';
 const UP = `${SITE}/wp-content/uploads`;
 const post = (over) => ({
   slug: 's', title: 'T', html: '<p>x</p>', dateObj: new Date(Date.UTC(2025, 11, 22)), ...over,
+});
+
+test('news template links the nav News item and the News crumb to /news/', () => {
+  const html = renderPost(TEMPLATE, post({ title: 'P' }), '');
+  assert.ok(html.includes('<a href="/news/">News</a>\n              </li>'));
+  assert.ok(TEMPLATE.includes('<a href="/">Home</a> <span>/</span> <a href="/news/">News</a>'));
+  assert.doesNotMatch(TEMPLATE, /href="index\.html"/);
 });
 
 test('renderPost gives each post its own og:image, size and published time', () => {
@@ -264,7 +264,7 @@ test('every real post puts its og:image in the schema and no dateModified', () =
 });
 
 test('the news publisher logo and the /contact/ LocalBusiness logo are one URL', () => {
-  const biz = JSON.parse(contact.schema(`${SITE}/contact/`, 'n', 'd', 'e@x'))['@graph']
+  const biz = JSON.parse(contact.schema(`${SITE}/contact/`, 'n', 'd', 'e@x', []))['@graph']
     .find((n) => n['@type'] === 'LocalBusiness');
   const article = JSON.parse(articleSchema(post({}), 'x'))['@graph'][0];
   assert.equal(article.publisher.logo, biz.logo);

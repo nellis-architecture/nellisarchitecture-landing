@@ -4,10 +4,10 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, navPlain, footer,
 } = require('../chrome');
 const {
-  DOMAIN, ORGANIZATION, pageUrl, seoTokens,
+  DOMAIN, organization, pageUrl, seoTokens,
 } = require('../seo');
 const {
   CATEGORIES, CATEGORY_KEYS, categoryHref, inCategory,
@@ -82,7 +82,7 @@ function categoryLinks(cat) {
     + `${links.join(' <span aria-hidden="true">·</span>\n')}\n${' '.repeat(16)}</nav>`;
 }
 
-function schema(url, name, desc, cat, label) {
+function schema(url, name, desc, cat, label, follow) {
   const hubItem = {
     '@type': 'ListItem', position: 2, name: 'Projects', item: DOMAIN + HUB_HREF,
   };
@@ -111,13 +111,13 @@ function schema(url, name, desc, cat, label) {
           ...tail,
         ],
       },
-      ...(cat === HUB ? [ORGANIZATION] : []),
+      ...(cat === HUB ? [organization(follow)] : []),
     ],
   }).replace(/</g, '\\u003c');
 }
 
 function render(content, {
-  site, newsHref, page, root, projects, manifest = readManifest(root),
+  site, page, root, projects, manifest = readManifest(root),
 }) {
   const label = labelOf(page.category);
   const list = members(projects, page.category);
@@ -134,6 +134,7 @@ function render(content, {
       seo.description || '',
       page.category,
       label,
+      site.follow,
     ),
     ...seoTokens(content, page),
   // Shortcut: no dates, so drop the empty modified_time line (as on project pages).
@@ -143,7 +144,7 @@ function render(content, {
     headHtml,
     top(content.h1, site),
     fill(loadPartial('page-category'), {
-      NEWS_HREF: escAttr(newsHref),
+      NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       CRUMBS: crumbs(page.category, label),
       H1: escText(content.h1),
@@ -151,7 +152,7 @@ function render(content, {
       CATEGORY_LINKS: categoryLinks(page.category),
       ITEMS: items(list, thumb, manifest),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

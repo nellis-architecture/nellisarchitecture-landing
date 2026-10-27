@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial, isVideo,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, navSite, follow, footer,
 } = require('../chrome');
 const { DOMAIN, INDEX } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
@@ -144,7 +144,7 @@ function schema(entry, pageTitle, desc) {
   }).replace(/</g, '\\u003c');
 }
 
-function currentProject(entry, manifest) {
+function currentProject(entry, manifest, followHtml) {
   const { name, p } = entry;
   return fill(loadPartial('current-project'), {
     OPEN_CLASS: ' project__openned',
@@ -159,6 +159,7 @@ function currentProject(entry, manifest) {
     HERO: hero(p.first_img_video, name, manifest),
     CONTENT: body(name, p, manifest),
     TYPE_SET: typeSet(p.project_type_set),
+    FOLLOW: followHtml,
   });
 }
 
@@ -191,12 +192,13 @@ const SCROLL_TO_CURRENT = [
 /* The grid in the narrow column: the thumb sizes (the hand-kept partial has the card sizes).
    SHORTCUT: data/filters/*.html keep the card sizes, so a filter click in this column loads a
    larger variant than needed. Upgrade: sizes="auto" when all browsers support it. */
-function projects(entry, manifest) {
+function projects(entry, manifest, followHtml) {
   const grid = loadPartial('index-projects')
     .replaceAll(`sizes="${escAttr(SLOTS.card)}"`, `sizes="${escAttr(SLOTS.thumb)}"`);
   const html = fill(grid, {
     CENTER_CLASS: ' centerMini',
-    CURRENT_PROJECT: currentProject(entry, manifest),
+    FOLLOW: followHtml,
+    CURRENT_PROJECT: currentProject(entry, manifest, followHtml),
   }).replace(GRID_ITEM, (m) => gridItem(m, entry.url));
   if (html.split(`href="${entry.url}" aria-current="page"`).length !== 2) {
     throw new Error(`${entry.name}: the Home grid must link ${entry.url} exactly once`);
@@ -205,8 +207,9 @@ function projects(entry, manifest) {
 }
 
 /* entry: one item of projectList(). */
-function render(entry, { site, newsHref, manifest = readManifest() }) {
+function render(entry, { site, manifest = readManifest() }) {
   const { name, p } = entry;
+  const followHtml = follow(site.follow);
   const pageTitle = title(name, p);
   const desc = description((p.project_text_1 || [])[0]);
   const url = DOMAIN + entry.url;
@@ -232,11 +235,11 @@ function render(entry, { site, newsHref, manifest = readManifest() }) {
     headHtml,
     top(name, site),
     fill(loadPartial('page-index'), {
-      NEWS_HREF: escAttr(newsHref),
+      NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
-      PROJECTS: projects(entry, manifest),
+      PROJECTS: projects(entry, manifest, followHtml),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

@@ -49,6 +49,74 @@ function affiliations(items, indent, level = 7) {
     + `${pad(level)}</div>`).join('\n');
 }
 
+const HOOK = {
+  '/projects/': 'projectPage',
+  '/studio/': 'studioPage',
+  '/people/': 'projectPeople',
+  '/news/': 'newsPage',
+  '/contact/': 'contactPage',
+};
+
+/* A link with no rule gets no hook class and no highlight; the build still succeeds.
+   Object.hasOwn, as in build/lib/html.js:23, so a link named "constructor" finds nothing. */
+const hookOf = (link) => (Object.hasOwn(HOOK, link) ? HOOK[link] : '');
+
+/* The class value comes from HOOK, not from the CMS, so it needs no escaping. */
+const classAttr = (c) => (c ? ` class="${c}"` : '');
+
+const PAD = {
+  item: ' '.repeat(14),
+  link: ' '.repeat(16),
+  cLink: ' '.repeat(28),
+  cItem: ' '.repeat(32),
+  follow: ' '.repeat(10),
+  followLink: ' '.repeat(12),
+};
+
+/* Shape A: page-index (Home and the 32 project pages), page-studio, page-people. */
+function navSite(items) {
+  return items.map((it) => {
+    const cls = hookOf(it.link);
+    return `${PAD.item}<li class="nav-item">\n`
+      + `${PAD.link}<a href="${escAttr(it.link)}"${classAttr(cls)} style="margin-left: 0;">`
+      + `${escText(it.label)}</a>\n`
+      + `${PAD.item}</li>`;
+  }).join('\n');
+}
+
+/* Shape C: page-privacy, page-news, page-contact, page-category.
+   The fixed nav-item class sits on the <a>, the hook on the <li>. */
+function navPlain(items) {
+  return items.map((it) => `${PAD.cLink}<a href="${escAttr(it.link)}" class="nav-item">\n`
+    + `${PAD.cItem}<li${classAttr(hookOf(it.link))}>${escText(it.label)}</li>\n`
+    + `${PAD.cLink}</a>`).join('\n');
+}
+
+/* Shape D: build/news-template.html. Shape A without the style attribute, and the
+   newsPage hook sits on the <li> with no class on the <a>. */
+function navPost(items) {
+  return items.map((it) => {
+    const cls = hookOf(it.link);
+    const onItem = cls === 'newsPage';
+    return `${PAD.item}<li class="nav-item${onItem ? ` ${cls}` : ''}">\n`
+      + `${PAD.link}<a href="${escAttr(it.link)}"${onItem ? '' : classAttr(cls)}>`
+      + `${escText(it.label)}</a>\n`
+      + `${PAD.item}</li>`;
+  }).join('\n');
+}
+
+/* All five Follow copies are byte-identical, indentation included. */
+function follow(items) {
+  const link = (it) => `${PAD.followLink}<a target="_blank" href="${escAttr(it.link)}">`
+    + `${escText(it.label)}</a>`;
+  return [
+    `${PAD.follow}<div class="follow">`,
+    `${PAD.followLink}<span class="name">Follow:</span>`,
+    ...items.map(link),
+    `${PAD.follow}</div>`,
+  ].join('\n');
+}
+
 const TEST_SITEKEY = '1x00000000000000000000AA';
 
 /* The Cloudflare build sets TURNSTILE_SITEKEY (npm run infra). Local builds use the test key. */
@@ -56,10 +124,21 @@ function sitekey() {
   return escAttr(process.env.TURNSTILE_SITEKEY || TEST_SITEKEY);
 }
 
-function footer() {
-  return fill(loadPartial('footer'), { TURNSTILE_SITEKEY: sitekey() });
+function footer(site) {
+  return fill(loadPartial('footer'), {
+    TURNSTILE_SITEKEY: sitekey(), FOLLOW: follow(site.follow),
+  });
 }
 
 module.exports = {
-  head, top, contactForm, affiliations, footer, sitekey,
+  head,
+  top,
+  contactForm,
+  affiliations,
+  navSite,
+  navPlain,
+  navPost,
+  follow,
+  footer,
+  sitekey,
 };

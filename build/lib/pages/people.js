@@ -1,9 +1,9 @@
 const {
-  escText, escAttr, fill, loadPartial,
+  escText, fill, loadPartial,
 } = require('../html');
 const { picture } = require('../images');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, navSite, footer,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 
@@ -13,8 +13,8 @@ const HEAD = {
   BEFORE: '',
   OG_TYPE: 'article',
   MODIFIED_TIME: '2026-04-24T06:09:07+00:00',
-  SCHEMA: withOrganization('{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/people\\/","url":"https:\\/\\/nellisarchitecture.com\\/people\\/","name":"The People | Nellis Architecture Studio Team & Experts Our Team","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-16T23:39:25+00:00","dateModified":"2026-04-24T06:09:07+00:00","description":"Meet the passionate team at Nellis Architecture. Our architects, designers, and creative experts bring innovation and artistry to every project.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/people\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/people\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/people\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"People | Nellis Architecture Studio Team & Experts"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}'),
 };
+const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/people\\/","url":"https:\\/\\/nellisarchitecture.com\\/people\\/","name":"The People | Nellis Architecture Studio Team & Experts Our Team","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-16T23:39:25+00:00","dateModified":"2026-04-24T06:09:07+00:00","description":"Meet the passionate team at Nellis Architecture. Our architects, designers, and creative experts bring innovation and artistry to every project.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/people\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/people\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/people\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"People | Nellis Architecture Studio Team & Experts"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
 /* eslint-enable @stylistic/max-len */
 
 function intro(paragraphs) {
@@ -38,20 +38,20 @@ function people(items, manifest) {
 
 /* The intro image is the page priority image. */
 function render(content, {
-  site, newsHref, page, manifest,
+  site, page, manifest,
 }) {
   return [
-    head({ ...HEAD, ...seoTokens(content, page) }),
+    head({ ...HEAD, SCHEMA: withOrganization(SCHEMA, site.follow), ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-people'), {
-      NEWS_HREF: escAttr(newsHref),
+      NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
       TITLE: escText(content.intro.title),
       INTRO: intro(content.intro.paragraphs),
       IMAGE: pic(content.intro.image, 'wide', manifest, true),
       PEOPLE: people(content.people, manifest),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

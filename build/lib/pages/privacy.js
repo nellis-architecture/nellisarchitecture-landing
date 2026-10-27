@@ -1,8 +1,8 @@
 const {
-  escText, escAttr, fill, loadPartial,
+  escText, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, navPlain, footer,
 } = require('../chrome');
 const { seoTokens } = require('../seo');
 
@@ -25,17 +25,17 @@ function bodyLines(text) {
   }).join('\n');
 }
 
-function render(content, { site, newsHref, page }) {
+function render(content, { site, page }) {
   return [
     head({ ...HEAD, ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-privacy'), {
-      NEWS_HREF: escAttr(newsHref),
+      NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       TITLE: escText(content.title),
       BODY: bodyLines(content.body),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

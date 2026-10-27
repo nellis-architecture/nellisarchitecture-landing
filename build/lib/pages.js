@@ -49,6 +49,41 @@ function readContent(root, name) {
   return JSON.parse(fs.readFileSync(path.join(root, 'content', 'pages', `${name}.json`), 'utf8'));
 }
 
+const isPath = (p) => typeof p === 'string' && /^\/[^\s]*$/.test(p) && !p.includes('..');
+const isUrl = (p) => typeof p === 'string' && /^https?:\/\/[^\s]+$/.test(p);
+
+function validateSite(site) {
+  const errors = [];
+  ['nav', 'follow'].forEach((key) => {
+    const list = site[key];
+    if (!Array.isArray(list) || !list.length) {
+      errors.push(`${key}: expected a non-empty array`);
+      return;
+    }
+    list.forEach((item, i) => {
+      const name = `${key}[${i}]`;
+      const fail = (why) => errors.push(`${name}: ${why}`);
+      if (typeof item !== 'object' || item === null) {
+        fail('expected an object with "label" and "link"');
+        return;
+      }
+      const label = typeof item.label === 'string' ? item.label.trim() : '';
+      const link = typeof item.link === 'string' ? item.link.trim() : '';
+      if (!label) fail('"label" is empty');
+      if (!link) fail('"link" is empty');
+      else if (!isPath(link) && !isUrl(link)) fail('"link" must start with / or http(s)://');
+    });
+  });
+  return errors;
+}
+
+function readSite(root) {
+  const site = readContent(root, 'site');
+  const errors = validateSite(site);
+  if (errors.length) throw new Error(`content/pages/site.json:\n${errors.join('\n')}`);
+  return site;
+}
+
 /* Each result also carries what the sitemap needs: slug, priority, noindex.
    projects: loadProjects() result, read once by the build. posts: loadPosts() result.
    manifest: build/images.json (the build passes it with the variants that CI made).
@@ -61,7 +96,7 @@ function renderPages(
   posts = null,
   manifest = readManifest(root),
 ) {
-  const site = readContent(root, 'site');
+  const site = readSite(root);
   return PAGES.filter((p) => posts || p.module !== news).map((p) => {
     const content = readContent(root, p.content);
     return {
@@ -85,4 +120,6 @@ function writePages(root, newsHref, projects, posts, manifest) {
   return pages;
 }
 
-module.exports = { PAGES, renderPages, writePages };
+module.exports = {
+  PAGES, renderPages, writePages, readSite, validateSite,
+};

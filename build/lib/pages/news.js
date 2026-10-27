@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, navPlain, footer,
 } = require('../chrome');
 const { DOMAIN, pageUrl, seoTokens } = require('../seo');
 const { picture } = require('../images');
@@ -72,7 +72,7 @@ function schema(url, name, desc) {
 }
 
 function render(content, {
-  site, newsHref, page, posts, manifest = {},
+  site, page, posts, manifest = {},
 }) {
   if (!posts || !posts.length) throw new Error('news/: no posts');
   const seo = content.seo || {};
@@ -89,13 +89,13 @@ function render(content, {
     headHtml,
     top(content.h1, site),
     fill(loadPartial('page-news'), {
-      NEWS_HREF: escAttr(newsHref),
+      NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       ITEMS: items(posts, manifest),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 
