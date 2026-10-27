@@ -3,7 +3,7 @@ const {
 } = require('../html');
 const { picture } = require('../images');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, footer, emailTokens,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 
@@ -46,12 +46,13 @@ function render(content, {
     fill(loadPartial('page-people'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
+      ...emailTokens(site),
       TITLE: escText(content.intro.title),
       INTRO: intro(content.intro.paragraphs),
       IMAGE: pic(content.intro.image, 'wide', manifest, true),
       PEOPLE: people(content.people, manifest),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

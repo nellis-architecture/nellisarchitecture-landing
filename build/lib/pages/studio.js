@@ -3,7 +3,7 @@ const {
 } = require('../html');
 const { picture } = require('../images');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, footer, emailTokens,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 
@@ -57,6 +57,7 @@ function render(content, {
     fill(loadPartial('page-studio'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '  ', 8),
+      ...emailTokens(site),
       INTRO_TITLE_ATTR: escAttr(intro.title),
       INTRO_TITLE: escText(intro.title),
       INTRO_SUBTITLE: escText(intro.subtitle),
@@ -79,7 +80,7 @@ function render(content, {
       FOUNDER_BIO: escText(founder.bio),
       FOUNDER_TEXT: escText(founder.text),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

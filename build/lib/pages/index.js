@@ -1,6 +1,6 @@
 const { escAttr, fill, loadPartial } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, footer, emailTokens, year,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 const { earlyScript } = require('../projects');
@@ -31,19 +31,25 @@ const CLOSED_PROJECT = {
 function render(content, {
   site, newsHref, page, projects,
 }) {
+  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = emailTokens(site);
   return [
     head({ ...HEAD, EARLY_SCRIPT: earlyScript(projects), ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-index'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
+      ...emailTokens(site),
       /* The first grid image is the page priority image. */
       PROJECTS: prioritize(fill(loadPartial('index-projects'), {
         CENTER_CLASS: '',
-        CURRENT_PROJECT: fill(loadPartial('current-project'), CLOSED_PROJECT),
+        ...emailTokens(site),
+        YEAR: year(),
+        CURRENT_PROJECT: fill(loadPartial('current-project'), {
+          ...CLOSED_PROJECT, CONTACT_EMAIL_HREF, CONTACT_EMAIL, YEAR: year(),
+        }),
       })),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

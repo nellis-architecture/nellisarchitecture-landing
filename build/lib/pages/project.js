@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial, isVideo,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, footer, emailTokens, year,
 } = require('../chrome');
 const { DOMAIN, INDEX } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
@@ -145,8 +145,9 @@ function schema(entry, pageTitle, desc) {
   }).replace(/</g, '\\u003c');
 }
 
-function currentProject(entry, manifest) {
+function currentProject(entry, manifest, site) {
   const { name, p } = entry;
+  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = emailTokens(site);
   return fill(loadPartial('current-project'), {
     OPEN_CLASS: ' project__openned',
     BREADCRUMB: fill(loadPartial('project-breadcrumb'), {
@@ -160,6 +161,9 @@ function currentProject(entry, manifest) {
     HERO: hero(p.first_img_video, name, manifest),
     CONTENT: body(name, p, manifest),
     TYPE_SET: typeSet(p.project_type_set),
+    CONTACT_EMAIL_HREF,
+    CONTACT_EMAIL,
+    YEAR: year(),
   });
 }
 
@@ -192,12 +196,14 @@ const SCROLL_TO_CURRENT = [
 /* The grid in the narrow column: the thumb sizes (the hand-kept partial has the card sizes).
    SHORTCUT: data/filters/*.html keep the card sizes, so a filter click in this column loads a
    larger variant than needed. Upgrade: sizes="auto" when all browsers support it. */
-function projects(entry, manifest) {
+function projects(entry, manifest, site) {
   const grid = loadPartial('index-projects')
     .replaceAll(`sizes="${escAttr(SLOTS.card)}"`, `sizes="${escAttr(SLOTS.thumb)}"`);
   const html = fill(grid, {
     CENTER_CLASS: ' centerMini',
-    CURRENT_PROJECT: currentProject(entry, manifest),
+    ...emailTokens(site),
+    YEAR: year(),
+    CURRENT_PROJECT: currentProject(entry, manifest, site),
   }).replace(GRID_ITEM, (m) => gridItem(m, entry.url));
   if (html.split(`href="${entry.url}" aria-current="page"`).length !== 2) {
     throw new Error(`${entry.name}: the Home grid must link ${entry.url} exactly once`);
@@ -235,9 +241,10 @@ function render(entry, { site, newsHref, manifest = readManifest() }) {
     fill(loadPartial('page-index'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
-      PROJECTS: projects(entry, manifest),
+      ...emailTokens(site),
+      PROJECTS: projects(entry, manifest, site),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

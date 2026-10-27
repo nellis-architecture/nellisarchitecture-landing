@@ -4,7 +4,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, footer, emailTokens,
 } = require('../chrome');
 const {
   DOMAIN, ORGANIZATION, pageUrl, seoTokens,
@@ -146,13 +146,14 @@ function render(content, {
     fill(loadPartial('page-category'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
+      ...emailTokens(site),
       CRUMBS: crumbs(page.category, label),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       CATEGORY_LINKS: categoryLinks(page.category),
       ITEMS: items(list, thumb, manifest),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

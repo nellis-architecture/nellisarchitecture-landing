@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, footer, emailTokens,
 } = require('../chrome');
 const { DOMAIN, pageUrl, seoTokens } = require('../seo');
 const { picture } = require('../images');
@@ -92,11 +92,12 @@ function render(content, {
     fill(loadPartial('page-news'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
+      ...emailTokens(site),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       ITEMS: items(posts, manifest),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

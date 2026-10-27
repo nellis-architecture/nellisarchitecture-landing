@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, footer,
+  head, top, affiliations, footer, emailTokens,
 } = require('../chrome');
 const { seoTokens } = require('../seo');
 
@@ -32,10 +32,11 @@ function render(content, { site, newsHref, page }) {
     fill(loadPartial('page-privacy'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
+      ...emailTokens(site),
       TITLE: escText(content.title),
       BODY: bodyLines(content.body),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 

@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, contactForm, affiliations, footer,
+  head, top, contactForm, affiliations, footer, emailTokens,
 } = require('../chrome');
 const {
   DOMAIN, LOGO, SAME_AS, pageUrl, seoTokens,
@@ -78,6 +78,7 @@ function render(content, { site, newsHref, page }) {
     fill(loadPartial('page-contact'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
+      ...emailTokens(site),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       ADDRESS: escText(content.address),
@@ -86,7 +87,7 @@ function render(content, { site, newsHref, page }) {
       EMAIL: escText(email),
       FORM: contactForm('', site.forms.contact),
     }),
-    footer(),
+    footer(site),
   ].join('\n');
 }
 
