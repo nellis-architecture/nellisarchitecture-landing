@@ -1,4 +1,6 @@
-const { test } = require('node:test');
+const {
+  test, beforeEach, afterEach, mock,
+} = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -40,11 +42,33 @@ class El {
     this.parentNode = null;
     this.on = {};
     this.scrollTop = 0;
+    this.reflows = 0;
     children.forEach((c) => this.appendChild(c));
   }
 
   get className() {
     return this.attrs.class || '';
+  }
+
+  get classList() {
+    const set = (list) => {
+      this.attrs.class = list.join(' ');
+    };
+    const list = () => this.className.split(' ').filter(Boolean);
+    return {
+      contains: (c) => list().includes(c),
+      add: (c) => set([...list().filter((x) => x !== c), c]),
+      remove: (c) => set(list().filter((x) => x !== c)),
+    };
+  }
+
+  getBoundingClientRect() {
+    this.reflows += 1;
+    return {};
+  }
+
+  replaceChildren() {
+    [...this.childNodes].forEach((c) => this.removeChild(c));
   }
 
   getAttribute(name) {
@@ -157,7 +181,10 @@ function build(p, panel = true) {
       new El('div', { class: 'swiper' }, [], name),
       new El('div', { class: 'footer mobFoot' }),
     ])] : []),
-    new El('div', { class: 'currentProject2' }, [new El('div', { class: 'swiper' })]),
+    new El('div', { class: 'currentProject2' }, [
+      new El('div', { class: 'swiper' }),
+      new El('div', { class: 'footer mobFoot' }),
+    ]),
   ]);
   return new El('html', {}, [head, body]);
 }
@@ -194,7 +221,7 @@ const flush = () => new Promise((resolve) => {
 });
 const page = (p) => ({ ok: true, redirected: false, text: () => Promise.resolve(`PAGE:${p}`) });
 
-function load(start = ZEPHYR) {
+function load(start = ZEPHYR, wide = true) {
   const log = [];
   const root = build(start);
   Object.assign(root, { outerHTML: `PAGE:${start}` });
@@ -246,6 +273,7 @@ function load(start = ZEPHYR) {
     addEventListener(type, fn) {
       this.on[type] = fn;
     },
+    matchMedia: (q) => ({ matches: wide && q === '(min-width: 1180px)' }),
   };
   const ctx = {
     window,
@@ -254,6 +282,8 @@ function load(start = ZEPHYR) {
     Swiper,
     Event,
     DOMParser,
+    setTimeout: (fn, ms) => setTimeout(fn, ms),
+    clearTimeout: (id) => clearTimeout(id),
     fetch: (url) => {
       fetched.push(url);
       return h.reply(url);
@@ -281,10 +311,19 @@ function load(start = ZEPHYR) {
   };
   const panel = () => document.querySelector('.currentProject');
   const shown = () => panel().querySelector('.projectBreadcrumbs').text;
+  const overlay = () => document.querySelector('.currentProject2');
   return {
-    log, document, swipers, parsed, fetched, h, location, click, back, panel, shown,
+    log, document, swipers, parsed, fetched, h, location, click, back, panel, shown, overlay,
   };
 }
+
+/* eslint-disable n/no-unsupported-features/node-builtins -- mock.timers is stable from Node 23.1;
+   the tests run on Node 24 */
+const tick = (ms = 800) => mock.timers.tick(ms);
+
+beforeEach(() => mock.timers.enable({ apis: ['setTimeout'] }));
+afterEach(() => mock.timers.reset());
+/* eslint-enable n/no-unsupported-features/node-builtins */
 
 test('a thumb click swaps the open project in place', async () => {
   const s = load();
@@ -292,6 +331,7 @@ test('a thumb click swaps the open project in place', async () => {
   s.panel().scrollTop = 500;
   const ev = s.click(W44);
   await flush();
+  tick();
   assert.ok(ev.defaultPrevented);
   assert.deepEqual(s.fetched, [W44]);
   assert.equal(s.shown(), 'w44');
@@ -387,6 +427,7 @@ test('only the latest click wins', async () => {
   await flush();
   pending[W44]();
   await flush();
+  tick();
   assert.equal(s.shown(), 'athena');
   assert.deepEqual(s.log.filter(([k]) => k === 'push'), [['push', ATHENA]]);
 });
@@ -395,6 +436,7 @@ test('Back and Forward swap in place without a new history entry', async () => {
   const s = load();
   s.click(W44);
   await flush();
+  tick();
   s.log.length = 0;
   s.back(ZEPHYR);
   await flush();
@@ -435,7 +477,9 @@ test('the gallery sliders are destroyed and made again with the theme options', 
   const theme = s.document.querySelector('.currentProject2 .swiper');
   s.click(W44);
   await flush();
-  assert.deepEqual(s.swipers.destroyed, [[old, true, true]]);
+  tick();
+  const gone = 'the theme slider goes with the first slide';
+  assert.deepEqual(s.swipers.destroyed, [[theme, true, true], [old, true, true]], gone);
   const fresh = s.panel().querySelector('.swiper');
   assert.equal(s.swipers.created.length, 1);
   assert.equal(s.swipers.created[0].el, fresh);
@@ -443,7 +487,7 @@ test('the gallery sliders are destroyed and made again with the theme options', 
   const params = s.swipers.created[0].passedParams;
   assert.equal(params.speed, 1000);
   assert.equal(params.el, undefined, 'not the theme slider element');
-  assert.equal(theme.swiper.passedParams.el, theme, 'the theme slider keeps its options');
+  assert.equal(s.overlay().querySelector('.swiper'), null, 'the overlay is empty');
 });
 
 test('a menu pick of another project switches to it', async () => {
@@ -451,6 +495,8 @@ test('a menu pick of another project switches to it', async () => {
   s.panel().scrollTop = 600;
   s.document.on['nellis:filterpick']({ detail: { href: W44 } });
   await flush();
+  assert.ok(s.overlay().classList.contains('currentRight'), 'a menu pick slides too');
+  tick();
   assert.equal(s.shown(), 'w44');
   assert.equal(s.location.pathname, W44);
   assert.equal(s.document.title, 'w44 | Nellis');
@@ -470,4 +516,83 @@ test('a menu pick of the open project or of no project does nothing', async () =
     assert.deepEqual(s.fetched, []);
     assert.deepEqual(s.log, []);
   }));
+});
+
+test('a desktop switch slides the new project in, then swaps it under the overlay', async () => {
+  const s = load(W44);
+  const o = s.overlay();
+  const crumb = () => o.querySelector('.projectBreadcrumbs');
+  s.click(ZEPHYR);
+  await flush();
+  assert.deepEqual(s.log, [
+    ['title', 'zephyr | Nellis'], ['push', ZEPHYR], ['event', 'nellis:projectswitch'],
+  ], 'the URL and the head change at once');
+  assert.ok(o.classList.contains('currentRight'));
+  assert.equal(crumb().text, 'zephyr');
+  assert.equal(o.childNodes.at(-1).className, 'footer mobFoot', 'the node copy keeps the foot');
+  assert.equal(o.querySelectorAll('.footer.mobFoot').length, 1);
+  assert.ok(o.querySelector('video').playedMuted, 'the overlay hero video plays');
+  assert.equal(s.swipers.created.length, 0, 'no slider in the overlay');
+  assert.equal(s.shown(), 'w44', 'the old project stays under the overlay');
+  tick(799);
+  assert.equal(s.shown(), 'w44');
+  tick(1);
+  assert.equal(s.shown(), 'zephyr');
+  assert.equal(s.panel().scrollTop, 0);
+  assert.equal(s.swipers.created.length, 1);
+  assert.equal(o.className, 'currentProject2', 'the overlay snaps back');
+  assert.ok(o.reflows >= 1);
+  assert.deepEqual(o.childNodes, []);
+});
+
+test('a fast second click slides only the last project', async () => {
+  const s = load();
+  s.click(W44);
+  await flush();
+  tick(400);
+  s.click(ATHENA);
+  await flush();
+  assert.equal(s.overlay().querySelector('.projectBreadcrumbs').text, 'athena');
+  assert.equal(s.overlay().querySelectorAll('.projectBreadcrumbs').length, 1);
+  assert.ok(s.overlay().classList.contains('currentRight'));
+  tick(400);
+  assert.equal(s.shown(), 'zephyr', 'the first timer is gone');
+  tick(400);
+  assert.equal(s.shown(), 'athena');
+  assert.equal(s.location.pathname, ATHENA);
+  assert.equal(s.document.title, 'athena | Nellis');
+  assert.equal(s.overlay().className, 'currentProject2');
+});
+
+test('popstate during a slide snaps the overlay back and swaps at once', async () => {
+  const s = load();
+  s.click(W44);
+  await flush();
+  s.back(ZEPHYR);
+  await flush();
+  assert.equal(s.overlay().className, 'currentProject2');
+  assert.deepEqual(s.overlay().childNodes, []);
+  assert.equal(s.shown(), 'zephyr');
+  assert.equal(s.document.title, 'zephyr | Nellis');
+  tick();
+  assert.equal(s.shown(), 'zephyr', 'the cleared timer does not swap to w44');
+});
+
+test('Back and Forward do not slide', async () => {
+  const s = load();
+  s.back(W44);
+  await flush();
+  assert.equal(s.shown(), 'w44');
+  assert.equal(s.overlay().className, 'currentProject2');
+  assert.equal(s.overlay().childNodes.length, 2, 'the theme overlay stays');
+});
+
+test('mobile swaps at once, without the overlay', async () => {
+  const s = load(ZEPHYR, false);
+  s.click(W44);
+  await flush();
+  assert.equal(s.shown(), 'w44');
+  assert.equal(s.overlay().className, 'currentProject2');
+  assert.equal(s.overlay().childNodes.length, 2);
+  assert.ok(s.overlay().querySelector('.swiper').swiper, 'the theme slider stays');
 });

@@ -18,6 +18,26 @@ const projectName = (page) => page.evaluate(() => {
   return el ? el.textContent.trim() : '';
 });
 
+/* The new project slides in on .currentProject2, then .currentProject holds it. */
+async function slidesIn(page, before) {
+  await page.waitForSelector('.currentProject2.currentRight', { timeout: 5000 });
+  await page.waitForFunction((own) => {
+    const name = document.querySelector('.currentProject .currentProject-name');
+    return !document.querySelector('.currentProject2.currentRight')
+      && name.textContent.trim() !== own;
+  }, before);
+  const panel = await page.evaluate(() => {
+    const open = document.querySelector('.currentProject');
+    const swiper = open.querySelector('.swiper');
+    return {
+      overlay: document.querySelector('.currentProject2').childElementCount,
+      top: open.scrollTop,
+      slider: !swiper || Boolean(swiper.swiper),
+    };
+  });
+  assert.deepEqual(panel, { overlay: 0, top: 0, slider: true });
+}
+
 const VIEWPORTS = [['desktop', DESKTOP], ['mobile', MOBILE]];
 
 VIEWPORTS.forEach(([label, viewport]) => {
@@ -77,6 +97,7 @@ test('project: a thumb click swaps the open project (desktop)', async () => {
     }, ZOYA);
     await v.page.locator(`.center .container a.project__link[href="${target}"]`).first()
       .click();
+    await slidesIn(v.page, before);
     await v.page.waitForFunction(
       ([own, next]) => window.location.pathname === next
         && [...document.querySelectorAll('.currentProject-name')]
@@ -101,16 +122,19 @@ test('project: a thumb click swaps the open project (desktop)', async () => {
 });
 
 test('project: a sidebar filter opens the first project of the list (desktop)', async () => {
-  const v = await visit(ZOYA, DESKTOP);
+  const landscapeFile = path.join(ROOT, 'data', 'filters', 'landscape_1.html');
+  const landscape = fs.readFileSync(landscapeFile, 'utf8');
+  const hrefs = [...landscape.matchAll(/href="(\/projects\/[^"]*)"/g)].map((m) => m[1]);
+  const first = hrefs[0];
+  /* start on another project, so that the pick switches (and slides) */
+  const v = await visit(hrefs.find((h) => h !== first), DESKTOP);
   await check(v, 'project-filter-desktop', async () => {
-    const landscapeFile = path.join(ROOT, 'data', 'filters', 'landscape_1.html');
-    const landscape = fs.readFileSync(landscapeFile, 'utf8');
-    const first = landscape.match(/href="(\/projects\/[^"]*)"/)[1];
+    const before = await projectName(v.page);
     await v.page.locator('.nav__project_item a:visible', { hasText: 'landscape' }).first()
       .click();
     await v.page.waitForFunction((next) => window.location.pathname === next, first);
+    await slidesIn(v.page, before);
     assert.equal(new URL(v.page.url()).pathname, first);
-    const hrefs = [...landscape.matchAll(/href="(\/projects\/[^"]*)"/g)].map((m) => m[1]);
     /* restore: a reload keeps the filtered column and the open project */
     await v.page.reload({ waitUntil: 'domcontentloaded' });
     await v.page.waitForFunction(
