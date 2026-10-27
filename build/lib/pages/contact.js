@@ -30,7 +30,6 @@ function schema(url, name, desc, email) {
         url,
         name,
         description: desc,
-        isPartOf: { '@id': `${DOMAIN}/#website` },
         breadcrumb: { '@id': `${url}#breadcrumb` },
         inLanguage: 'en-US',
       },

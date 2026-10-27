@@ -118,7 +118,6 @@ function schema(entry, pageTitle, desc) {
         url,
         name: pageTitle,
         description: desc,
-        isPartOf: { '@id': `${DOMAIN}/#website` },
         breadcrumb: { '@id': `${url}#breadcrumb` },
         inLanguage: 'en-US',
       },

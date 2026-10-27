@@ -127,6 +127,7 @@ test('the /news/ page has its own title, meta, canonical and schema', () => {
   const [pageNode, crumbs] = json['@graph'];
   assert.equal(pageNode['@type'], 'CollectionPage');
   assert.equal(pageNode.url, url);
+  assert.equal(pageNode.isPartOf, undefined);
   assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
     [1, 'Home', `${DOMAIN}/`], [2, 'News', undefined],
   ]);
