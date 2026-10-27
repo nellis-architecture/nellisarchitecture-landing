@@ -107,7 +107,7 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 
 - GitHub: <https://github.com/nellis-architecture/nellisarchitecture-landing> (private). CLI: `gh`.
 - **One branch: `master`.** Do all work on `master`. Do not create a branch for a card. The local checks and the operator's push decision protect the work. A branch does not. An unmerged branch deploys nothing: Workers Builds deploys only a push to `master`. A card that reports unmerged work as shipped is wrong.
-- If the person asks you to merge a stray branch, merge it into `master`. Then run the checks and report the merge. The operator deletes the remote branch after the push. Deleting a remote branch is a push, and an agent never pushes.
+- Report a stray branch that you find. If the person asks you to merge it, merge it into `master`. Then run the checks and report the merge. The operator deletes the remote branch after the push. Deleting a remote branch is a push, and an agent never pushes.
 - Do not resolve a merge or a rebase conflict. Stop and report it.
 - Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`master`). Before work: `git pull --rebase`.
 
