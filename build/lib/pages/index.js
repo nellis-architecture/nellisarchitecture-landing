@@ -32,7 +32,6 @@ function render(content, {
   site, page, projects,
 }) {
   const followHtml = follow(site.follow);
-  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = emailTokens(site);
   return [
     head({
       ...HEAD,
@@ -52,7 +51,7 @@ function render(content, {
         ...emailTokens(site),
         YEAR: year(),
         CURRENT_PROJECT: fill(loadPartial('current-project'), {
-          ...CLOSED_PROJECT, FOLLOW: followHtml, CONTACT_EMAIL_HREF, CONTACT_EMAIL, YEAR: year(),
+          ...CLOSED_PROJECT, FOLLOW: followHtml, ...emailTokens(site), YEAR: year(),
         }),
       })),
     }),

@@ -146,7 +146,6 @@ function schema(entry, pageTitle, desc) {
 
 function currentProject(entry, manifest, site, followHtml) {
   const { name, p } = entry;
-  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = emailTokens(site);
   return fill(loadPartial('current-project'), {
     OPEN_CLASS: ' project__openned',
     BREADCRUMB: fill(loadPartial('project-breadcrumb'), {
@@ -161,8 +160,7 @@ function currentProject(entry, manifest, site, followHtml) {
     CONTENT: body(name, p, manifest),
     TYPE_SET: typeSet(p.project_type_set),
     FOLLOW: followHtml,
-    CONTACT_EMAIL_HREF,
-    CONTACT_EMAIL,
+    ...emailTokens(site),
     YEAR: year(),
   });
 }
