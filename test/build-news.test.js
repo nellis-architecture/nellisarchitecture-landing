@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   parseFrontMatter, inlineMd, mdToHtml, parseDate, monthIndex, esc, idNum, sitemap, loadPosts,
-  renderPost, readingTime, newsImg, newsJsonEntry, newsList, articleSchema,
+  renderPost, fillSite, readingTime, newsImg, newsJsonEntry, newsList, articleSchema,
 } = require('../build-news');
 const { readManifest, SLOTS } = require('../build/lib/images');
 const { escAttr } = require('../build/lib/html');
@@ -158,7 +158,11 @@ test('news template has no feed link', () => {
 });
 
 const ROOT = path.join(__dirname, '..');
-const TEMPLATE = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+const RAW_TEMPLATE = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+const SITE_JSON = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'content', 'pages', 'site.json'), 'utf8'),
+);
+const TEMPLATE = fillSite(RAW_TEMPLATE, SITE_JSON);
 const meta = (html, prop) => [
   ...html.matchAll(new RegExp(`(?:property|name)="${prop}" content="([^"]*)"`, 'g')),
 ].map((m) => m[1]);
@@ -559,4 +563,21 @@ test('the two short-month posts get August dates and sort in date order', () => 
   ].map(at);
   assert.ok(order.every((i) => i > -1), String(order));
   assert.deepEqual(order, [...order].sort((a, b) => a - b));
+});
+
+test('fillSite puts the site.json emails in every mailto link and the build year', () => {
+  const site = {
+    forms: {
+      contact: { ...SITE_JSON.forms.contact, email: 'a@x.test' },
+      skills: { ...SITE_JSON.forms.skills, email: 'b@x.test' },
+    },
+  };
+  const html = renderPost(fillSite(RAW_TEMPLATE, site), post(), '');
+  ['a@x.test', 'b@x.test'].forEach((email) => {
+    assert.equal(html.split(`mailto:${email}"`).length - 1, 3, email);
+    assert.equal(html.match(new RegExp(`>\\s*${email}</a`, 'g')).length, 3, email);
+  });
+  assert.doesNotMatch(html, /mailto:(hello|people)@/);
+  assert.ok(html.includes(`© Nellis Architecture ${new Date().getUTCFullYear()}`));
+  assert.ok(!html.includes('{{'));
 });

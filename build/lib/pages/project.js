@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial, isVideo,
 } = require('../html');
 const {
-  head, top, affiliations, navSite, follow, footer,
+  head, top, affiliations, navSite, follow, footer, emailTokens, year,
 } = require('../chrome');
 const { DOMAIN, INDEX } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
@@ -144,8 +144,9 @@ function schema(entry, pageTitle, desc) {
   }).replace(/</g, '\\u003c');
 }
 
-function currentProject(entry, manifest, followHtml) {
+function currentProject(entry, manifest, site, followHtml) {
   const { name, p } = entry;
+  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = emailTokens(site);
   return fill(loadPartial('current-project'), {
     OPEN_CLASS: ' project__openned',
     BREADCRUMB: fill(loadPartial('project-breadcrumb'), {
@@ -160,6 +161,9 @@ function currentProject(entry, manifest, followHtml) {
     CONTENT: body(name, p, manifest),
     TYPE_SET: typeSet(p.project_type_set),
     FOLLOW: followHtml,
+    CONTACT_EMAIL_HREF,
+    CONTACT_EMAIL,
+    YEAR: year(),
   });
 }
 
@@ -192,13 +196,15 @@ const SCROLL_TO_CURRENT = [
 /* The grid in the narrow column: the thumb sizes (the hand-kept partial has the card sizes).
    SHORTCUT: data/filters/*.html keep the card sizes, so a filter click in this column loads a
    larger variant than needed. Upgrade: sizes="auto" when all browsers support it. */
-function projects(entry, manifest, followHtml) {
+function projects(entry, manifest, site, followHtml) {
   const grid = loadPartial('index-projects')
     .replaceAll(`sizes="${escAttr(SLOTS.card)}"`, `sizes="${escAttr(SLOTS.thumb)}"`);
   const html = fill(grid, {
     CENTER_CLASS: ' centerMini',
     FOLLOW: followHtml,
-    CURRENT_PROJECT: currentProject(entry, manifest, followHtml),
+    ...emailTokens(site),
+    YEAR: year(),
+    CURRENT_PROJECT: currentProject(entry, manifest, site, followHtml),
   }).replace(GRID_ITEM, (m) => gridItem(m, entry.url));
   if (html.split(`href="${entry.url}" aria-current="page"`).length !== 2) {
     throw new Error(`${entry.name}: the Home grid must link ${entry.url} exactly once`);
@@ -237,7 +243,8 @@ function render(entry, { site, manifest = readManifest() }) {
     fill(loadPartial('page-index'), {
       NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
-      PROJECTS: projects(entry, manifest, followHtml),
+      ...emailTokens(site),
+      PROJECTS: projects(entry, manifest, site, followHtml),
     }),
     footer(site),
   ].join('\n');

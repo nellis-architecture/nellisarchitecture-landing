@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, navPlain, footer,
+  head, top, affiliations, navPlain, footer, emailTokens,
 } = require('../chrome');
 const { DOMAIN, pageUrl, seoTokens } = require('../seo');
 const { picture } = require('../images');
@@ -152,6 +152,7 @@ function render(content, {
       NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       CRUMBS: crumbs(page.category),
+      ...emailTokens(site),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       CATEGORY_LINKS: categoryLinks(page.category),

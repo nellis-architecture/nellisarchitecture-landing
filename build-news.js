@@ -36,7 +36,9 @@ const { rss } = require('./build/lib/feed');
 const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
 const { escAttr, isVideo, loadPartial } = require('./build/lib/html');
-const { follow, navPost, sitekey } = require('./build/lib/chrome');
+const {
+  follow, navPost, sitekey, emailTokens, year,
+} = require('./build/lib/chrome');
 const {
   heroPath, categoryHref, FALLBACK_SRC, NEWS_CATEGORIES,
 } = require('./build/lib/pages/news');
@@ -288,6 +290,11 @@ function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
     .replaceAll('{{FOLLOW}}', () => follow(site.follow));
 }
 
+function fillSite(template, site) {
+  return Object.entries({ ...emailTokens(site), YEAR: year() })
+    .reduce((html, [key, value]) => html.replaceAll(`{{${key}}}`, () => value), template);
+}
+
 function newsJsonEntry(p, manifest) {
   return {
     success: true,
@@ -371,8 +378,7 @@ function pruneProjects(root, list) {
   });
 }
 
-function writeProjects(root, list, newsHref, manifest) {
-  const site = readSite(root);
+function writeProjects(root, list, newsHref, manifest, site) {
   list.forEach((e) => {
     const outDir = path.join(root, e.url);
     fs.mkdirSync(outDir, { recursive: true });
@@ -408,7 +414,8 @@ function build(manifest = readManifest(ROOT)) {
   const site = readSite(ROOT);
 
   /* ---------- per-post page ---------- */
-  const template = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+  const raw = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+  const template = fillSite(raw, site);
   const newsJson = {};
   posts.forEach((p) => {
     const outDir = path.join(ROOT, 'news', p.slug);
@@ -428,7 +435,7 @@ function build(manifest = readManifest(ROOT)) {
   const newsHref = '/news/';
   const projects = loadProjects(ROOT);
   const pages = writePages(ROOT, newsHref, projects, posts, manifest);
-  writeProjects(ROOT, projects, newsHref, manifest);
+  writeProjects(ROOT, projects, newsHref, manifest, site);
   writePreview(ROOT, manifest, newsHref);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson, null, 2));
@@ -456,6 +463,7 @@ module.exports = {
   loadPosts,
   articleSchema,
   renderPost,
+  fillSite,
   newsImg,
   newsJsonEntry,
   newsList,

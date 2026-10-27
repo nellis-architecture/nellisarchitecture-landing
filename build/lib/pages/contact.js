@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, contactForm, affiliations, navPlain, footer,
+  head, top, contactForm, affiliations, navPlain, footer, emailTokens,
 } = require('../chrome');
 const {
   DOMAIN, LOGO, pageUrl, sameAs, seoTokens,
@@ -83,6 +83,7 @@ function render(content, { site, page }) {
     fill(loadPartial('page-contact'), {
       NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
+      ...emailTokens(site),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       ADDRESS: escText(content.address),

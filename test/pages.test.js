@@ -7,7 +7,9 @@ const { bodyLines } = require('../build/lib/pages/privacy');
 const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
 const project = require('../build/lib/pages/project');
-const { renderPages, readSite, validateSite } = require('../build/lib/pages');
+const {
+  PAGES, renderPages, readSite, validateSite,
+} = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
 const { loadPosts } = require('../build-news');
 
@@ -401,4 +403,44 @@ test('every page carries one well-formed "No result" span in the nav search', ()
   assertNoResult(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
   assertNoResult(news, 'news-template.html');
+});
+
+test('every page takes the mailto links from site.json and the year from the build', () => {
+  const site = readSite(ROOT);
+  const changed = {
+    ...site,
+    forms: {
+      ...site.forms,
+      contact: { ...site.forms.contact, email: 'a@x.test' },
+      skills: { ...site.forms.skills, email: 'b@x.test' },
+    },
+  };
+  const projects = loadProjects(ROOT);
+  const read = (name) => JSON.parse(
+    fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
+  );
+  const pages = PAGES.map((p) => [p.slug, p.module.render(p.data || read(p.content), {
+    site: changed, newsHref: '/news/', page: p, root: ROOT, projects, posts: POSTS,
+  })]);
+  pages.push([projects[0].url, project.render(projects[0], { site: changed, newsHref: '/news/' })]);
+  const copyright = `© Nellis Architecture ${new Date().getUTCFullYear()}`;
+  pages.forEach(([name, html]) => {
+    ['a@x.test', 'b@x.test'].forEach((email) => {
+      assert.ok(html.includes(`mailto:${email}"`), `${name} ${email}`);
+      assert.match(html, new RegExp(`>\\s*${email}</a`), `${name} ${email}`);
+    });
+    assert.doesNotMatch(html, /mailto:(hello|people)@|>\s*(hello|people)@[^<]*<\/a/, name);
+    assert.ok(html.includes(copyright), name);
+  });
+});
+
+test('no partial and no news template has a fixed footer email or copyright year', () => {
+  const dir = path.join(ROOT, 'build', 'lib', 'partials');
+  const files = fs.readdirSync(dir).map((f) => path.join(dir, f))
+    .concat(path.join(ROOT, 'build', 'news-template.html'));
+  files.forEach((f) => {
+    const html = fs.readFileSync(f, 'utf8');
+    assert.doesNotMatch(html, /(hello|people)@nellisarchitecture\.com/, f);
+    assert.doesNotMatch(html, /Nellis Architecture \d{4}/, f);
+  });
 });

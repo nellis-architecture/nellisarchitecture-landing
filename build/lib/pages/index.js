@@ -1,6 +1,6 @@
 const { fill, loadPartial } = require('../html');
 const {
-  head, top, affiliations, navSite, follow, footer,
+  head, top, affiliations, navSite, follow, footer, emailTokens, year,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 const { earlyScript } = require('../projects');
@@ -32,6 +32,7 @@ function render(content, {
   site, page, projects,
 }) {
   const followHtml = follow(site.follow);
+  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = emailTokens(site);
   return [
     head({
       ...HEAD,
@@ -43,12 +44,15 @@ function render(content, {
     fill(loadPartial('page-index'), {
       NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
+      ...emailTokens(site),
       /* The first grid image is the page priority image. */
       PROJECTS: prioritize(fill(loadPartial('index-projects'), {
         CENTER_CLASS: '',
         FOLLOW: followHtml,
+        ...emailTokens(site),
+        YEAR: year(),
         CURRENT_PROJECT: fill(loadPartial('current-project'), {
-          ...CLOSED_PROJECT, FOLLOW: followHtml,
+          ...CLOSED_PROJECT, FOLLOW: followHtml, CONTACT_EMAIL_HREF, CONTACT_EMAIL, YEAR: year(),
         }),
       })),
     }),

@@ -2,7 +2,7 @@ const {
   escText, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, affiliations, navPlain, footer,
+  head, top, affiliations, navPlain, footer, emailTokens,
 } = require('../chrome');
 const { seoTokens } = require('../seo');
 
@@ -32,6 +32,7 @@ function render(content, { site, page }) {
     fill(loadPartial('page-privacy'), {
       NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
+      ...emailTokens(site),
       TITLE: escText(content.title),
       BODY: bodyLines(content.body),
     }),

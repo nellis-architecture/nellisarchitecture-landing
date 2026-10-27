@@ -3,7 +3,7 @@ const {
 } = require('../html');
 const { picture } = require('../images');
 const {
-  head, top, affiliations, navSite, footer,
+  head, top, affiliations, navSite, footer, emailTokens,
 } = require('../chrome');
 const { seoTokens, withOrganization } = require('../seo');
 
@@ -46,6 +46,7 @@ function render(content, {
     fill(loadPartial('page-people'), {
       NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
+      ...emailTokens(site),
       TITLE: escText(content.intro.title),
       INTRO: intro(content.intro.paragraphs),
       IMAGE: pic(content.intro.image, 'wide', manifest, true),

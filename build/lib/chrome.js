@@ -124,9 +124,21 @@ function sitekey() {
   return escAttr(process.env.TURNSTILE_SITEKEY || TEST_SITEKEY);
 }
 
+function emailTokens(site) {
+  const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = formTokens('CONTACT', site.forms.contact);
+  const { SKILLS_EMAIL_HREF, SKILLS_EMAIL } = formTokens('SKILLS', site.forms.skills);
+  return {
+    CONTACT_EMAIL_HREF, CONTACT_EMAIL, SKILLS_EMAIL_HREF, SKILLS_EMAIL,
+  };
+}
+
+function year() {
+  return String(new Date().getUTCFullYear());
+}
+
 function footer(site) {
   return fill(loadPartial('footer'), {
-    TURNSTILE_SITEKEY: sitekey(), FOLLOW: follow(site.follow),
+    TURNSTILE_SITEKEY: sitekey(), FOLLOW: follow(site.follow), ...emailTokens(site), YEAR: year(),
   });
 }
 
@@ -141,4 +153,6 @@ module.exports = {
   follow,
   footer,
   sitekey,
+  emailTokens,
+  year,
 };
