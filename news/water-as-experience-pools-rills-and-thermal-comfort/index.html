@@ -577,6 +577,8 @@
 
         <div class="NewsData">December 18, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/landscape-outdoor-living/">Landscape &amp; Outdoor Living</a>
+
         <div class="NewsContent">
 <hr />
 <p>In hot climates, water is more than a feature. It is a presence. A way to cool, to soften and to slow down a space. Across the Gulf, where sunlight is constant and temperatures rise quickly, water has long shaped how buildings feel and how comfort is created. For our studio, water is not an add-on. It is part of the architecture. It defines movement, anchors courtyards and transforms outdoor areas into calm, inhabitable spaces throughout the year. “Water has an emotional dimension. It changes how people breathe and behave,” says Lee Nellis, Principal Architect. “A well designed pool or rill is not decoration. It is atmosphere.”</p>
@@ -1419,6 +1421,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

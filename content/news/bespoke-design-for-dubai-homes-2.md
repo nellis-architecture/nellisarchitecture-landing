@@ -2,6 +2,7 @@
 title: "Bespoke Design for Dubai Homes"
 id: "983"
 slug: "bespoke-design-for-dubai-homes-2"
+category: "interior-design"
 date: "September 24, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/09/Bespoke-Design-for-Dubai-Homes.png"
 hero_alt: "Bespoke Design for Dubai Homes"

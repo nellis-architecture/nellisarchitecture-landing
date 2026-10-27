@@ -577,6 +577,8 @@
 
         <div class="NewsData">Aug 11, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/interior-design/">Interior Design</a>
+
         <div class="NewsContent">
 <hr />
 <p>There is a moment, walking into certain buildings, when the body registers something the mind has not yet named. The ceiling lifts. The sound softens. The floor underfoot feels different from the pavement outside. Long before a single product is handled, an assessment has already been made about worth.</p>
@@ -1409,6 +1411,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

@@ -576,6 +576,8 @@
 
         <div class="NewsData">December 24, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Every project begins with a spark. For Onyx, that spark was the idea of movement, of fluid lines, light and luxury inspired by the form of a yacht. The result became more than a high end villa design. It became a statement of confidence for <a href="https://nellisarchitecture.com/news/miraia-award-winning-5-star-single-residence-international-property-awards-2025/">Nellis Architecture’s</a> first completed project on the African continent and a symbol of how contemporary residential architecture can carry identity across geography. “This project asked us to be both brave and precise,” says Lee Nellis, Principal Architect. “Extraordinary architecture happens when ambition is balanced with care. A home has to feel grounded and connected to its place, no matter how bold the concept.”</p>
@@ -1398,6 +1400,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

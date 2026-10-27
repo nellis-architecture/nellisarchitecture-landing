@@ -577,6 +577,8 @@
 
         <div class="NewsData">May 8, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/interior-design/">Interior Design</a>
+
         <div class="NewsContent">
 <hr />
 <p>Dubai villa interior design does not begin when the shell is complete. It begins much earlier, with how a family moves through a home, how they gather, how they want to feel at the end of a long day. On Palm Jumeirah, this becomes even more critical. Interior design is not a layer applied to architecture. It is inseparable from it.</p>
@@ -1410,6 +1412,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

@@ -2,6 +2,7 @@
 title: "Living Tomorrow: Reflections on the Future of Home Design"
 id: "973"
 slug: "living-tomorrow-reflections-on-the-future-of-home-design"
+category: "dubai-lifestyle-trends"
 date: "July 1, 2025"
 link: "https://www.linkedin.com/pulse/living-tomorrow-reflections-future-home-design-nellis-architecture-ijrdf/"
 ---

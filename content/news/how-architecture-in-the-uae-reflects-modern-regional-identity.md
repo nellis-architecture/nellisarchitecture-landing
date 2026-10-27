@@ -2,6 +2,7 @@
 title: "Architecture and Identity in the UAE | Contemporary Middle Eastern Design | Nellis Architecture"
 id: "1826"
 slug: "how-architecture-in-the-uae-reflects-modern-regional-identity"
+category: "dubai-lifestyle-trends"
 date: "July 6, 2026"
 description: "The UAE is redefining what regional architecture means. Discover how contemporary Middle Eastern design is shaping residential identity across Dubai - and what that means for how homes are commissioned and built today."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/Architecture-Identity-in-the-UAE-Contemporary-Middle-Eastern-Design-Nellis-Architecture-scaled.jpg"

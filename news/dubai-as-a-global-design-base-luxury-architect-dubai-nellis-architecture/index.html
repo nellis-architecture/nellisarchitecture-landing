@@ -577,6 +577,8 @@
 
         <div class="NewsData">July 2, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/dubai-lifestyle-trends/">Dubai Lifestyle &amp; Trends</a>
+
         <div class="NewsContent">
 <hr />
 <p>There is a particular kind of client that Dubai has always attracted. Mobile, internationally experienced, with homes or professional roots across multiple cities and an eye calibrated by exposure to the world’s most considered architecture. For this client, the choice to commission a home in Dubai is rarely impulsive. It is the result of a deliberate calculation about where quality of life, design ambition and long-term stability intersect most convincingly.</p>
@@ -1413,6 +1415,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

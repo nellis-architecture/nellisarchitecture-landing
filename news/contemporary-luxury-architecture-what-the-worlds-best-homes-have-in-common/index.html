@@ -577,6 +577,8 @@
 
         <div class="NewsData">July 28, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Walk through the finest homes in the world, and a pattern quickly becomes clear. They rarely share a style. A minimalist residence in Kyoto has little in common, visually, with a stone villa on the Amalfi coast or a glass-walled home overlooking Dubai’s coastline. Yet spend time in each, and something familiar emerges. They feel considered. They feel calm. They feel, without needing to explain themselves, right.</p>
@@ -1408,6 +1410,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

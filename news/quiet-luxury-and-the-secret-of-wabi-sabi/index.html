@@ -577,6 +577,8 @@
 
         <div class="NewsData">September 30, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/interior-design/">Interior Design</a>
+
         <div class="NewsContent">
 <hr />
 <h3>A Calm Shift in Dubai</h3>
@@ -1390,6 +1392,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

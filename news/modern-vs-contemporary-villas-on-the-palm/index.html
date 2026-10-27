@@ -577,6 +577,8 @@
 
         <div class="NewsData">February 14, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>On the Palm Jumeirah, architectural language carries weight. A villa’s style influences not only how it looks on day one, but how it performs, ages and holds value over time. One of the most common questions we are asked as a Dubai based architectural firm is deceptively simple. Should a Palm villa be modern or contemporary. The terms are often used interchangeably, but they describe different approaches to design. Understanding that difference is critical when investing in a bespoke villa on one of Dubai’s most recognisable addresses. As <a href="https://nellisarchitecture.com/">villa architects in Dubai</a> working across luxury residential projects, we see this decision as less about labels and more about intent, longevity and lifestyle.</p>
@@ -1409,6 +1411,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

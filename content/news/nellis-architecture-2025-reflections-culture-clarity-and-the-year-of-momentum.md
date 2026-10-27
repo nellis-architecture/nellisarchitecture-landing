@@ -2,6 +2,7 @@
 title: "Nellis Architecture 2025 Reflections: Culture, Clarity and the Year of Momentum"
 id: "1063"
 slug: "nellis-architecture-2025-reflections-culture-clarity-and-the-year-of-momentum"
+category: "studio-news-culture"
 date: "December 17, 2025"
 description: "A reflective conversation with Nellis Architecture leaders on growth, culture and design momentum. Discover how a Dubai based architectural firm strengthened its identity in 2025 and set the stage for a new era from its new studio at Expo City."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/12/Nellis-Architecture-2025-Reflections.jpg"

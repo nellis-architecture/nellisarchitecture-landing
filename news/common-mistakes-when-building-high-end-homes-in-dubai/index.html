@@ -577,6 +577,8 @@
 
         <div class="NewsData">January 25, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Building a high-end home in Dubai is often described as a dream project. A blank plot. A clear vision. The opportunity to create something bespoke, personal and lasting. Yet in practice, even the most ambitious luxury villa projects can falter when early decisions are rushed, misaligned or driven by short-term thinking. As an architectural firm in Dubai working closely with homeowners, developers and consultants across the UAE, we see many of the same issues repeated. Not because clients lack ambition, but because the complexity of building a luxury villa in this region is often underestimated. From heat gain and climate response to scope creep and value engineering pitfalls, the mistakes are rarely dramatic. They are subtle. And by the time they surface, they are expensive to undo. This is not a checklist of errors. It is a reflection on what we have learned through years of designing bespoke residential architecture in Dubai, and what matters most when the goal is to create a home that performs well, feels calm and endures over time.</p>
@@ -1413,6 +1415,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

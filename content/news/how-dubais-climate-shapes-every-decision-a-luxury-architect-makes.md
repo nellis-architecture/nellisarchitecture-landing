@@ -2,6 +2,7 @@
 title: "How Dubai Climate Shapes Every Decision a Luxury Architect Makes"
 id: "1959"
 slug: "how-dubais-climate-shapes-every-decision-a-luxury-architect-makes"
+category: "villa-design-architecture"
 date: "August 14, 2026"
 description: "In Dubai, climate is never a backdrop to design. It is the first client any residential architect in Dubai must satisfy, shaping orientation, envelope and form long before an interior decision is made."
 ---

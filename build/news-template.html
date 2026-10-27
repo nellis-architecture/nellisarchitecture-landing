@@ -505,6 +505,8 @@
 
         <div class="NewsData">{{DATE}}</div>
 
+        <a class="NewsCategory" href="{{CATEGORY_HREF}}">{{CATEGORY}}</a>
+
         <div class="NewsContent">{{CONTENT}}</div>
         {{NEWS_BTN}}
         <div class="elscroll"></div>
@@ -772,6 +774,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

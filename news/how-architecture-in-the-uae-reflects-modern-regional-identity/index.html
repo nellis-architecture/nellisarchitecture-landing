@@ -577,6 +577,8 @@
 
         <div class="NewsData">July 6, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/dubai-lifestyle-trends/">Dubai Lifestyle &amp; Trends</a>
+
         <div class="NewsContent">
 <hr />
 <p>There was a period, not long ago, when the dominant conversation about UAE architecture centred on what it resembled. Glass facades borrowed from Manhattan. Modernist volumes transplanted from Europe. Residential typologies designed for climates and cultures that had nothing to do with the Gulf.</p>
@@ -1404,6 +1406,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

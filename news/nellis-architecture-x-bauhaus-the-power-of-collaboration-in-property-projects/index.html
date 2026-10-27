@@ -577,6 +577,8 @@
 
         <div class="NewsData">December 20, 2024</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <p>At Nellis Architecture, we believe that great design is driven by meaningful collaboration. In a recent video feature, Lee Nellis, Founder of Nellis Architecture, and James Sharples, Projects Director at Bauhaus, <a href="https://youtu.be/0F9dgGYiV2A?si=SddAOBM2G49Gyxak">discuss the power of shared expertise in shaping successful projects.</a></p>
 <p>The conversation explores a range of topics, including Soul—our standout development on La Mer—highlighting the unique features that set it apart.</p>
@@ -1378,6 +1380,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

@@ -2,6 +2,7 @@
 title: "Visiting Vitrocsa in Switzerland: Nellis Architecture x GLASSLINE"
 id: "963"
 slug: "visiting-vitrocsa-in-switzerland-nellis-architecture-x-glassline"
+category: "studio-news-culture"
 date: "February 2, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/02/OUR-PEOPLE-84.png"
 hero_alt: "Visiting Vitrocsa in Switzerland: Nellis Architecture x GLASSLINE"

@@ -2,6 +2,7 @@
 title: "How We Approach Dubai Villa Interior Design on Palm Jumeirah | Nellis Architecture"
 id: "1608"
 slug: "how-we-approach-dubai-villa-interior-design-on-palm-jumeirah-nellis-architecture"
+category: "interior-design"
 date: "May 8, 2026"
 description: "How Dubai villa interior design on Palm Jumeirah is shaped by light, climate and lifestyle, and why architecture and interiors must be designed as one continuous experience."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/Dubai-villa-interior-design-Nellis-Architecture-scaled.jpg"

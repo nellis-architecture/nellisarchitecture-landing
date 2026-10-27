@@ -2,6 +2,7 @@
 title: "Introducing Margaret – and Why Landscape Architecture Isn’t Just “Nice to Have”"
 id: "975"
 slug: "introducing-margaret-and-why-landscape-architecture-isnt-just-nice-to-have"
+category: "landscape-outdoor-living"
 date: "July 9, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/07/Margaret-for-linkedin-scaled.jpg"
 hero_alt: "Introducing Margaret – and Why Landscape Architecture Isn’t Just “Nice to Have”"

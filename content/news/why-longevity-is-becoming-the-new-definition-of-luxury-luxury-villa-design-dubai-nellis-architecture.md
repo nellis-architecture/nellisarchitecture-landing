@@ -2,6 +2,7 @@
 title: "Why Longevity Is Becoming the New Definition of Luxury"
 id: "1531"
 slug: "why-longevity-is-becoming-the-new-definition-of-luxury-luxury-villa-design-dubai-nellis-architecture"
+category: "dubai-lifestyle-trends"
 date: "April 6, 2026"
 description: "A considered exploration of how longevity, restraint and future focused architectural thinking are redefining luxury villa design across Dubai and the UAE."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/04/Why-Longevity-Is-Becoming-the-New-Definition-of-Luxury-Nellis-Architecture-scaled.jpg"

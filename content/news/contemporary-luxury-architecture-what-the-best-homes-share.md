@@ -2,6 +2,7 @@
 title: "Contemporary Luxury Architecture: What the World’s Best Residential Homes Have in Common"
 id: "1817"
 slug: "contemporary-luxury-architecture-what-the-best-homes-share"
+category: "villa-design-architecture"
 date: "July 5, 2026"
 description: "What the world’s most considered luxury homes share - and why exceptional residential architecture is defined by precision, restraint and lasting design intelligence."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/Contemporary-Luxury-Architecture-What-the-Best-Homes-Share-Nellis-Architecture-scaled.jpg"

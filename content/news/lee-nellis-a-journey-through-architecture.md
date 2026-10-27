@@ -2,6 +2,7 @@
 title: "Lee Nellis: A Journey Through Architecture"
 id: "956"
 slug: "lee-nellis-a-journey-through-architecture"
+category: "studio-news-culture"
 date: "December 6, 2024"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/07/Sasha-Lee-025.jpeg"
 hero_alt: "Lee Nellis: A Journey Through Architecture"

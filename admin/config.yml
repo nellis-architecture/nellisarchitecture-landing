@@ -38,6 +38,16 @@ collections:
         date_format: "MMMM D, YYYY"
         time_format: false
       - { label: "URL slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Use lowercase letters, digits and single dashes only"], hint: "Lowercase words separated by dashes. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        hint: "The article shows on the page of this category: /news/category/<slug>/."
+        options:
+          - { label: "Villa Design & Architecture", value: "villa-design-architecture" }
+          - { label: "Interior Design", value: "interior-design" }
+          - { label: "Landscape & Outdoor Living", value: "landscape-outdoor-living" }
+          - { label: "Dubai Lifestyle & Trends", value: "dubai-lifestyle-trends" }
+          - { label: "Studio News & Culture", value: "studio-news-culture" }
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
       - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google. Also shows as the excerpt on /news/." }
       - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, required: false, hint: "On: Google does not show the article, and the sitemap does not list it. The article stays on the site and in the news list." }

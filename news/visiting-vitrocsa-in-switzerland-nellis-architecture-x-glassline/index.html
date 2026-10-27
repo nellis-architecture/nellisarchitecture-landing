@@ -577,6 +577,8 @@
 
         <div class="NewsData">February 2, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <p>At Nellis Architecture, glazing has always played a vital role in shaping the experience of our spaces. Over the years, we have completed numerous projects in collaboration with GLASSLINE, exploring various glazing systems to find the perfect fit for each design. Among these, Vitrocsa has always held a special place for its innovation and craftsmanship.</p>
 <p>Recently, thanks to GLASSLINE, <a href="https://www.instagram.com/reel/DFilHTPoHjG/?utm_source=ig_web_copy_link">we had the unique opportunity to visit Vitrocsa’s headquarters in Switzerland.</a> This exclusive visit allowed us to see firsthand the precision and passion behind their cutting-edge glazing solutions. While specifying a system on paper is important, witnessing the craftsmanship and engineering in action truly brings understanding and appreciation to another level.</p>
@@ -1379,6 +1381,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

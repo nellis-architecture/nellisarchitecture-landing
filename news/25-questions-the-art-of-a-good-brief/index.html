@@ -577,6 +577,8 @@
 
         <div class="NewsData">December 22, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Some of the best homes begin with a conversation long before a drawing is made. A design brief is more than a checklist. It is how an architect begins to understand the rhythm of a family, the priorities of a lifestyle, and the way a home should make its occupants feel. The questions asked at the start shape the clarity that follows. At <a href="https://nellisarchitecture.com/">Nellis Architecture</a>, the qualification process is deliberately gentle. It is structured enough to bring definition, yet open enough for clients to express what matters most. The 25 questions we use are not bureaucratic steps. They are invitations, helping both client and architect find the project’s true direction.</p>
@@ -1431,6 +1433,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

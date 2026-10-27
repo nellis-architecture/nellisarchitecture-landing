@@ -2,6 +2,7 @@
 title: "Architectural Design Across the UAE | Luxury Home Design Dubai | Nellis Architecture"
 id: "1620"
 slug: "architectural-design-across-the-uae-luxury-home-design-dubai"
+category: "villa-design-architecture"
 date: "May 15, 2026"
 description: "How residential architecture across all UAE emirates differs in response to place, and why context defines successful design."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/luxury-architect-Dubai-architecture-firms-in-Dubai-Nellis-Architecture.jpg"

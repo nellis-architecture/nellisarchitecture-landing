@@ -577,6 +577,8 @@
 
         <div class="NewsData">December 6, 2024</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <p>Lee Nellis: A Journey in Architecture and Studio Founding in Dubai</p>
 <p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7270774026141093888">Lee Nellis’ journey</a> was deeply influenced by the rich heritage of Scotland, with its unique blend of historical and contemporary buildings. Among the architects who inspired him was the renowned Charles Rennie Mackintosh—along with the dramatic Scottish landscape itself. The diverse terrain of the Highlands and their striking scenery left a lasting impression on his creative outlook.</p>
@@ -1380,6 +1382,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

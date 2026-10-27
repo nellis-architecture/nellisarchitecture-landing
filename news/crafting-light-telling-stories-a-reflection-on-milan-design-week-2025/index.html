@@ -577,6 +577,8 @@
 
         <div class="NewsData">May 1, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/interior-design/">Interior Design</a>
+
         <div class="NewsContent">
 <hr />
 <p>Milan Design Week is always a spectacle — a whirlwind of ideas, forms, and provocations. But this year, for me, it was about light. Not just lighting, but light as experience. Light as emotion. Light as the difference between a house and a home. We often speak about lighting in practical terms — the fixtures, the placement, the technical specs. But in Milan, I saw lighting as poetry. Statement pieces that don’t just illuminate a room — they change it. One piece, a pendant collaboration between Flos and Piet Boon, stole my heart. It’s sculptural and soft, directional and delicate — and entirely adaptable to your mood. I’m determined to place it in one of our future projects at Nellis Architecture.</p>
@@ -1386,6 +1388,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

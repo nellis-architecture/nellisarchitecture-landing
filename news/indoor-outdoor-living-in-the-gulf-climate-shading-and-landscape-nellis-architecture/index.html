@@ -577,6 +577,8 @@
 
         <div class="NewsData">December 29, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/landscape-outdoor-living/">Landscape &amp; Outdoor Living</a>
+
         <div class="NewsContent">
 <hr />
 <p>Indoor–outdoor living is more than a design preference in the Gulf. It is a way of inhabiting the landscape, using architecture to soften the extremes of climate while drawing people closer to nature. The challenge is familiar. Summers are intense. Winters are extraordinary. A home must therefore adapt, opening fully in the cool season and protecting comfort during the hotter months without losing atmosphere or connection.</p>
@@ -1408,6 +1410,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

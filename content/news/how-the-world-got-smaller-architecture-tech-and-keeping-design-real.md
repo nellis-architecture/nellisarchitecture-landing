@@ -2,6 +2,7 @@
 title: "How the World Got Smaller: Architecture, Tech, and Keeping Design Real"
 id: "969"
 slug: "how-the-world-got-smaller-architecture-tech-and-keeping-design-real"
+category: "dubai-lifestyle-trends"
 date: "April 14, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/06/Ashley-Bothma-LinkedIn-post-scaled.jpg"
 hero_alt: "How the World Got Smaller: Architecture, Tech, and Keeping Design Real"

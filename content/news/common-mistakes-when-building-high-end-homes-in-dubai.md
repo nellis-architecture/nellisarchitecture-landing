@@ -2,6 +2,7 @@
 title: "Common Mistakes When Building High-End Homes in Dubai | Luxury Villa Design | Nellis Architecture"
 id: "1182"
 slug: "common-mistakes-when-building-high-end-homes-in-dubai"
+category: "villa-design-architecture"
 date: "January 25, 2026"
 description: "An architect’s perspective on the most common mistakes made when building high-end homes in Dubai, from climate response to design coordination and long-term planning."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/01/Common-Mistakes-When-Building-High-End-Homes-in-Dubai-Nellis.jpg"

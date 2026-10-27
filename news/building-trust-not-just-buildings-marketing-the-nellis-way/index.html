@@ -577,6 +577,8 @@
 
         <div class="NewsData">June 3, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Every story leaves a trace: marketing and meaning at Nellis Architecture has always been about more than structures — it’s about the lives lived within them.</p>
@@ -1394,6 +1396,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

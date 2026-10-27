@@ -121,10 +121,10 @@
             <div class="container">
                 <nav class="projectBreadcrumbs" aria-label="Breadcrumb">
                     <a href="/">Home</a> <span aria-hidden="true">›</span>
-                    <span aria-current="page">News</span>
+{{CRUMBS}}
                 </nav>
                 <h2 class="categoryTitle">{{H1}}</h2>
-                <p class="categoryIntro">{{INTRO}}</p>
+                <p class="categoryIntro">{{INTRO}}</p>{{CATEGORY_LINKS}}
                 <div class="newsIndex">
 {{ITEMS}}
                 </div>
@@ -216,6 +216,10 @@
 
         .projectBreadcrumbs a {
             color: inherit;
+        }
+
+        .projectBreadcrumbs[aria-label="Categories"] {
+            margin-bottom: 35px;
         }
 
         .categoryTitle {

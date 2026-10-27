@@ -156,9 +156,32 @@ test('parseFixed skips comments and blank lines', () => {
 
 test('parseFixed throws on a bad line and names the file and the line number', () => {
   ['/a /b 404', '/a /b 302', '/a /b 301!', '/a /b', '/a /b 301 x', 'a /b 301', '/a b 301',
-    '/a* /b 301', '/a?x /b 301'].forEach((line) => {
+    '/a* /b 301', '/a?x /b 301', '/a% /b 301', '/a%d /b 301', '/a%zz /b 301'].forEach((line) => {
     const re = /^Error: build\/redirects\.txt line 2: /;
     assert.throws(() => parseFixed(`# c\n${line}\n`), re, line);
+  });
+});
+
+test('parseFixed takes a percent-encoded byte in lowercase or uppercase hex', () => {
+  assert.deepEqual(parseFixed('/a%d0%B1 /b 301\n').map((r) => r.from), ['/a%d0%B1']);
+});
+
+const RU = '/news/category/%d0%b1%d0%b5%d0%b7-%d1%80%d1%83%d0%b1%d1%80%d0%b8%d0%ba%d0%b8';
+
+test('old news category URLs: the index and the Russian URL go to /news/, other topics 404', () => {
+  const has = (from) => assert.ok(
+    FIXED.some((r) => r.from === from && r.to === '/news/' && r.status === 301),
+    from,
+  );
+  const upper = RU.replace(/%[0-9a-f]{2}/g, (m) => m.toUpperCase());
+  ['/news/category', '/news/category/', RU, `${RU}/`, upper, `${upper}/`].forEach(has);
+  assert.ok(!FIXED.some((r) => r.from.startsWith('/news/category/*')));
+  ['villa-design-architecture', 'interior-design', 'landscape-outdoor-living',
+    'dubai-lifestyle-trends', 'studio-news-culture', 'x'].forEach((slug) => {
+    assert.equal(hitsFixed(`/news/category/${slug}/`, FROMS), undefined, slug);
+  });
+  [RU, `${RU}/`, upper, '/news/category', '/news/category/'].forEach((from) => {
+    assert.ok(hitsFixed(from, FROMS), from);
   });
 });
 
@@ -188,7 +211,7 @@ test('build/redirects.txt keeps the old WordPress URLs', () => {
   ['/feed/atom', '/feed/rss', '/rss'].forEach((from) => has(from, '/feed/'));
   has('/comments/feed', '/');
   has('/news/:slug/feed', '/news/:slug/');
-  ['tag', 'category', 'author'].forEach((k) => has(`/news/${k}/*`, '/news/'));
+  ['tag', 'author'].forEach((k) => has(`/news/${k}/*`, '/news/'));
   ['sitemap_index', 'post-sitemap', 'page-sitemap', 'category-sitemap', 'post_tag-sitemap',
     'author-sitemap', 'wp-sitemap'].forEach((name) => has(`/${name}.xml`, '/sitemap.xml'));
   has('/page/*', '/');

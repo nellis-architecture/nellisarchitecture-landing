@@ -487,6 +487,13 @@
                 </nav>
                 <h2 class="categoryTitle">News</h2>
                 <p class="categoryIntro">Notes from our Dubai studio on luxury villa architecture, interior design and landscape. We write about climate, privacy and craft on Palm Jumeirah and across the UAE, about our people, and about awards and events.</p>
+                <nav class="projectBreadcrumbs" aria-label="Categories">
+                    <a href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a> <span aria-hidden="true">·</span>
+                    <a href="/news/category/interior-design/">Interior Design</a> <span aria-hidden="true">·</span>
+                    <a href="/news/category/landscape-outdoor-living/">Landscape &amp; Outdoor Living</a> <span aria-hidden="true">·</span>
+                    <a href="/news/category/dubai-lifestyle-trends/">Dubai Lifestyle &amp; Trends</a> <span aria-hidden="true">·</span>
+                    <a href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+                </nav>
                 <div class="newsIndex">
                     <article class="newsIndexItem">
                         <div class="newsIndexImg">
@@ -1167,6 +1174,10 @@
 
         .projectBreadcrumbs a {
             color: inherit;
+        }
+
+        .projectBreadcrumbs[aria-label="Categories"] {
+            margin-bottom: 35px;
         }
 
         .categoryTitle {

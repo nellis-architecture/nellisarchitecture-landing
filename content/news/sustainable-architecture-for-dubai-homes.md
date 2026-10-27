@@ -2,6 +2,7 @@
 title: "Sustainable Architecture for Dubai Homes"
 id: "1007"
 slug: "sustainable-architecture-for-dubai-homes"
+category: "villa-design-architecture"
 date: "November 25, 2025"
 description: "Sustainable architecture for Dubai homes pairs regenerative architectural design with crafted interiors, energy efficiency, and water-wise systems for lasting comfort."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/07/Zoya5-scaled.jpg"

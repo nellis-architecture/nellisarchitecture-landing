@@ -2,6 +2,7 @@
 title: "Full Circle Moments and Firsts: A Conversation with Anastasia, Intern at Nellis Architecture"
 id: "981"
 slug: "full-circle-moments-and-firsts-a-conversation-with-anastasia-intern-at-nellis-architecture"
+category: "studio-news-culture"
 date: "August 15, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/08/midjourney-editor-1755166501078.png"
 hero_alt: "Full Circle Moments and Firsts: A Conversation with Anastasia, Intern at Nellis Architecture"

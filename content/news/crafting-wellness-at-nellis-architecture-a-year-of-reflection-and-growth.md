@@ -2,6 +2,7 @@
 title: "Crafting Wellness at Nellis Architecture: A Year of Reflection and Growth"
 id: "961"
 slug: "crafting-wellness-at-nellis-architecture-a-year-of-reflection-and-growth"
+category: "studio-news-culture"
 date: "January 31, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/02/image_2025-03-22_01-30-43-1.png"
 hero_alt: "Crafting Wellness at Nellis Architecture: A Year of Reflection and Growth"

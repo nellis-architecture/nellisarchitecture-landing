@@ -2,6 +2,7 @@
 title: "Seeing Beyond the Surface: My Journey in Architectural Visualisation"
 id: "979"
 slug: "seeing-beyond-the-surface-my-journey-in-architectural-visualisation"
+category: "studio-news-culture"
 date: "August 11, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/08/Franklin-Linked-In-scaled.jpg"
 hero_alt: "Seeing Beyond the Surface: My Journey in Architectural Visualisation"

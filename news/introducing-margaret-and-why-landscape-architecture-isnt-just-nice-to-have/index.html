@@ -577,6 +577,8 @@
 
         <div class="NewsData">July 9, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/landscape-outdoor-living/">Landscape &amp; Outdoor Living</a>
+
         <div class="NewsContent">
 <hr />
 <p>If you’ve ever walked into a home and gasped at the view from the window— how the trees are placed just so, or how the light catches a quiet corner— you’re already feeling the power of landscape architecture.</p>
@@ -1393,6 +1395,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

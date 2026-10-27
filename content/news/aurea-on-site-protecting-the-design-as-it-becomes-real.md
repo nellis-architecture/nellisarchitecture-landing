@@ -2,6 +2,7 @@
 title: "Aurea On Site: Protecting the Design as It Becomes Real"
 id: "1997"
 slug: "aurea-on-site-protecting-the-design-as-it-becomes-real"
+category: "studio-news-culture"
 date: "September 10, 2026"
 ---
 

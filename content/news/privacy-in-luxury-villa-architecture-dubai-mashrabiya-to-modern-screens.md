@@ -2,6 +2,7 @@
 title: "From Mashrabiya to Modern Screens: Privacy in Architecture and What It Means for Dubai Villas Today"
 id: "1470"
 slug: "privacy-in-luxury-villa-architecture-dubai-mashrabiya-to-modern-screens"
+category: "villa-design-architecture"
 date: "March 24, 2026"
 description: "How traditional privacy principles and modern screening technologies are shaping luxury villa design, façade architecture and residential living across Dubai."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/03/From-Mashrabiya-to-Modern-Screens-Privacy-in-Architecture-and-What-It-Means-for-Dubai-Villas-Today-scaled.jpg"

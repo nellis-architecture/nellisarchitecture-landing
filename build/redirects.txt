@@ -21,10 +21,16 @@
 /news/:slug/feed/ /news/:slug/ 301
 
 # Old WordPress news archives (card ujdxD55f): tag, category and author lists go to the news index.
+# /news/category/<slug>/ are live pages (card vHDJG4Ho). The old WordPress category goes to the index,
+# in lowercase and uppercase hex. Other old categories answer 404.
 /news/tag/* /news/ 301
 /news/tag /news/ 301
-/news/category/* /news/ 301
+/news/category/ /news/ 301
 /news/category /news/ 301
+/news/category/%d0%b1%d0%b5%d0%b7-%d1%80%d1%83%d0%b1%d1%80%d0%b8%d0%ba%d0%b8 /news/ 301
+/news/category/%d0%b1%d0%b5%d0%b7-%d1%80%d1%83%d0%b1%d1%80%d0%b8%d0%ba%d0%b8/ /news/ 301
+/news/category/%D0%B1%D0%B5%D0%B7-%D1%80%D1%83%D0%B1%D1%80%D0%B8%D0%BA%D0%B8 /news/ 301
+/news/category/%D0%B1%D0%B5%D0%B7-%D1%80%D1%83%D0%B1%D1%80%D0%B8%D0%BA%D0%B8/ /news/ 301
 /news/author/* /news/ 301
 /news/author /news/ 301
 

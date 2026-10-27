@@ -2,6 +2,7 @@
 title: "Designing Stillness on the Sea | 5-Star Single Residence Winner | Nellis Architecture"
 id: "1109"
 slug: "miraia-designing-stillness-on-the-sea-miraia"
+category: "villa-design-architecture"
 date: "December 24, 2025"
 description: "Miraia, winner of the 5-Star Single Residence Award 2025, is a flowing, nature-led home designed by Nellis Architecture as a place of stillness on the sea. Shaped entirely in-house, it reflects a new direction for luxury villa design and residential architecture in the Middle East"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/12/Miraia-Designing-Stillness-on-the-Sea.png"

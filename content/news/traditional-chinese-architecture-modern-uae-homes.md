@@ -2,6 +2,7 @@
 title: "Designing for Balance, What Traditional Chinese Architecture Teaches Modern UAE Homes"
 id: "1708"
 slug: "traditional-chinese-architecture-modern-uae-homes"
+category: "villa-design-architecture"
 date: "June 3, 2026"
 description: "How traditional Chinese architecture principles of flow, balance and spatial harmony influence luxury residential design in Dubai and the UAE."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/06/Balanced-Luxury-Home-Design-Dubai-Residential-Architecture-UAE-Nellis-Architecture-scaled.jpg"

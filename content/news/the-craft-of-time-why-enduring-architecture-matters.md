@@ -2,6 +2,7 @@
 title: "The Craft of Time: Why Enduring Architecture Matters"
 id: "1052"
 slug: "the-craft-of-time-why-enduring-architecture-matters"
+category: "villa-design-architecture"
 date: "December 15, 2025"
 description: "The Craft of Time explores how a leading, Dubai-based architectural firm creates luxury residential architecture rooted in care, context, and precision. Discover why bespoke villa design and premium villa interior design endure when shaped with purpose and crafted to last."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/12/The-Craft-of-Time.jpg"
