@@ -11,7 +11,12 @@ const OG_IMAGE = [
 
 function head(values) {
   return fill(loadPartial('head'), {
-    EARLY_SCRIPT: '', PRELOAD: '', OG_IMAGE, IMAGES_CSS: loadPartial('images-css'), ...values,
+    EARLY_SCRIPT: '',
+    PRELOAD: '',
+    SCHEMA_EXTRA: '',
+    OG_IMAGE,
+    IMAGES_CSS: loadPartial('images-css'),
+    ...values,
   });
 }
 

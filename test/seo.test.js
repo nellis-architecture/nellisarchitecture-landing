@@ -4,7 +4,7 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const {
-  LOGO, ORGANIZATION, SAME_AS, pageUrl, seoTokens, withOrganization,
+  LOGO, ORGANIZATION, SAME_AS, customSchema, pageUrl, seoTokens, withOrganization,
 } = require('../build/lib/seo');
 const { PAGES, renderPages } = require('../build/lib/pages');
 // eslint-disable-next-line import-x/no-useless-path-segments -- Home page module
@@ -189,4 +189,44 @@ test('the build is current and idempotent: the registry pages match a new render
   renderPages(ROOT, '/news/').forEach((p) => {
     assert.equal(fs.readFileSync(path.join(ROOT, p.file), 'utf8'), p.html, p.file);
   });
+});
+
+test('customSchema: empty or missing adds nothing', () => {
+  [undefined, '', '  \n '].forEach((raw) => assert.equal(customSchema(raw, 'f'), ''));
+});
+
+test('customSchema re-serializes an object or an array into one ld+json block', () => {
+  assert.equal(
+    customSchema('{\n  "@type": "Thing",\n  "name": "N"\n}', 'f'),
+    '\t<script type="application/ld+json">{"@type":"Thing","name":"N"}</script>\n',
+  );
+  assert.equal(
+    customSchema('[{"@type":"A"}, {"@type":"B"}]', 'f'),
+    '\t<script type="application/ld+json">[{"@type":"A"},{"@type":"B"}]</script>\n',
+  );
+});
+
+test('customSchema throws on invalid JSON or a wrong type and names the file', () => {
+  const file = 'content/pages/x.json';
+  assert.throws(() => customSchema('{"a":', file), /pages\/x\.json: schema is not valid JSON/);
+  ['"s"', '1', 'null', 'true'].forEach((raw) => {
+    assert.throws(() => customSchema(raw, file), /x\.json: schema must be a JSON object/, raw);
+  });
+});
+
+test('customSchema escapes < so </script> and <!-- cannot break out', () => {
+  const out = customSchema('{"a":"</script><!-- x"}', 'f');
+  assert.ok(out.includes('\\u003c/script>\\u003c!-- x'), out);
+  assert.equal(count(out, '</script>'), 1);
+  assert.ok(!out.includes('<!--'));
+});
+
+test('seoTokens fills SCHEMA_EXTRA from seo.schema and names the page file on error', () => {
+  assert.equal(seoTokens({ h1: 'H', seo: {} }, { slug: 'x', content: 'x' }).SCHEMA_EXTRA, '');
+  const t = seoTokens({ h1: 'H', seo: { schema: '{"a":1}' } }, { slug: 'x', content: 'x' });
+  assert.equal(t.SCHEMA_EXTRA, '\t<script type="application/ld+json">{"a":1}</script>\n');
+  assert.throws(
+    () => seoTokens({ h1: 'H', seo: { schema: '[' } }, pageOf('studio')),
+    /content\/pages\/studio\.json: schema is not valid JSON/,
+  );
 });
