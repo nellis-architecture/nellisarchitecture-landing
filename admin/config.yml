@@ -93,7 +93,7 @@ collections:
             hint: "The menu of every page, in this order. Drag an item to move it. A link starts with / or https://."
             fields:
               - { label: "Label", name: "label", widget: "string", hint: "Text of the menu item." }
-              - { label: "Link", name: "link", widget: "string", pattern: ['^(/(?!/)(?!.*(\.\.|//))|https?://)', "Start with / or http:// or https://. No .. or //."], hint: "For example /projects/." }
+              - { label: "Link", name: "link", widget: "string", pattern: ['^(/(?!/)(?!.*(\.\.|//))|https?://)', "Start with / or http:// or https://. No .. or //."], hint: "For example /projects/. No spaces, no .. and no //." }
           - label: "Follow"
             name: "follow"
             widget: "list"

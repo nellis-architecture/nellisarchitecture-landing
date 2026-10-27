@@ -358,11 +358,16 @@ test('validateSite refuses an item that is not an object', () => {
 
 test('readSite throws one error that names content/pages/site.json and the item', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'site-'));
-  fs.mkdirSync(path.join(dir, 'content', 'pages'), { recursive: true });
+  const file = path.join(dir, 'content', 'pages', 'site.json');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
   const bad = siteOf({ nav: [...OK_NAV, ...OK_NAV, { label: ' ', link: '/x/' }] });
-  fs.writeFileSync(path.join(dir, 'content', 'pages', 'site.json'), JSON.stringify(bad));
+  fs.writeFileSync(file, JSON.stringify(bad));
   assert.throws(() => readSite(dir), {
     message: 'content/pages/site.json:\nnav[2]: "label" is empty',
+  });
+  fs.writeFileSync(file, JSON.stringify(siteOf({ nav: [null] })));
+  assert.throws(() => readSite(dir), {
+    message: 'content/pages/site.json:\nnav[0]: expected an object with "label" and "link"',
   });
   assert.deepEqual(readSite(ROOT).nav.length, 5);
   fs.rmSync(dir, { recursive: true });
