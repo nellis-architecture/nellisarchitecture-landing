@@ -577,6 +577,8 @@
 
         <div class="NewsData">February 13, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>In Dubai, views are often one of the primary drivers behind buying land. Whether overlooking the sea, a golf course or the skyline, outlook is deeply tied to value, experience and emotion. At the same time, privacy is non negotiable. Homes are lived in closely, socially and daily. The challenge is balancing openness with retreat, spatial sequencing and an understanding of how people actually live in their homes.</p>
@@ -1404,6 +1406,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

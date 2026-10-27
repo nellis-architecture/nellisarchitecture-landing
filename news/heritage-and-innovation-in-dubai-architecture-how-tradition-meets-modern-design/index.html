@@ -577,6 +577,8 @@
 
         <div class="NewsData">November 21, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/dubai-lifestyle-trends/">Dubai Lifestyle &amp; Trends</a>
+
         <div class="NewsContent">
 <hr />
 <h3>A City of Contrasts: Heritage and Innovation in Everyday Life</h3>
@@ -1379,6 +1381,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

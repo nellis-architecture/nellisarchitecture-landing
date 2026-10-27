@@ -2,6 +2,7 @@
 title: "Contemporary Luxury Architecture: What the World’s Best Homes Have in Common"
 id: "1910"
 slug: "contemporary-luxury-architecture-what-the-worlds-best-homes-have-in-common"
+category: "villa-design-architecture"
 date: "July 28, 2026"
 description: "The world's best luxury homes are not defined by scale or spectacle. Discover the shared principles of luxury home design behind Nellis Architecture's approach to timeless residential architecture."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/Contemporary-Luxury-Architecture-Luxury-Home-Design-Nellis-Architecture-scaled.jpg"

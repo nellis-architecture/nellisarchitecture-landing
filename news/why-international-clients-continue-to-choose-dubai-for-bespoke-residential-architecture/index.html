@@ -577,6 +577,8 @@
 
         <div class="NewsData">Aug 14, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/dubai-lifestyle-trends/">Dubai Lifestyle &amp; Trends</a>
+
         <div class="NewsContent">
 <hr />
 <p>Most international clients commissioning a home in Dubai have built before. They arrive with a clearer understanding of what they want than first-time clients.</p>
@@ -1395,6 +1397,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

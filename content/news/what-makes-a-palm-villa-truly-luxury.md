@@ -2,6 +2,7 @@
 title: "What Makes a Palm Villa Truly Luxury | Luxury Villa Design Dubai | Nellis Architecture"
 id: "1356"
 slug: "what-makes-a-palm-villa-truly-luxury"
+category: "villa-design-architecture"
 date: "February 15, 2026"
 description: "A considered look at what defines true luxury in Palm Jumeirah villas, from architecture and interiors to material craft, landscape and long-term residential planning in Dubai."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/02/What-Makes-a-Palm-Villa-Truly-‘Luxury-scaled.jpg"

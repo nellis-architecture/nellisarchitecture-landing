@@ -41,6 +41,18 @@ const PAGES = [
     priority: '0.7',
     category: cat,
   })),
+  /* The news category pages get their text from NEWS_CATEGORIES, not content/pages/. */
+  ...Object.entries(news.NEWS_CATEGORIES).map(([cat, c]) => ({
+    slug: `news/category/${cat}`,
+    module: news,
+    priority: '0.6',
+    category: cat,
+    data: {
+      h1: c.name,
+      intro: c.description,
+      seo: { title: `${c.name} | News | Nellis Architecture`, description: c.description },
+    },
+  })),
 ];
 
 const pageFile = (slug) => (slug ? `${slug}/index.html` : 'index.html');
@@ -63,7 +75,7 @@ function renderPages(
 ) {
   const site = readContent(root, 'site');
   return PAGES.filter((p) => posts || p.module !== news).map((p) => {
-    const content = readContent(root, p.content);
+    const content = p.data || readContent(root, p.content);
     return {
       file: pageFile(p.slug),
       html: p.module.render(content, {

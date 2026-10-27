@@ -2,6 +2,7 @@
 title: "Future-Proofing a Palm Jumeirah Home | Luxury Villa Design Dubai | Nellis Architecture"
 id: "1248"
 slug: "future-proofing-a-palm-jumeirah-home-luxury-villa-design-dubai-nellis-architecture"
+category: "villa-design-architecture"
 date: "February 3, 2026"
 description: "A considered look at future-proofing a Palm Jumeirah villa through climate-responsive architecture, integrated interiors and smart home planning by a Dubai based architectural firm."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/02/Future-Proofing-a-Palm-Jumeirah-Home-scaled.jpg"

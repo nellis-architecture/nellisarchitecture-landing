@@ -577,6 +577,8 @@
 
         <div class="NewsData">August 11, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Visualisation isn’t just about making spaces look good — it’s about creating an experience. It’s about telling a story.</p>
@@ -1381,6 +1383,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

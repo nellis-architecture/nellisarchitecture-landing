@@ -2,6 +2,7 @@
 title: "Beyond Aesthetics: Designing Spaces That Last | Luxury Home Design Dubai | Nellis Architecture"
 id: "1632"
 slug: "beyond-aesthetics-designing-spaces-that-last"
+category: "villa-design-architecture"
 date: "May 18, 2026"
 description: "Why luxury residential architecture in Dubai must go beyond aesthetics, focusing on material integrity, proportion and long-term performance over trend-led design"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/luxury-architect-Dubai-Nellis-Architecture-scaled.jpg"

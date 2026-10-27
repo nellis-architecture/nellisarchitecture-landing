@@ -2,6 +2,7 @@
 title: "Crafting Light, Telling Stories: A Reflection on Milan Design Week 2025"
 id: "967"
 slug: "crafting-light-telling-stories-a-reflection-on-milan-design-week-2025"
+category: "interior-design"
 date: "May 1, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/06/Ana-Linked-In-scaled.jpg"
 hero_alt: "Crafting Light, Telling Stories: A Reflection on Milan Design Week 2025"

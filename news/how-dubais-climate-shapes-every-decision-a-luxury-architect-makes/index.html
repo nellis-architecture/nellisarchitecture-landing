@@ -576,6 +576,8 @@
 
         <div class="NewsData">August 14, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>A room can be designed anywhere. A home, in Dubai, cannot. For a <a href="https://nellisarchitecture.com/news/mediterranean-inspired-luxury-home-design-dubai-residential-architecture-uae-nellis-architecture/"><strong>residential architect in Dubai</strong></a>, climate is not a site condition to be managed once the design has been decided. It is the first constraint the design must answer – present before the brief is finished, and still active on the hottest afternoon of a home’s fortieth summer.</p>
@@ -1402,6 +1404,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

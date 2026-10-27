@@ -2,6 +2,7 @@
 title: "Building Trust Not Just Buildings: Marketing the Nellis Way"
 id: "971"
 slug: "building-trust-not-just-buildings-marketing-the-nellis-way"
+category: "studio-news-culture"
 date: "June 3, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/06/Screenshot-2025-07-25-at-09.52.02.png"
 hero_alt: "Building Trust Not Just Buildings: Marketing the Nellis Way"

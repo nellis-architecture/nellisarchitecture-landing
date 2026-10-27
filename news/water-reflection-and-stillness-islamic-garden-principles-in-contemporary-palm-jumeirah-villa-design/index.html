@@ -577,6 +577,8 @@
 
         <div class="NewsData">April 4, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/landscape-outdoor-living/">Landscape &amp; Outdoor Living</a>
+
         <div class="NewsContent">
 <hr />
 <p>Across Palm Jumeirah and Dubai’s wider coastal landscape, the idea of luxury outdoor space is quietly shifting. Scale and spectacle are no longer enough. Increasingly, clients commissioning a luxury architect in Dubai or appointing a leading architectural firm in Dubai are seeking something less overt and more atmospheric: gardens that create calm, privacy and sensory balance rather than simply visual impact.</p>
@@ -1394,6 +1396,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

@@ -2,6 +2,7 @@
 title: "When the Brief Comes Pre-Built. A studio reflection with Pieter, Ben and Quinton | Nellis Architecture"
 id: "977"
 slug: "when-the-brief-comes-pre-built-a-studio-reflection-with-pieter-ben-and-quinton-nellis-architecture"
+category: "studio-news-culture"
 date: "July 22, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/07/DSC_0388-scaled.jpg"
 hero_alt: "When the Brief Comes Pre-Built. A studio reflection with Pieter, Ben and Quinton | Nellis Architecture"

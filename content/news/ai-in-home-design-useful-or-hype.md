@@ -2,6 +2,7 @@
 title: "AI In Home Design: Useful Or Hype?"
 id: "987"
 slug: "ai-in-home-design-useful-or-hype"
+category: "dubai-lifestyle-trends"
 date: "November 01, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/11/jtju_WQC.jpeg"
 hero_alt: "AI In Home Design: Useful Or Hype?"

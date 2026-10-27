@@ -577,6 +577,8 @@
 
         <div class="NewsData">June 3, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Across Dubai’s most established residential communities, from Palm Jumeirah to Emirates Hills, there is a growing refinement in how luxury homes are being designed. Materials are becoming more controlled. Layouts are becoming more open. Visual clarity is often prioritised. Yet despite this, many spaces still feel slightly unresolved. Not because they are poorly designed, but because they lack a sense of balance.</p>
@@ -1401,6 +1403,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

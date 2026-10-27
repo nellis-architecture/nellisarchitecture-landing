@@ -577,6 +577,8 @@
 
         <div class="NewsData">August 15, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <hr />
 <p>We sat down with Anastasia, a third-year architecture student from the State University of Land Use Planning in Moscow, Russia, to reflect on her one-month internship at Nellis Architecture in Dubai. It wasn’t just her first time in a working studio, it was something of a full-circle moment.</p>
@@ -1392,6 +1394,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

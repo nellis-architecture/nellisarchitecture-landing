@@ -2,6 +2,7 @@
 title: "Quiet Luxury and the Secret of Wabi-Sabi"
 id: "985"
 slug: "quiet-luxury-and-the-secret-of-wabi-sabi"
+category: "interior-design"
 date: "September 30, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/09/quiet.webp"
 hero_alt: "Quiet Luxury and the Secret of Wabi-Sabi"

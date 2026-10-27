@@ -2,6 +2,7 @@
 title: "The Islamic Garden Principles in Contemporary Palm Jumeirah Villa Design"
 id: "1524"
 slug: "water-reflection-and-stillness-islamic-garden-principles-in-contemporary-palm-jumeirah-villa-design"
+category: "landscape-outdoor-living"
 date: "April 4, 2026"
 description: "An exploration of how water, shade and geometry from Islamic garden design influence contemporary luxury villa landscape and architecture in Palm Jumeirah and Dubai."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/04/luxury-architect-Dubai-scaled.jpg"

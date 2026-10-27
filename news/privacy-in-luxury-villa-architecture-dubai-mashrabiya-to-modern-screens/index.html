@@ -577,6 +577,8 @@
 
         <div class="NewsData">March 24, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Privacy has long shaped residential architecture across the Middle East. Well before façade systems or smart glazing technologies, traditional homes relied on passive design strategies to create protection, dignity and environmental comfort. In today’s luxury residential landscape in Dubai, these principles are not being replaced. They are being reinterpreted.</p>
@@ -1392,6 +1394,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

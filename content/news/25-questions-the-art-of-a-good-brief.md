@@ -2,6 +2,7 @@
 title: "25 Questions: The Art of a Good Architectural Brief | Nellis Architecture"
 id: "1077"
 slug: "25-questions-the-art-of-a-good-brief"
+category: "villa-design-architecture"
 date: "December 22, 2025"
 description: "A guide to the 25 questions every architect should ask during the qualification stage. Discover how Nellis Architecture shapes clearer, more meaningful villa design and residential architecture briefs."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/12/25-questions.jpg"

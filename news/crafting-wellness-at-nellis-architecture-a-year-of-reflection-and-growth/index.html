@@ -577,6 +577,8 @@
 
         <div class="NewsData">January 31, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <hr />
 <p>At Nellis Architecture, our mission is designing spaces with meaning. ‘Meaningful’ is something that holds significance, purpose, and value. What we design for our clients, equally applies to our team culture</p>
@@ -1383,6 +1385,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

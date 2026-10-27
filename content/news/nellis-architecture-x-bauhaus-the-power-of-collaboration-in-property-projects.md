@@ -2,6 +2,7 @@
 title: "Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects"
 id: "959"
 slug: "nellis-architecture-x-bauhaus-the-power-of-collaboration-in-property-projects"
+category: "studio-news-culture"
 date: "December 20, 2024"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2024/12/Lees-talk-with-Bauhaus-photo.png"
 hero_alt: "Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects"

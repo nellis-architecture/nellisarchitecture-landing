@@ -577,6 +577,8 @@
 
         <div class="NewsData">February 15, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Luxury on Palm Jumeirah is often misunderstood. It is easy to assume that scale, budget or location alone define a luxury villa. In reality, true luxury emerges from restraint, clarity and craft. It is shaped by how a home responds to climate, lifestyle and longevity rather than how loudly it announces itself.            As a Dubai based architectural firm working across Palm Jumeirah and the wider UAE, we see luxury not as an aesthetic category, but as a design discipline. One that demands careful decision making at every stage of the process, from early site studies to the final detailing of joinery and stone. A luxury villa should feel effortless. That effortlessness is the result of considered architecture, integrated interiors and a deep understanding of how people live within these homes over time.</p>
@@ -1395,6 +1397,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

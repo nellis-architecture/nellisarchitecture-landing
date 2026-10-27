@@ -2,6 +2,7 @@
 title: "When Design Is Tested What Actually Matters | Luxury Villa Design Dubai | Nellis Architecture"
 id: "1642"
 slug: "when-design-is-tested-what-actually-matters"
+category: "villa-design-architecture"
 date: "May 25, 2026"
 description: "How luxury residential architecture in Dubai performs beyond day one, and why durability and long-term performance define true design quality"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/luxury-architect-Dubai-luxury-villa-design-Dubai-By-Nellis-Architecture-scaled.jpg"

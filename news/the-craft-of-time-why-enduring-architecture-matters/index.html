@@ -577,6 +577,8 @@
 
         <div class="NewsData">December 15, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Some places invite you to slow down. They encourage you to look closer, to notice the weight of a door handle, the softness of worn timber, or the way light settles on stone. These details become a quiet reminder that residential architecture is never only about construction. It is about memory, care, and the patience required to create something that will last.</p>
@@ -1387,6 +1389,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

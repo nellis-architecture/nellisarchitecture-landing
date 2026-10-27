@@ -577,6 +577,8 @@
 
         <div class="NewsData">March 19, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/studio-news-culture/">Studio News &amp; Culture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Every building tells a story, shaped by the lessons of the past, the constraints of the present, and the aspirations of the future. Yet, in an era dominated by technology, where AI and digital tools accelerate the design process, we must ask: what do we lose when we move too far from the craftsmanship that once defined architecture?</p>
@@ -1386,6 +1388,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

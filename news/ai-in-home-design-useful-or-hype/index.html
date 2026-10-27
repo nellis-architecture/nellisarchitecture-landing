@@ -577,6 +577,8 @@
 
         <div class="NewsData">November 01, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/dubai-lifestyle-trends/">Dubai Lifestyle &amp; Trends</a>
+
         <div class="NewsContent">
 <hr />
 <p>AI in home design helps Dubai architects accelerate architectural design with 3D visualisation, smart-home integrations and automations, yet award-winning architects still lead the human decisions that shape luxury villa design and modern villa interior design.</p>
@@ -1379,6 +1381,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

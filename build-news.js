@@ -9,7 +9,7 @@
  *   1. Reads every markdown file in content/news/
  *   2. Renders news/<slug>/index.html from build/news-template.html
  *   3. Rebuilds the NewsList sidebar on every news page (newest first)
- *   4. Builds index.html, studio/, people/, privacy/, news/, contact/ and
+ *   4. Builds index.html, studio/, people/, privacy/, news/, news/category/<slug>/, contact/ and
  *      projects/<category>/index.html from content/pages/*.json (build/lib/);
  *      their "News" link points at /news/
  *   5. Updates data/news.json (used by the in-page news switcher)
@@ -36,7 +36,9 @@ const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
 const { escAttr, isVideo, loadPartial } = require('./build/lib/html');
 const { sitekey } = require('./build/lib/chrome');
-const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
+const {
+  heroPath, categoryHref, FALLBACK_SRC, NEWS_CATEGORIES,
+} = require('./build/lib/pages/news');
 const {
   ensureVariants, readManifest, picture, heroVideo, preloadLink,
 } = require('./build/lib/images');
@@ -172,6 +174,10 @@ function loadPosts(dir, manifest = {}) {
     if (!['true', 'false', '', undefined].includes(fm.noindex)) {
       throw new Error(`${file}: noindex must be true or false: "${fm.noindex}"`);
     }
+    if (!Object.hasOwn(NEWS_CATEGORIES, fm.category || '')) {
+      const keys = Object.keys(NEWS_CATEGORIES).join(', ');
+      throw new Error(`${file}: category must be one of ${keys}: "${fm.category}"`);
+    }
     fm.noindex = fm.noindex === 'true';
     if (!fm.id) fm.id = `md${fm.slug}`;
     fm.filename = f.slice(0, -3);
@@ -264,6 +270,8 @@ function renderPost(template, p, list, manifest = {}) {
     .replaceAll('{{IMAGES_CSS}}', loadPartial('images-css'))
     .replaceAll('{{TITLE}}', p.title)
     .replaceAll('{{DATE}}', p.date || '')
+    .replaceAll('{{CATEGORY_HREF}}', categoryHref(p.category))
+    .replaceAll('{{CATEGORY}}', esc(NEWS_CATEGORIES[p.category].name))
     .replaceAll('{{CONTENT}}', `\n${p.html}\n        `)
     .replaceAll('{{NEWS_BTN}}', newsBtn)
     .replaceAll('{{NEWSLIST}}', list)
@@ -282,6 +290,8 @@ function newsJsonEntry(p, manifest) {
       picture: p.hero && !isVideo(p.hero) ? heroPicture(p, manifest) : '',
       link: p.link || '',
       slug: p.slug,
+      category: NEWS_CATEGORIES[p.category].name,
+      category_href: categoryHref(p.category),
     },
   };
 }
@@ -303,12 +313,12 @@ function sitemap(posts, pages, projects = []) {
     + `${rows.join('\n')}\n</urlset>\n`;
 }
 
-/* Only folders directly inside news/ are deleted. */
+/* Only folders directly inside news/ are deleted. news/category/ holds the category pages. */
 function pruneNews(root, posts) {
   const newsRoot = path.join(root, 'news');
   const slugs = new Set(posts.map((p) => p.slug));
   fs.readdirSync(newsRoot, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && !slugs.has(d.name))
+    .filter((d) => d.isDirectory() && !slugs.has(d.name) && d.name !== 'category')
     .forEach((d) => {
       fs.rmSync(path.join(newsRoot, d.name), { recursive: true });
       console.log(`deleted stale news/${d.name}/`);

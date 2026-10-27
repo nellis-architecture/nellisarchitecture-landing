@@ -577,6 +577,8 @@
 
         <div class="NewsData">June 28, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/dubai-lifestyle-trends/">Dubai Lifestyle &amp; Trends</a>
+
         <div class="NewsContent">
 <hr />
 <p>Smart home technology is often presented as an amenity. A feature to be listed alongside the number of bedrooms, the pool length and the finish specification. In practice, it is something more fundamental than that – or it should be. When integrated correctly, home automation systems do not add to a luxury villa. They disappear into it. The home becomes quieter, more responsive and easier to live in without the technology ever drawing attention to itself. When integrated poorly, the opposite occurs. Systems conflict, interfaces proliferate and the home requires management rather than simply being lived in.</p>
@@ -1411,6 +1413,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

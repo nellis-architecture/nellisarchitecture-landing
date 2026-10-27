@@ -2,6 +2,7 @@
 title: "Beachfront Resilience: Salt, Wind, And Glazing"
 id: "989"
 slug: "beachfront-resilience-salt-wind-and-glazing"
+category: "villa-design-architecture"
 date: "November 07, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/11/qENpH5_A.jpeg"
 hero_alt: "Beachfront Resilience: Salt, Wind, And Glazing"

@@ -2,6 +2,7 @@
 title: "Systems Thinking in Architecture: Designing Systems, Not Just Villas"
 id: "1841"
 slug: "systems-thinking-in-architecture-sustainable-architecture-uae"
+category: "villa-design-architecture"
 date: "July 9, 2026"
 description: "The most enduring luxury homes in Dubai and the UAE are not designed room by room. They are designed as systems - where climate, technology, structure and daily life are resolved together from the beginning."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/Systems-Thinking-in-Architecture-Sustainable-Architecture-UAE-Nellis-Architecture-scaled.jpg"

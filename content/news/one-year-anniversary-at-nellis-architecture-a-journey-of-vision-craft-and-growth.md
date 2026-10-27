@@ -2,6 +2,7 @@
 title: "One-Year Anniversary at Nellis Architecture: A Journey of Vision, Craft, and Growth"
 id: "952"
 slug: "one-year-anniversary-at-nellis-architecture-a-journey-of-vision-craft-and-growth"
+category: "studio-news-culture"
 date: "November 6, 2024"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/07/One-Year-Anniversary-Video-For-Website.mp4"
 hero_alt: "One-Year Anniversary at Nellis Architecture: A Journey of Vision, Craft, and Growth"

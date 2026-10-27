@@ -2,6 +2,7 @@
 title: "Heritage and Innovation in Dubai Architecture: How Tradition Meets Modern Design"
 id: "994"
 slug: "heritage-and-innovation-in-dubai-architecture-how-tradition-meets-modern-design"
+category: "dubai-lifestyle-trends"
 date: "November 21, 2025"
 description: "Discover how Dubai’s architecture blends heritage with innovation, from villa interior design to sustainable, modern homes crafted with care."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/11/fFS57bbQ.jpeg"

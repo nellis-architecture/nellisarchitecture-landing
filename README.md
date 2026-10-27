@@ -20,6 +20,7 @@ How this project is run — start here:
 index.html, {studio,people,privacy,contact}/index.html             # pages (generated)
 news/index.html                                                    # news index: all articles, newest first (generated)
 news/<slug>/index.html                                             # 58 articles (generated)
+news/category/<slug>/index.html                                    # 5 news category pages (generated)
 projects/index.html                                                # projects hub: all projects + category links (generated)
 projects/<category>/index.html                                     # 4 category pages (generated)
 projects/<category>/<slug>/index.html                              # 32 project pages (generated from data/projects.json)

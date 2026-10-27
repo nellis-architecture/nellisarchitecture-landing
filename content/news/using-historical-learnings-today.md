@@ -2,6 +2,7 @@
 title: "Using Historical Learnings Today"
 id: "965"
 slug: "using-historical-learnings-today"
+category: "studio-news-culture"
 date: "March 19, 2025"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/02/image_2025-03-22_01-36-57-1.png"
 hero_alt: "Using Historical Learnings Today"

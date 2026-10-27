@@ -577,6 +577,8 @@
 
         <div class="NewsData">December 24, 2025</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Miraia was awarded the 5-Star Single Residence at the International Property Awards. For our studio, it was more than recognition. It was a moment of stillness. A reminder of why we design the way we do. Miraia was never just a project. It was a question, an intention, and a place shaped to hold calm in a city that rarely pauses. At<a href="https://nellisarchitecture.com/news/the-craft-of-time-why-enduring-architecture-matters/"> Nellis Architecture</a>, we believe homes should breathe, expand, and restore. Miraia is that belief made physical. A home shaped by rhythm, guided by landscape, and representative of a new generation of residential architecture in the Middle East.</p>
@@ -1385,6 +1387,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

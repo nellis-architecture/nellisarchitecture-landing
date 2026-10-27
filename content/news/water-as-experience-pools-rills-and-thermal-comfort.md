@@ -2,6 +2,7 @@
 title: "Water as Experience | Pools, Rills and Thermal Comfort in Gulf Architecture | Nellis Architecture"
 id: "1071"
 slug: "water-as-experience-pools-rills-and-thermal-comfort"
+category: "landscape-outdoor-living"
 date: "December 18, 2025"
 description: "Exploring how pools, rills and water walls create luxury experiences and thermal comfort in Gulf architecture. A study of passive cooling, shallow water courts and shaded outdoor living by Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/12/Water-as-Experience.jpg"

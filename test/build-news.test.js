@@ -141,7 +141,8 @@ test('sitemap skips noindex pages', () => {
 
 test('loadPosts refuses a slug that is not lowercase letters, digits and dashes', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'posts-'));
-  const post = (slug) => `---\ntitle: T\nslug: ${slug}\ndate: 2026-01-02\n---\nBody\n`;
+  const post = (slug) => '---\ntitle: T\n'
+    + `slug: ${slug}\ncategory: interior-design\ndate: 2026-01-02\n---\nBody\n`;
   fs.writeFileSync(path.join(dir, 'ok.md'), post('ok-post-2'));
   assert.equal(loadPosts(dir)[0].slug, 'ok-post-2');
   ['..', '../x', 'a/b', 'Upper', 'two words', 'a--b', '-a', ''].forEach((bad) => {
@@ -171,7 +172,12 @@ const meta = (html, prop) => [
 const SITE = 'https://nellisarchitecture.com';
 const UP = `${SITE}/wp-content/uploads`;
 const post = (over) => ({
-  slug: 's', title: 'T', html: '<p>x</p>', dateObj: new Date(Date.UTC(2025, 11, 22)), ...over,
+  slug: 's',
+  title: 'T',
+  category: 'interior-design',
+  html: '<p>x</p>',
+  dateObj: new Date(Date.UTC(2025, 11, 22)),
+  ...over,
 });
 
 test('renderPost gives each post its own og:image, size and published time', () => {
@@ -287,7 +293,10 @@ test('renderPost writes the reading time and keeps the author', () => {
 test('loadPosts reads noindex as a boolean and refuses other values', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'posts-'));
   const file = path.join(dir, 'p.md');
-  const write = (line) => fs.writeFileSync(file, `---\ntitle: T\nslug: p\n${line}\n---\nBody\n`);
+  const write = (line) => fs.writeFileSync(
+    file,
+    `---\ntitle: T\nslug: p\ncategory: interior-design\n${line}\n---\nBody\n`,
+  );
   [['noindex: true', true], ['noindex: "true"', true], ['noindex: false', false],
     ['noindex: "false"', false], ['', false], ['noindex:', false]].forEach(([line, want]) => {
     write(line);
@@ -424,6 +433,41 @@ test('newsJsonEntry: picture is the hero markup for an image hero, else empty', 
   assert.match(data.picture, /^<picture /);
   assert.equal(newsJsonEntry(post({ hero: `${UP}/v.mp4` }), MANIFEST).data.picture, '');
   assert.equal(newsJsonEntry(post({}), MANIFEST).data.picture, '');
+});
+
+test('loadPosts refuses a missing or unknown category and names the file', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'posts-'));
+  const file = path.join(dir, 'p.md');
+  const write = (line) => fs.writeFileSync(file, `---\ntitle: T\nslug: p\n${line}\n---\nBody\n`);
+  write('category: "studio-news-culture"');
+  assert.equal(loadPosts(dir)[0].category, 'studio-news-culture');
+  ['', 'category:', 'category: news', 'category: Interior Design', 'category: constructor']
+    .forEach((line) => {
+      write(line);
+      const named = (e) => e.message.includes(file) && /category must be one of/.test(e.message);
+      assert.throws(() => loadPosts(dir), named, line);
+    });
+  fs.rmSync(dir, { recursive: true });
+});
+
+test('renderPost links the post to its category page, outside .NewsData', () => {
+  const html = renderPost(TEMPLATE, post({ category: 'landscape-outdoor-living', date: 'D' }), '');
+  assert.ok(html.includes('<div class="NewsData">D</div>\n\n        <a class="NewsCategory" '
+    + 'href="/news/category/landscape-outdoor-living/">Landscape &amp; Outdoor Living</a>'));
+});
+
+test('newsJsonEntry carries the category name and link', () => {
+  const { data } = newsJsonEntry(post({ category: 'dubai-lifestyle-trends' }), MANIFEST);
+  assert.equal(data.category, 'Dubai Lifestyle & Trends');
+  assert.equal(data.category_href, '/news/category/dubai-lifestyle-trends/');
+});
+
+test('the switcher sets the category link text and href', () => {
+  const js = TEMPLATE.slice(TEMPLATE.indexOf('function ajaxNews'));
+  assert.ok(js.includes("document.querySelector('.NewsCategory').textContent = post.category;"));
+  assert.ok(js.includes(
+    "document.querySelector('.NewsCategory').setAttribute('href', post.category_href);",
+  ));
 });
 
 test('the switcher uses post.picture first and keeps the img and video paths', () => {

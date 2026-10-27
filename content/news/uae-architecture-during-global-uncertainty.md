@@ -2,6 +2,7 @@
 title: "UAE Architecture During Global Uncertainty: How Dubai’s Architecture Sector Continues to Grow Through Global Change"
 id: "1833"
 slug: "uae-architecture-during-global-uncertainty"
+category: "dubai-lifestyle-trends"
 date: "July 7, 2026"
 description: "While architecture industries in many parts of the world have contracted under economic and political pressure, Dubai’s has not. An examination of why - and what it means for those commissioning residential projects in the UAE."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/UAE-Architecture-During-Global-Uncertainty-Architecture-Firms-in-Dubai-Nellis-Architecture-scaled.jpg"

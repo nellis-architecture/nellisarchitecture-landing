@@ -83,3 +83,19 @@ VIEWPORTS.forEach(([label, viewport]) => {
     });
   });
 });
+
+test('news: a category page lists its posts; the post category link opens its page', async () => {
+  const v = await visit('/news/category/villa-design-architecture/', DESKTOP);
+  await check(v, 'news-category', async () => {
+    const count = await v.page.evaluate(() => document
+      .querySelectorAll('.newsIndexItem').length);
+    const want = Object.values(NEWS)
+      .filter(({ data }) => data.category_href === '/news/category/villa-design-architecture/');
+    assert.equal(count, want.length);
+    await v.page.goto(new URL(POST, v.page.url()).href, { waitUntil: 'domcontentloaded' });
+    await v.page.locator('.NewsCategory').click();
+    await v.page.waitForURL(/\/news\/category\/dubai-lifestyle-trends\/$/);
+    const h1 = await v.page.locator('.categoryTitle').textContent();
+    assert.equal(h1, 'Dubai Lifestyle & Trends');
+  });
+});

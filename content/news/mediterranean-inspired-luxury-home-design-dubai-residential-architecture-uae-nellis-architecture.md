@@ -2,6 +2,7 @@
 title: "Mediterranean-Inspired Luxury Home Design Dubai | Residential Architecture UAE | Nellis Architecture"
 id: "1656"
 slug: "mediterranean-inspired-luxury-home-design-dubai-residential-architecture-uae-nellis-architecture"
+category: "villa-design-architecture"
 date: "May 30, 2026"
 description: "How Mediterranean design principles shape luxury residential architecture in Dubai, focusing on light, shade and spaces designed for real everyday living."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/architectural-design-services-Nellis-Architecture-2.jpg"

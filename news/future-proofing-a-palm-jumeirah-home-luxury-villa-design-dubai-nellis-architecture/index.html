@@ -577,6 +577,8 @@
 
         <div class="NewsData">February 3, 2026</div>
 
+        <a class="NewsCategory" href="/news/category/villa-design-architecture/">Villa Design &amp; Architecture</a>
+
         <div class="NewsContent">
 <hr />
 <p>Designing a home on Palm Jumeirah comes with a particular responsibility. The location is iconic, but it is also exposed, saline, and constantly evolving. When we begin work on a Palm Jumeirah villa, the conversation is rarely about short-term impact. Instead, it centres on how the home will perform, adapt, and remain relevant over time. As an architect Dubai homeowners trust for long-term residential thinking, we see future-proofing not as a technical add-on, but as a design mindset that informs every decision from day one.</p>
@@ -1402,6 +1404,8 @@
                   mediaContainer.innerHTML = '';
                 }
                 document.querySelector('.NewsData').textContent = post.data || '';
+                document.querySelector('.NewsCategory').textContent = post.category;
+                document.querySelector('.NewsCategory').setAttribute('href', post.category_href);
                 document.querySelector('.NewsContent').innerHTML = (post.content || '') + '<br><br>';
                 const newsBtn = document.querySelector('.NewsBtn');
                 if (post.link && post.link !== '#' && post.link !== '') {

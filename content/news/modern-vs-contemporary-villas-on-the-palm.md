@@ -2,6 +2,7 @@
 title: "Modern vs Contemporary Villas on the Palm | Luxury Villa Design Dubai | Nellis Architecture"
 id: "1341"
 slug: "modern-vs-contemporary-villas-on-the-palm"
+category: "villa-design-architecture"
 date: "February 14, 2026"
 description: "An informed look at the difference between modern and contemporary villas on the Palm, and how architectural decisions influence longevity, lifestyle and resale value in Dubai."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/02/Modern-vs-Contemporary-Villas-on-the-Palm-scaled.jpg"

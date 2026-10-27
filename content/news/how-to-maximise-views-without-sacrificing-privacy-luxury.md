@@ -2,6 +2,7 @@
 title: "How to Maximise Views Without Sacrificing Privacy | Luxury Villa Design Dubai | Nellis Architecture"
 id: "1304"
 slug: "how-to-maximise-views-without-sacrificing-privacy-luxury"
+category: "villa-design-architecture"
 date: "February 13, 2026"
 description: "A thoughtful exploration of how luxury villas in Dubai balance views and privacy through architectural planning, landscape strategy and integrated residential design."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/02/Dubai-villa-interior-design-scaled.jpg"

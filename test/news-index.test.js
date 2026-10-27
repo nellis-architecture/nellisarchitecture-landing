@@ -164,6 +164,90 @@ test('news/index.html survives pruneNews and refreshNewsLists', () => {
   fs.rmSync(root, { recursive: true });
 });
 
+const CATS = PAGES.filter((p) => p.slug.startsWith('news/category/'));
+const renderCat = (slug, posts = POSTS) => {
+  const p = PAGES.find((x) => x.slug === `news/category/${slug}`);
+  return news.render(p.data, {
+    site, newsHref: '/news/', page: p, posts, manifest: {},
+  });
+};
+
+test('there is one category page per NEWS_CATEGORIES entry, in the approved order', () => {
+  assert.deepEqual(CATS.map((p) => p.category), Object.keys(news.NEWS_CATEGORIES));
+  assert.deepEqual(CATS.map((p) => p.priority), ['0.6', '0.6', '0.6', '0.6', '0.6']);
+});
+
+test('a category page lists only its posts, newest first', () => {
+  const html = renderCat('interior-design');
+  const hrefs = [...html.matchAll(/<h3 class="newsIndexTitle"><a href="([^"]+)">/g)]
+    .map((m) => m[1]);
+  const want = POSTS.filter((p) => p.category === 'interior-design');
+  assert.ok(want.length > 1);
+  assert.deepEqual(hrefs, want.map((p) => `/news/${p.slug}/`));
+  assert.ok(!html.includes('{{'));
+});
+
+test('a category page has its own title, meta, canonical, crumbs and schema', () => {
+  const html = renderCat('landscape-outdoor-living');
+  const { name, description } = news.NEWS_CATEGORIES['landscape-outdoor-living'];
+  const url = `${DOMAIN}/news/category/landscape-outdoor-living/`;
+  const title = 'Landscape &amp; Outdoor Living | News | Nellis Architecture';
+  assert.ok(html.includes(`<title>${title}</title>`));
+  assert.ok(html.includes(`<meta name="description" content="${description}" />`));
+  assert.ok(html.includes(`<link rel="canonical" href="${url}" />`));
+  assert.ok(html.includes(`<meta property="og:url" content="${url}" />`));
+  assert.ok(html.includes('<meta property="og:type" content="website" />'));
+  assert.ok(html.includes('<h2 class="categoryTitle">Landscape &amp; Outdoor Living</h2>'));
+  assert.ok(html.includes(`<p class="categoryIntro">${description}</p>\n`));
+  assert.ok(html.includes('<a href="/news/">News</a> <span aria-hidden="true">›</span>\n'
+    + '                    <span aria-current="page">Landscape &amp; Outdoor Living</span>'));
+  assert.ok(!html.includes('<nav class="projectBreadcrumbs" aria-label="Categories">'));
+  const ld = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+  const [pageNode, crumbs, ...rest] = JSON.parse(ld)['@graph'];
+  assert.equal(pageNode['@type'], 'CollectionPage');
+  assert.equal(pageNode.url, url);
+  assert.equal(rest.length, 0);
+  assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
+    [1, 'Home', `${DOMAIN}/`], [2, 'News', `${DOMAIN}/news/`], [3, name, undefined],
+  ]);
+});
+
+test('a category page without posts throws', () => {
+  const other = [post({ category: 'studio-news-culture' })];
+  assert.throws(() => renderCat('interior-design', other), /category\/interior-design\/: no posts/);
+  assert.throws(() => renderCat('interior-design', null), /no posts/);
+});
+
+test('the /news/ page keeps its crumbs and links the 5 category pages', () => {
+  const html = render(POSTS);
+  assert.ok(html.includes('<a href="/">Home</a> <span aria-hidden="true">›</span>\n'
+    + '                    <span aria-current="page">News</span>\n                </nav>'));
+  const nav = html.split('aria-label="Categories">')[1].split('</nav>')[0];
+  const links = [...nav.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(links, Object.entries(news.NEWS_CATEGORIES)
+    .map(([slug, c]) => [`/news/category/${slug}/`, escAttr(c.name)]));
+});
+
+test('the sitemap lists the 5 category pages once each', () => {
+  const xml = sitemap(POSTS, renderPages(ROOT, '/news/', LIST, POSTS), LIST);
+  CATS.forEach((p) => {
+    const row = `<url><loc>${DOMAIN}/${p.slug}/</loc><priority>0.6</priority></url>`;
+    assert.equal(count(xml, row), 1, p.slug);
+  });
+});
+
+test('pruneNews keeps news/category/ and refreshNewsLists does not touch it', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'news-cat-'));
+  const file = path.join(root, 'news', 'category', 'interior-design', 'index.html');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const html = '<div class="NewsList">\nold\n<div class="elscroll"></div>';
+  fs.writeFileSync(file, html);
+  pruneNews(root, [{ slug: 'kept' }]);
+  refreshNewsLists(root, 'NEW');
+  assert.equal(fs.readFileSync(file, 'utf8'), html);
+  fs.rmSync(root, { recursive: true });
+});
+
 test('news partials close every div they open', () => {
   ['page-news', 'news-item'].forEach((name) => {
     const html = fs.readFileSync(path.join(ROOT, `build/lib/partials/${name}.html`), 'utf8');
