@@ -1,5 +1,6 @@
 /* global Swiper */
-/* Project pages: a thumb click swaps the open project in place, as on the live site. */
+/* Project pages: a thumb click swaps the open project in place, as on the live site.
+   On desktop the new project slides in from the right on .currentProject2 (theme CSS). */
 (function projectSwitch() {
   'use strict';
 
@@ -18,8 +19,11 @@
   };
   const parser = new DOMParser();
   const cache = new Map();
+  const overlay = document.querySelector('.currentProject2');
   let current = window.location.pathname;
   let latest = 0;
+  let options = null;
+  let timer = 0;
 
   // Taken before the footer scripts change the page (img-protect wraps the images).
   cache.set(current, parser.parseFromString(document.documentElement.outerHTML, 'text/html'));
@@ -27,29 +31,55 @@
   function swiperOptions() {
     const theme = document.querySelector('.currentProject2 .swiper');
     if (!theme || !theme.swiper) return SWIPER_OPTIONS;
-    const options = { ...theme.swiper.passedParams };
-    delete options.el;
-    return options;
+    const params = { ...theme.swiper.passedParams };
+    delete params.el;
+    return params;
   }
 
-  function swapPanel(doc) {
-    const panel = document.querySelector('.currentProject');
+  function fill(panel, doc) {
     const foot = panel.querySelector('.footer.mobFoot');
     const next = doc.querySelector('.currentProject');
     const nextFoot = next.querySelector('.footer.mobFoot');
+    if (!options) options = swiperOptions();
     panel.querySelectorAll('.swiper').forEach((el) => el.swiper && el.swiper.destroy(true, true));
     while (panel.firstChild !== foot) panel.removeChild(panel.firstChild);
     for (let n = next.firstChild; n && n !== nextFoot; n = n.nextSibling) {
       panel.insertBefore(document.importNode(n, true), foot);
     }
-    const options = swiperOptions();
-    panel.querySelectorAll('.swiper').forEach((el) => new Swiper(el, options));
-    panel.scrollTop = 0;
     const video = panel.querySelector('.currentProject-heroImg video');
     if (video) {
       video.muted = video.defaultMuted;
       video.play().catch(() => {});
     }
+  }
+
+  function swapPanel(doc) {
+    const panel = document.querySelector('.currentProject');
+    fill(panel, doc);
+    panel.querySelectorAll('.swiper').forEach((el) => new Swiper(el, options));
+    panel.scrollTop = 0;
+  }
+
+  function snapBack() {
+    if (!timer) return;
+    clearTimeout(timer);
+    timer = 0;
+    overlay.classList.add('curTransition');
+    overlay.classList.remove('currentRight');
+    overlay.getBoundingClientRect();
+    overlay.classList.remove('curTransition');
+    overlay.replaceChildren();
+  }
+
+  function slide(doc) {
+    snapBack();
+    fill(overlay, doc);
+    overlay.getBoundingClientRect();
+    overlay.classList.add('currentRight');
+    timer = setTimeout(() => {
+      swapPanel(doc);
+      snapBack();
+    }, 800);
   }
 
   function swapHead(doc) {
@@ -84,7 +114,11 @@
     const mine = latest;
     load(path).then((doc) => {
       if (mine !== latest) return;
-      swapPanel(doc);
+      if (push && window.matchMedia('(min-width: 1180px)').matches) slide(doc);
+      else {
+        snapBack();
+        swapPanel(doc);
+      }
       swapHead(doc);
       if (push) window.history.pushState(null, '', path);
       current = path;
