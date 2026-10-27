@@ -365,3 +365,13 @@ test('every footer links Privacy policy to /privacy/ and Got skills to the skill
     skills.forEach((m) => assert.equal(m[1], site.forms.skills.email, name));
   });
 });
+
+test('no page and no news template has an empty phone link', () => {
+  const site = readSite();
+  const [entry] = loadProjects(ROOT);
+  const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
+  pages.push([entry.url, project.render(entry, { site, newsHref: '/news/' })]);
+  const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+  pages.push(['news-template.html', news]);
+  pages.forEach(([name, html]) => assert.ok(!html.includes('href="tel:"'), name));
+});
