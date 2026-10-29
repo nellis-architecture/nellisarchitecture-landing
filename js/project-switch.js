@@ -24,6 +24,7 @@
   let latest = 0;
   let options = null;
   let timer = 0;
+  let finish = null;
 
   // Taken before the footer scripts change the page (img-protect wraps the images).
   cache.set(current, parser.parseFromString(document.documentElement.outerHTML, 'text/html'));
@@ -64,6 +65,7 @@
     if (!timer) return;
     clearTimeout(timer);
     timer = 0;
+    finish = null;
     overlay.classList.add('curTransition');
     overlay.classList.remove('currentRight');
     overlay.getBoundingClientRect();
@@ -71,16 +73,25 @@
     overlay.replaceChildren();
   }
 
+  /* The slide can start late (a first visit decodes the new images first), so the 0.8 s
+     count starts when the move starts. The 1.6 s timer covers a slide that never starts. */
   function slide(doc) {
     snapBack();
     fill(overlay, doc);
     overlay.getBoundingClientRect();
     overlay.classList.add('currentRight');
-    timer = setTimeout(() => {
+    finish = () => {
       swapPanel(doc);
       snapBack();
-    }, 800);
+    };
+    timer = setTimeout(finish, 1600);
   }
+
+  overlay.addEventListener('transitionstart', (e) => {
+    if (e.target !== overlay || e.propertyName !== 'right' || !finish) return;
+    clearTimeout(timer);
+    timer = setTimeout(finish, 800);
+  });
 
   function swapHead(doc) {
     document.title = doc.title;

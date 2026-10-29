@@ -312,14 +312,16 @@ function load(start = ZEPHYR, wide = true) {
   const panel = () => document.querySelector('.currentProject');
   const shown = () => panel().querySelector('.projectBreadcrumbs').text;
   const overlay = () => document.querySelector('.currentProject2');
+  /* The browser fires transitionstart when the slide begins to move. */
+  const moves = () => overlay().on.transitionstart({ target: overlay(), propertyName: 'right' });
   return {
-    log, document, swipers, parsed, fetched, h, location, click, back, panel, shown, overlay,
+    log, document, swipers, parsed, fetched, h, location, click, back, panel, shown, overlay, moves,
   };
 }
 
 /* eslint-disable n/no-unsupported-features/node-builtins -- mock.timers is stable from Node 23.1;
    the tests run on Node 24 */
-const tick = (ms = 800) => mock.timers.tick(ms);
+const tick = (ms = 1600) => mock.timers.tick(ms);
 
 beforeEach(() => mock.timers.enable({ apis: ['setTimeout'] }));
 afterEach(() => mock.timers.reset());
@@ -534,6 +536,7 @@ test('a desktop switch slides the new project in, then swaps it under the overla
   assert.ok(o.querySelector('video').playedMuted, 'the overlay hero video plays');
   assert.equal(s.swipers.created.length, 0, 'no slider in the overlay');
   assert.equal(s.shown(), 'w44', 'the old project stays under the overlay');
+  s.moves();
   tick(799);
   assert.equal(s.shown(), 'w44');
   tick(1);
@@ -545,6 +548,32 @@ test('a desktop switch slides the new project in, then swaps it under the overla
   assert.deepEqual(o.childNodes, []);
 });
 
+test('the 0.8 s count starts when the slide moves; no move swaps at 1.6 s', async () => {
+  const late = load(W44);
+  late.click(ZEPHYR);
+  await flush();
+  tick(600);
+  late.overlay().on.transitionstart({ target: late.panel(), propertyName: 'right' });
+  late.overlay().on.transitionstart({ target: late.overlay(), propertyName: 'opacity' });
+  tick(800);
+  assert.equal(late.shown(), 'w44', 'other targets and properties do not start the count');
+  late.moves();
+  tick(799);
+  assert.equal(late.shown(), 'w44', 'a late start still gets the whole 0.8 s');
+  tick(1);
+  assert.equal(late.shown(), 'zephyr');
+  late.moves();
+  tick();
+  assert.equal(late.overlay().className, 'currentProject2', 'a stray event does nothing');
+  const never = load(W44);
+  never.click(ZEPHYR);
+  await flush();
+  tick(1599);
+  assert.equal(never.shown(), 'w44');
+  tick(1);
+  assert.equal(never.shown(), 'zephyr');
+});
+
 test('a fast second click slides only the last project', async () => {
   const s = load();
   s.click(W44);
@@ -552,6 +581,7 @@ test('a fast second click slides only the last project', async () => {
   tick(400);
   s.click(ATHENA);
   await flush();
+  s.moves();
   assert.equal(s.overlay().querySelector('.projectBreadcrumbs').text, 'athena');
   assert.equal(s.overlay().querySelectorAll('.projectBreadcrumbs').length, 1);
   assert.ok(s.overlay().classList.contains('currentRight'));
