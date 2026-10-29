@@ -22,8 +22,31 @@ test('parseFrontMatter reads plain and quoted values', () => {
 });
 
 test('parseFrontMatter ignores lines that are not keys', () => {
-  const { fm } = parseFrontMatter('---\ntitle: T\n  - stray\nBad-Key: x\n---\n');
+  const { fm } = parseFrontMatter('---\ntitle: T\n- stray\nBad-Key: x\n---\n');
   assert.deepEqual(fm, { title: 'T' });
+});
+
+test('parseFrontMatter joins a value that a CMS save folded onto indented lines', () => {
+  const src = [
+    '---',
+    'title: Can Architecture Make a Luxury Brand More Desirable? The Psychology of',
+    '  Premium Retail Design',
+    'description: "Luxury retail design: why a store must do more than display a product -',
+    '  it must tell a story,',
+    '  and sell it"',
+    'date: Aug 11, 2026',
+    'id: "1077"',
+    '---',
+    'Body',
+  ].join('\n');
+  const { fm, body } = parseFrontMatter(src);
+  assert.equal(fm.title, 'Can Architecture Make a Luxury Brand More Desirable? '
+    + 'The Psychology of Premium Retail Design');
+  assert.equal(fm.description, 'Luxury retail design: why a store must do more than display '
+    + 'a product - it must tell a story, and sell it');
+  assert.equal(fm.date, 'Aug 11, 2026');
+  assert.equal(fm.id, '1077');
+  assert.equal(body, 'Body');
 });
 
 test('parseFrontMatter throws on a missing front matter block', () => {

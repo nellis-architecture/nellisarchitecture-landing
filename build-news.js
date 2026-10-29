@@ -86,6 +86,13 @@ function parseFrontMatter(src, file = '') {
       /* Block scalar (Decap writes `|-`, or `>-` past 80 chars). Only `schema` uses it, as
          JSON: `>` joins with a space, the blank lines drop, and the end is trimmed. */
       const block = v.match(/^([|>])[-+]?$/);
+      if (!block) {
+        /* A CMS save folds a long plain or quoted value onto indented lines: join with a space. */
+        while (i + 1 < lines.length && /^\s+\S/.test(lines[i + 1])) {
+          i += 1;
+          v = `${v} ${lines[i].trim()}`;
+        }
+      }
       if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1).replace(/\\"/g, '"');
       if (block) {
         const rest = [];
