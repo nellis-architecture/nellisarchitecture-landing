@@ -139,6 +139,31 @@ test('the preview pane of a page is a sandboxed iframe without scripts', () => {
   assert.equal(bad.tag, 'p');
 });
 
+test('the preview shows an unsaved upload and names the file of a bad schema', () => {
+  const templates = {};
+  const window = {
+    CMS: {
+      registerPreviewTemplate: (n, c) => {
+        templates[n] = c;
+      },
+    },
+    h: (tag, props, text) => ({ tag, props, text }),
+  };
+  run(window);
+  const data = content('studio');
+  data.intro.photo.src = '/wp-content/uploads/pages/draft-new.jpg';
+  const media = [{ path: 'wp-content/uploads/pages/draft-new.jpg', url: 'blob:x/1' }];
+  const entry = (d) => ({
+    get: (key) => ({ toJS: () => (key === 'mediaFiles' ? media : d) }),
+  });
+  const out = templates.studio({ entry: entry(data), getAsset: (p) => p });
+  assert.ok(out.props.srcDoc.includes('src="blob:x/1"'));
+  assert.ok(!out.props.srcDoc.includes('src="/wp-content/uploads/pages/draft-new.jpg"'));
+  const bad = { ...data, seo: { ...data.seo, schema: '{"a":' } };
+  const message = templates.studio({ entry: entry(bad) }).text;
+  assert.match(message, /content\/pages\/studio\.json: schema/);
+});
+
 test('pathShim matches node:path.posix', () => {
   const shim = pathShim();
   const { posix } = path;

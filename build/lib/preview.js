@@ -130,7 +130,7 @@ function renderPage(load, pages, newsHref, site, name, content) {
   return load(page.file).render(content, {
     site,
     newsHref,
-    page: { slug: page.slug, category: page.category },
+    page: { slug: page.slug, category: page.category, content: page.content },
     root: '.',
     projects: load('build/lib/projects.js').loadProjects('.'),
     posts: null,
@@ -164,13 +164,21 @@ function forPreview(html, manifest, getAsset) {
   });
 }
 
-/* One Decap preview template per page. No allow-scripts: the theme JS does not run. */
+/* One Decap preview template per page. No allow-scripts: the theme JS does not run.
+   An upload that is not saved yet exists only as a blob: URL in the entry's mediaFiles. */
 function register(cms, h, pages, render, prepare, manifest) {
   pages.forEach(({ content }) => {
     cms.registerPreviewTemplate(content, (props) => {
+      const files = props.entry.get('mediaFiles');
+      const drafts = {};
+      const list = files && files.toJS ? files.toJS() : [];
+      (Array.isArray(list) ? list : []).forEach((f) => {
+        if (f.url && f.path) drafts[`/${f.path.replace(/^\//, '')}`] = f.url;
+      });
+      const getAsset = (p) => drafts[p] || (props.getAsset ? props.getAsset(p) : p);
       let html;
       try {
-        html = prepare(render(content, props.entry.get('data').toJS()), manifest, props.getAsset);
+        html = prepare(render(content, props.entry.get('data').toJS()), manifest, getAsset);
       } catch (err) {
         return h('p', null, `Preview not available: ${err.message}`);
       }
