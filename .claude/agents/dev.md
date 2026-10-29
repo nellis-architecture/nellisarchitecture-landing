@@ -14,7 +14,7 @@ Implement **exactly** the signed-off plan. No scope creep. No speculative abstra
 - Write **unit tests** for non-trivial logic: a branch, a loop, a parser. A trivial one-liner needs no test. A bug fix needs a test that fails without the fix.
 - Run the checks before hand-off. Confirm only the expected files changed.
 - Leave a marker comment on any deliberate shortcut. Name the ceiling and the upgrade path.
-- **Commit a checkpoint on `master`. Do not create a branch or a merge commit. Do not push.** (docs/workflow/development.md → Repository)
+- **Commit a checkpoint on the current branch. Do not make a merge commit. Do not push:** the orchestrator pushes after the operator's sign-off. (docs/workflow/development.md → Repository)
 
 Report each item:
 

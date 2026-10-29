@@ -8,8 +8,8 @@ Driver: `/ticket <card-url>` ([.claude/commands/ticket.md](../../.claude/command
 
 | Role | Does | Agent |
 |---|---|---|
-| Operator | Prioritises, answers open decisions, reviews, pushes, closes cards. | the person |
-| Orchestrator | Reads the card state, starts the hat for that state, moves the card. | main session |
+| Operator | Prioritises, answers open decisions, reviews and signs off, closes cards. | the person |
+| Orchestrator | Reads the card state, starts the hat for that state, moves the card. Pushes to `origin/master` after the operator's sign-off. | main session |
 | Architect | Checks for duplicates, writes the design and the plan. No code. | [architect](../../.claude/agents/architect.md) |
 | Bar-raiser | Reviews the design (Architect BR) and the code (Dev BR). PASS or BLOCK. | [bar-raiser](../../.claude/agents/bar-raiser.md) |
 | Developer | Implements the signed-off plan with tests. Commits locally. | [dev](../../.claude/agents/dev.md) |
@@ -32,13 +32,13 @@ Backlog → To do → Architect BR → In Progress → Test → Dev BR → Revie
 | In Progress | dev | Implement. Run checks. Local commit. | Green checkpoint commit. | Test |
 | Test | orchestrator | Run checks. | Checks pass. Fail → In Progress. | Dev BR |
 | Dev BR | bar-raiser | Code and test review. | PASS. BLOCK → In Progress. | Review |
-| Review | qa | Acceptance criteria, content and SEO checks. [Review scenario](#review-scenario): write it, run it, attach the evidence. | PASS **and operator review**. BLOCK → In Progress. | Shipping |
-| Shipping | orchestrator | Operator pushes. Verify the deploy. Run the pending scenario tests. | Deploy verified. | Done (operator) |
+| Review | qa | Acceptance criteria, content and SEO checks. [Review scenario](#review-scenario): write it, run it, attach the evidence. | PASS **and operator sign-off**. BLOCK → In Progress. | Shipping |
+| Shipping | orchestrator | [Push to `origin/master`](#repository). Verify the deploy. Run the pending scenario tests. | Deploy verified. | Done (operator) |
 | Done | — | Terminal. Follow-ups go to Backlog. | — | — |
 | Blocked | — | Report the blocker. Ask the operator. | — | previous state |
 | Closed | — | Not done, not needed. Terminal. | — | — |
 
-Human gates: Review sign-off, push, Done, Closed, and an Architect BR sign-off only when AGENTS.md → Decisions asks for one. Agents never pass these gates.
+Human gates: Review sign-off, Done, Closed, and an Architect BR sign-off only when AGENTS.md → Decisions asks for one. Agents never pass these gates. The Review sign-off allows the agent to push.
 
 ## Board conventions
 
@@ -134,11 +134,11 @@ One time, for each person or machine. The API and the MCP server use only the AP
 ### Repository
 
 - GitHub: <https://github.com/nellis-architecture/nellisarchitecture-landing> (private). CLI: `gh`.
-- **One branch: `master`.** Do all work on `master`. Do not create a branch for a card. The local checks and the operator's push decision protect the work. A branch does not. An unmerged branch deploys nothing: Workers Builds deploys only a push to `master`. A card that reports unmerged work as shipped is wrong.
+- **One remote branch: `master`.** Work on the current branch or on any local branch: the name does not matter. Push only to `origin/master`. Never push another branch and never open a pull request. Workers Builds deploys only `master`. A card that reports unpushed work as shipped is wrong.
 - **Linear history.** Do not make merge commits. Before work: `git pull --rebase`. Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`master`).
-- Report a stray branch that you find. If the person asks you to bring it in, rebase its commits onto `master` (`git rebase` or `git cherry-pick`). Do not merge it.
-- When the person asks, resolve a rebase conflict. Keep the intent of both sides. Do not merge generated files by hand: run the build. Run the checks on each rebased commit, then report each resolution on its card.
-- Any operator can approve a change and ask for the push to `master`. A second review is not necessary, and there are no pull requests: a bad push is rolled back with a new push. The operator deletes the remote branch after the push. Deleting a remote branch is a push, and an agent never pushes.
+- **Push after sign-off.** When an operator signs off a card at Review, the agent pushes: `git fetch origin`, `git rebase origin/master`, run the checks, then `git push origin HEAD:master`. Move the card to Shipping with the pushed commit hash. Do not push without a sign-off. Any operator can sign off. A second review is not necessary: a bad push is rolled back with a new push.
+- Report a stray remote branch that you find. If the person asks you to bring it in, rebase its commits onto `master` (`git rebase` or `git cherry-pick`). Do not merge it. The operator deletes the remote branch.
+- Resolve a rebase conflict when the person asks, or when you rebase a signed-off card before its push. Keep the intent of both sides. Do not merge generated files by hand: run the build. Run the checks on each rebased commit, then report each resolution on its card. If the checks fail, do not push: report on the card.
 
 ### Commands
 
@@ -213,7 +213,7 @@ The Worker uses the Free plan. See [Workers limits](https://developers.cloudflar
 
 Rules:
 
-- Push to `master` in batches. One push is one build. Do not push for docs or test changes alone.
+- One push is one build. Push code changes after the sign-off. A change with only docs or tests does not need its own push: it goes with the next push.
 - CMS editors: one publish is one build. Publish changes together.
 
 ### Deploy check (Shipping)
