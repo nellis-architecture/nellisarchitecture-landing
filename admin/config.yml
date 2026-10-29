@@ -1,5 +1,5 @@
 # Decap CMS configuration — Nellis Architecture news
-# base_url is the workers.dev Worker until the DNS cutover (card 9 sets the apex).
+# base_url is the workers.dev Worker until the DNS cutover (LND-052 sets the apex).
 
 backend:
   name: github

@@ -60,7 +60,7 @@ test('_headers sets the security headers on every path', () => {
   assert.equal(all.get('x-frame-options'), 'SAMEORIGIN');
   assert.equal(all.get('x-content-type-options'), 'nosniff');
   assert.equal(all.get('referrer-policy'), 'strict-origin-when-cross-origin');
-  assert.equal(all.get('x-robots-tag'), 'noindex', 'noindex stays until the DNS cutover (card 9)');
+  assert.equal(all.get('x-robots-tag'), 'noindex', 'noindex stays until the DNS cutover (LND-052)');
 });
 
 test('_headers caches uploads and variants for one year, immutable', () => {

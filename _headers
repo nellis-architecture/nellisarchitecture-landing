@@ -1,4 +1,4 @@
-# X-Robots-Tag: noindex keeps workers.dev out of search. Remove it at the DNS cutover (card 9).
+# X-Robots-Tag: noindex keeps workers.dev out of search. Remove it at the DNS cutover (LND-052).
 /*
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff

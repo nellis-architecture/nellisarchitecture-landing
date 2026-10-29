@@ -54,7 +54,7 @@ const SEARCH = 'data/search.json';
    .photo1 and .FourBlock__firstPhoto. person: the open .accord__itemImg (people).
    post: the .NewsImg hero and the .NewsContent images of a news post (the news theme also
    breaks at 1700 px). teaser: the .newsIndexImg cards of /news/ (page-news.html: 320 px).
-   Measured in headless Brave (card 9qVdi6pv). */
+   Measured in headless Brave (LND-069). */
 const SLOTS = {
   card: '(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), '
     + '(max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), '
