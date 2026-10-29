@@ -862,7 +862,7 @@ const { fill, loadPartial } = require('../html');
 const {
   head, top, affiliations, navSite, follow, footer, emailTokens, year,
 } = require('../chrome');
-const { seoTokens, withOrganization } = require('../seo');
+const { seoTokens, yoastPage } = require('../seo');
 const { earlyScript } = require('../projects');
 const { prioritize } = require('../images');
 
@@ -873,7 +873,7 @@ const HEAD = {
   OG_TYPE: 'website',
   MODIFIED_TIME: '2026-04-23T11:09:57+00:00',
 };
-const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture | Award-Winning Architectural Design Firm","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T22:04:15+00:00","dateModified":"2026-04-23T11:09:57+00:00","description":"Nellis Architecture is one of the best architecture firms in Dubai, delivering award-winning residential, commercial, and bespoke architectural design solutions.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
+const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/","url":"https:\\/\\/nellisarchitecture.com\\/","name":"{{NAME}}","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T22:04:15+00:00","dateModified":"2026-04-23T11:09:57+00:00","description":"{{DESCRIPTION}}","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
 /* eslint-enable @stylistic/max-len */
 
 /* The project overlay stays closed and empty on Home: each project has its own page. */
@@ -895,7 +895,7 @@ function render(content, {
   return [
     head({
       ...HEAD,
-      SCHEMA: withOrganization(SCHEMA, site.follow),
+      SCHEMA: yoastPage(SCHEMA, content, site.follow),
       EARLY_SCRIPT: earlyScript(projects),
       ...seoTokens(content, page),
     }),
@@ -1038,7 +1038,7 @@ const { picture } = require('../images');
 const {
   head, top, affiliations, navSite, footer, emailTokens,
 } = require('../chrome');
-const { seoTokens, withOrganization } = require('../seo');
+const { seoTokens, yoastPage } = require('../seo');
 
 /* Fixed head values, raw HTML. SEO values come from content.seo (seoTokens). */
 /* eslint-disable @stylistic/max-len -- raw WordPress head values, kept byte for byte */
@@ -1047,7 +1047,7 @@ const HEAD = {
   OG_TYPE: 'article',
   MODIFIED_TIME: '2026-04-24T06:23:40+00:00',
 };
-const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/","url":"https:\\/\\/nellisarchitecture.com\\/studio\\/","name":"Architecture Studio Dubai | Luxury Villa Design & Interiors","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T21:05:18+00:00","dateModified":"2026-04-24T06:23:40+00:00","description":"Discover Nellis Architecture Studio in Dubai. Experts in luxury villa design, master planning, interiors, and landscape architecture for high-end residential and investment projects.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/studio\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Architecture Studio Dubai"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
+const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/","url":"https:\\/\\/nellisarchitecture.com\\/studio\\/","name":"{{NAME}}","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T21:05:18+00:00","dateModified":"2026-04-24T06:23:40+00:00","description":"{{DESCRIPTION}}","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/studio\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Architecture Studio Dubai"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
 /* eslint-enable @stylistic/max-len */
 
 /* Quote text: each line break becomes <br>. */
@@ -1085,7 +1085,7 @@ function render(content, {
     src: img.src, alt: img.alt, title: img.title, slot, ...more,
   }, manifest);
   return [
-    head({ ...HEAD, SCHEMA: withOrganization(SCHEMA, site.follow), ...seoTokens(content, page) }),
+    head({ ...HEAD, SCHEMA: yoastPage(SCHEMA, content, site.follow), ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-studio'), {
       NAV: navSite(site.nav),
@@ -1300,6 +1300,22 @@ const yoastOrganization = (follow) => JSON.stringify(organization(follow)).repla
 const withOrganization = (schema, follow) => `${schema.slice(0, -2)},`
   + `${yoastOrganization(follow)}]}`;
 
+/* The page title: the SEO title, else the page title, else the h1. */
+const titleOf = (content) => (content.seo || {}).title || content.title || content.h1;
+
+/* A JSON string value as Yoast writes it: `\/` for a slash; `<` escaped for the script tag. */
+const yoastString = (v) => JSON.stringify(String(v || '')).slice(1, -1)
+  .replace(/\//g, '\\/').replace(/</g, '\\u003c');
+
+/* The Yoast literal with the WebPage name and description from the content (the same
+   values as the title and the meta description), then the Organization node. */
+function yoastPage(schema, content, follow) {
+  const filled = schema
+    .replace('{{NAME}}', () => yoastString(titleOf(content)))
+    .replace('{{DESCRIPTION}}', () => yoastString((content.seo || {}).description));
+  return withOrganization(filled, follow);
+}
+
 /* The editor's extra ld+json block: re-serialized, `<` escaped, so </script> cannot close it. */
 function customSchema(raw, file) {
   if (!raw || !raw.trim()) return '';
@@ -1322,7 +1338,7 @@ function seoTokens(content, page) {
   if (seo.canonical && !seo.canonical.startsWith(`${DOMAIN}/`)) {
     throw new Error(`seo.canonical must start with ${DOMAIN}/: ${seo.canonical}`);
   }
-  const title = seo.title || content.title || content.h1;
+  const title = titleOf(content);
   const url = seo.canonical || pageUrl(page.slug);
   return {
     TITLE: escText(title),
@@ -1346,7 +1362,9 @@ module.exports = {
   pageUrl,
   sameAs,
   seoTokens,
+  titleOf,
   withOrganization,
+  yoastPage,
 };
 
 }

@@ -4,7 +4,7 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const {
-  LOGO, customSchema, organization, pageUrl, sameAs, seoTokens, withOrganization,
+  LOGO, customSchema, organization, pageUrl, sameAs, seoTokens, withOrganization, yoastPage,
 } = require('../build/lib/seo');
 const { PAGES, renderPages } = require('../build/lib/pages');
 // eslint-disable-next-line import-x/no-useless-path-segments -- Home page module
@@ -25,8 +25,8 @@ const INDEX_ROBOTS = "<meta name='robots' content='index, follow, max-image-prev
 
 test('an empty SEO title falls back to the page title, then to the h1', () => {
   const expected = {
-    index: 'Nellis Architecture | Award-Winning Architectural Design Firm',
-    studio: 'Architecture Studio Dubai',
+    index: 'Award-Winning Architect in Dubai',
+    studio: 'Dubai Architecture Studio',
     people: 'People | Nellis Architecture Studio Team &amp; Experts',
     privacy: 'Privacy policy',
   };
@@ -38,6 +38,40 @@ test('an empty SEO title falls back to the page title, then to the h1', () => {
     assert.equal(t.OG_TITLE, title.replace(/"/g, '&quot;'), name);
   });
   assert.equal(seoTokens({ h1: 'H' }, { slug: 'x' }).TITLE, 'H');
+});
+
+const unHtml = (s) => s.replace(/&quot;/g, '"')
+  .replace(/&#0?39;/g, "'")
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&amp;/g, '&');
+const metaOf = (html, attr, key) => unHtml(
+  html.match(new RegExp(`${attr}="${key}" content="([^"]*)"`))[1],
+);
+
+test('Home and Studio: the WebPage node and og tags equal the title and description', () => {
+  const pages = renderPages(ROOT, '/news/');
+  [['index', 'index.html'], ['studio', 'studio/index.html']].forEach(([name, file]) => {
+    const { html } = pages.find((p) => p.file === file);
+    const title = unHtml(html.match(/<title>([^<]+)<\/title>/)[1]);
+    const description = metaOf(html, 'name', 'description');
+    assert.equal(title, read(name).seo.title, name);
+    assert.equal(metaOf(html, 'property', 'og:title'), title, name);
+    assert.equal(metaOf(html, 'property', 'og:description'), description, name);
+    const webPage = JSON.parse(ldRaw(html))['@graph'].find((n) => n['@type'] === 'WebPage');
+    assert.deepEqual([webPage.name, webPage.description], [title, description], name);
+  });
+});
+
+test('yoastPage writes the values as Yoast JSON: \\/ for a slash, < escaped, $ kept', () => {
+  const schema = '{"@graph":[{"name":"{{NAME}}","description":"{{DESCRIPTION}}"}]}';
+  const content = { seo: { title: 'A/B "q" $& <x>', description: 'd\\e' } };
+  const out = yoastPage(schema, content, FOLLOW);
+  const start = '{"@graph":[{"name":"A\\/B \\"q\\" $& \\u003cx>","description":"d\\\\e"},';
+  assert.ok(out.startsWith(start));
+  const [node, org] = JSON.parse(out)['@graph'];
+  assert.deepEqual(node, { name: 'A/B "q" $& <x>', description: 'd\\e' });
+  assert.equal(org['@type'], 'Organization');
 });
 
 test('og:title falls back to the SEO title', () => {

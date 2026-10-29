@@ -5,7 +5,7 @@ const { picture } = require('../images');
 const {
   head, top, affiliations, navSite, footer, emailTokens,
 } = require('../chrome');
-const { seoTokens, withOrganization } = require('../seo');
+const { seoTokens, yoastPage } = require('../seo');
 
 /* Fixed head values, raw HTML. SEO values come from content.seo (seoTokens). */
 /* eslint-disable @stylistic/max-len -- raw WordPress head values, kept byte for byte */
@@ -14,7 +14,7 @@ const HEAD = {
   OG_TYPE: 'article',
   MODIFIED_TIME: '2026-04-24T06:23:40+00:00',
 };
-const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/","url":"https:\\/\\/nellisarchitecture.com\\/studio\\/","name":"Architecture Studio Dubai | Luxury Villa Design & Interiors","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T21:05:18+00:00","dateModified":"2026-04-24T06:23:40+00:00","description":"Discover Nellis Architecture Studio in Dubai. Experts in luxury villa design, master planning, interiors, and landscape architecture for high-end residential and investment projects.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/studio\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Architecture Studio Dubai"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
+const SCHEMA = '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/","url":"https:\\/\\/nellisarchitecture.com\\/studio\\/","name":"{{NAME}}","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T21:05:18+00:00","dateModified":"2026-04-24T06:23:40+00:00","description":"{{DESCRIPTION}}","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/studio\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Architecture Studio Dubai"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}';
 /* eslint-enable @stylistic/max-len */
 
 /* Quote text: each line break becomes <br>. */
@@ -52,7 +52,7 @@ function render(content, {
     src: img.src, alt: img.alt, title: img.title, slot, ...more,
   }, manifest);
   return [
-    head({ ...HEAD, SCHEMA: withOrganization(SCHEMA, site.follow), ...seoTokens(content, page) }),
+    head({ ...HEAD, SCHEMA: yoastPage(SCHEMA, content, site.follow), ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-studio'), {
       NAV: navSite(site.nav),

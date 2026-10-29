@@ -25,6 +25,22 @@ const yoastOrganization = (follow) => JSON.stringify(organization(follow)).repla
 const withOrganization = (schema, follow) => `${schema.slice(0, -2)},`
   + `${yoastOrganization(follow)}]}`;
 
+/* The page title: the SEO title, else the page title, else the h1. */
+const titleOf = (content) => (content.seo || {}).title || content.title || content.h1;
+
+/* A JSON string value as Yoast writes it: `\/` for a slash; `<` escaped for the script tag. */
+const yoastString = (v) => JSON.stringify(String(v || '')).slice(1, -1)
+  .replace(/\//g, '\\/').replace(/</g, '\\u003c');
+
+/* The Yoast literal with the WebPage name and description from the content (the same
+   values as the title and the meta description), then the Organization node. */
+function yoastPage(schema, content, follow) {
+  const filled = schema
+    .replace('{{NAME}}', () => yoastString(titleOf(content)))
+    .replace('{{DESCRIPTION}}', () => yoastString((content.seo || {}).description));
+  return withOrganization(filled, follow);
+}
+
 /* The editor's extra ld+json block: re-serialized, `<` escaped, so </script> cannot close it. */
 function customSchema(raw, file) {
   if (!raw || !raw.trim()) return '';
@@ -47,7 +63,7 @@ function seoTokens(content, page) {
   if (seo.canonical && !seo.canonical.startsWith(`${DOMAIN}/`)) {
     throw new Error(`seo.canonical must start with ${DOMAIN}/: ${seo.canonical}`);
   }
-  const title = seo.title || content.title || content.h1;
+  const title = titleOf(content);
   const url = seo.canonical || pageUrl(page.slug);
   return {
     TITLE: escText(title),
@@ -71,5 +87,7 @@ module.exports = {
   pageUrl,
   sameAs,
   seoTokens,
+  titleOf,
   withOrganization,
+  yoastPage,
 };
