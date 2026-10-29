@@ -70,7 +70,8 @@ Review also runs `npm run test:browser` and attaches the output to the card.
 ### Task board — Trello
 
 - Board: **Website** — <https://trello.com/b/jaBEXApc/website> (board id `6acf67111cc66adaf0db8c8a`).
-- API: [Trello REST API](https://developer.atlassian.com/cloud/trello/rest/) with `curl`. Credentials come from the environment: `TRELLO_KEY`, `TRELLO_TOKEN` (set in the operator's shell profile; restart the app after a change). Never print or commit them.
+- API: [Trello REST API](https://developer.atlassian.com/cloud/trello/rest/) with `curl`. Credentials come from the environment: `TRELLO_KEY`, `TRELLO_TOKEN` (see [Trello setup on macOS](#trello-setup-on-macos)). Never print or commit them.
+- MCP: [`.mcp.json`](../../.mcp.json) runs [@thadeu/trello-mcp](https://github.com/thadeu/trello-mcp) with the same credentials (`TRELLO_KEY` → `TRELLO_API_KEY`). The server can only use this board (`TRELLO_ALLOWED_BOARD_IDS`).
 - A card URL `https://trello.com/c/<shortLink>/...` gives the card id `<shortLink>`.
 
 | List | id |
@@ -102,6 +103,32 @@ curl -s "$T/lists/<list-id>/cards?fields=name,shortUrl,labels&$A"
 ```
 
 The shell is zsh: an unquoted `$var` does not split into words. Pass each argument separately.
+
+#### Trello setup on macOS
+
+One time, for each person or machine. The API and the MCP server use only the API key and the token. They do not use the API secret.
+
+1. Open the [Power-Up admin](https://trello.com/power-ups/admin). Make a Power-Up in the workspace of the board. Open its **API key** tab and click **Generate a new API key**. Copy the API key.
+2. Get a token. Open this URL with your API key, and click **Allow**:
+   `https://trello.com/1/authorize?expiration=never&scope=read,write&response_type=token&name=nellis&key=<api-key>`
+   ([Trello authorization](https://developer.atlassian.com/cloud/trello/guides/rest-api/authorization/)).
+3. Add the two values to `~/.zshenv`. zsh reads this file for each shell, also for the shells that an agent starts.
+
+   ```sh
+   export TRELLO_KEY=<api-key>
+   export TRELLO_TOKEN=<token>
+   ```
+
+4. An app that you start from the Dock or Finder (for example the Claude desktop app or an IDE) does not read `~/.zshenv`. Give the values to these apps in a new terminal, then restart the app. Do this step again after each login:
+
+   ```sh
+   launchctl setenv TRELLO_KEY "$TRELLO_KEY"
+   launchctl setenv TRELLO_TOKEN "$TRELLO_TOKEN"
+   ```
+
+5. Check the credentials. The command prints your Trello user name:
+   `curl -s "https://api.trello.com/1/members/me?fields=username&key=$TRELLO_KEY&token=$TRELLO_TOKEN"`
+6. Start [Claude Code](https://code.claude.com/docs/en/mcp#project-scope) in the repo and approve the project server `trello` from `.mcp.json`. Then `claude mcp get trello` shows the server as connected.
 
 ### Repository
 

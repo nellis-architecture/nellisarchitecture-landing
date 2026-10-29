@@ -3,6 +3,7 @@
 /.wrangler/
 /.idea/
 /.claude/
+/.mcp.json
 .DS_Store
 /.gitignore
 /.nvmrc
