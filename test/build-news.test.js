@@ -250,6 +250,15 @@ test('renderPost breadcrumb schema links News to /news/', () => {
   ]);
 });
 
+test('renderPost adds the site name to <title> once', () => {
+  const title = (over) => renderPost(TEMPLATE, post(over), '').match(/<title>([^<]*)<\/title>/)[1];
+  const name = ' | Nellis Architecture';
+  assert.equal(title({ title: 'A' }), `A${name}`);
+  assert.equal(title({ title: `A | Dubai${name}` }), `A | Dubai${name}`);
+  assert.equal(title({ title: 'Nellis Architecture news' }), `Nellis Architecture news${name}`);
+  assert.equal(title({ title: 'A', seo_title: 'S' }), 'S');
+});
+
 test('articleSchema emits the image and the publisher logo and no dateModified', () => {
   const ld = articleSchema(post({}), `${UP}/2025/12/25-questions.jpg`);
   const article = JSON.parse(ld)['@graph'][0];

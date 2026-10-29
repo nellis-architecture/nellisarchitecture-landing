@@ -268,6 +268,14 @@ function newsImg(p, manifest = {}) {
   return `<div class="NewsImg">\n            ${inner}\n          </div>`;
 }
 
+const SITE_NAME = ' | Nellis Architecture';
+
+/* WordPress titles often end with the site name already: do not add it twice. */
+function seoTitle(p) {
+  if (p.seo_title) return p.seo_title;
+  return p.title.endsWith(SITE_NAME) ? p.title : `${p.title}${SITE_NAME}`;
+}
+
 function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
   const img = ogImage(p);
   const newsBtn = p.link
@@ -275,7 +283,7 @@ function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
     : '<a href="/" class="NewsBtn"></a>';
 
   return template
-    .replaceAll('{{SEO_TITLE}}', esc(p.seo_title || `${p.title} | Nellis Architecture`))
+    .replaceAll('{{SEO_TITLE}}', esc(seoTitle(p)))
     .replaceAll('{{PRELOAD}}', p.hero && isVideo(p.hero)
       ? preloadLink(heroVideo(p.hero, manifest).href) : '')
     .replaceAll('{{ROBOTS}}', p.noindex ? NOINDEX : INDEX)
