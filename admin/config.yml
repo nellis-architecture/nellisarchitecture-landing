@@ -90,7 +90,7 @@ collections:
                   - { label: "Title", name: "title", widget: "string", hint: *site_hint }
                   - { label: "Description", name: "description", widget: "string", hint: *site_hint }
                   - { label: "Button", name: "button", widget: "string", hint: *site_hint }
-                  - { label: "E-mail", name: "email", widget: "string", hint: *site_hint }
+                  - { label: "E-mail", name: "email", widget: "string", hint: "Changes show on every page, the news articles too." }
               - label: "Skills form (Got skills?)"
                 name: "skills"
                 widget: "object"
