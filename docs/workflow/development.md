@@ -134,9 +134,10 @@ One time, for each person or machine. The API and the MCP server use only the AP
 
 - GitHub: <https://github.com/nellis-architecture/nellisarchitecture-landing> (private). CLI: `gh`.
 - **One branch: `master`.** Do all work on `master`. Do not create a branch for a card. The local checks and the operator's push decision protect the work. A branch does not. An unmerged branch deploys nothing: Workers Builds deploys only a push to `master`. A card that reports unmerged work as shipped is wrong.
-- Report a stray branch that you find. If the person asks you to merge it, merge it into `master`. Then run the checks and report the merge. The operator deletes the remote branch after the push. Deleting a remote branch is a push, and an agent never pushes.
-- Do not resolve a merge or a rebase conflict. Stop and report it.
-- Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`master`). Before work: `git pull --rebase`.
+- **Linear history.** Do not make merge commits. Before work: `git pull --rebase`. Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`master`).
+- Report a stray branch that you find. If the person asks you to bring it in, rebase its commits onto `master` (`git rebase` or `git cherry-pick`). Do not merge it.
+- When the person asks, resolve a rebase conflict. Keep the intent of both sides. Do not merge generated files by hand: run the build. Run the checks on each rebased commit, then report each resolution on its card.
+- Any operator can approve a change and ask for the push to `master`. A second review is not necessary, and there are no pull requests: a bad push is rolled back with a new push. The operator deletes the remote branch after the push. Deleting a remote branch is a push, and an agent never pushes.
 
 ### Commands
 
