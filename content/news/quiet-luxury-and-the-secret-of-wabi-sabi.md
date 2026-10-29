@@ -4,6 +4,7 @@ id: "985"
 slug: "quiet-luxury-and-the-secret-of-wabi-sabi"
 category: "interior-design"
 date: "September 30, 2025"
+description: "Quiet luxury in Dubai homes: how Wabi-Sabi, honest materials, calm light and a serene neutral palette create interiors that feel composed and last longer."
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/09/quiet.webp"
 hero_alt: "Quiet Luxury and the Secret of Wabi-Sabi"
 ---

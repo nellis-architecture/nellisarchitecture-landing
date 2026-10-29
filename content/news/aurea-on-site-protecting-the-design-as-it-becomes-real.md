@@ -4,6 +4,7 @@ id: "1997"
 slug: "aurea-on-site-protecting-the-design-as-it-becomes-real"
 category: "studio-news-culture"
 date: "September 10, 2026"
+description: "Aurea on site: how Lee Nellis acts as Design Guardian, keeping the design intent intact as structure, services and budgets turn the drawings into a real home."
 ---
 
 ---

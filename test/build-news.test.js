@@ -573,6 +573,12 @@ test('parseDate reads 3-letter month names and Sept in any case', () => {
   });
 });
 
+test('every real post has a meta description', () => {
+  loadPosts(path.join(ROOT, 'content', 'news')).forEach((p) => {
+    assert.ok((p.description || '').trim(), p.slug);
+  });
+});
+
 test('every real post date names a known month', () => {
   loadPosts(path.join(ROOT, 'content', 'news')).forEach((p) => {
     const m = (p.date || '').match(/([A-Za-z]+)\s+\d{1,2},\s*\d{4}/);
