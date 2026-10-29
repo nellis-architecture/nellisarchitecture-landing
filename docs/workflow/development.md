@@ -42,6 +42,7 @@ Human gates: Review sign-off, push, Done, Closed, and an Architect BR sign-off o
 
 ## Board conventions
 
+- **Card id:** each card has a surrogate id `LND-<nnn>` (three digits) at the start of its title, for example `LND-092 Agents work on master: …`. Refer to a card by this id in comments, commit messages, docs and reports, for example `(LND-092)`. Do not use the Trello short link or the Trello card number: the card number is not unique on this board. A new card gets the next free number: the highest `LND` number on the board (archived cards too), plus one. Set it in the title when you create the card.
 - Every card move has a comment: `<from> → <to>: <reason>`. Add the evidence: plan summary, verdict, commit hash, or check output tail.
 - Trello does not render Markdown tables. Write a list, or a preformatted ASCII table in a code block.
 - A design or a decision goes on the card (description or comment). No separate decision files.
@@ -72,7 +73,7 @@ Review also runs `npm run test:browser` and attaches the output to the card.
 - Board: **Website** — <https://trello.com/b/jaBEXApc/website> (board id `6acf67111cc66adaf0db8c8a`).
 - API: [Trello REST API](https://developer.atlassian.com/cloud/trello/rest/) with `curl`. Credentials come from the environment: `TRELLO_KEY`, `TRELLO_TOKEN` (see [Trello setup on macOS](#trello-setup-on-macos)). Never print or commit them.
 - MCP: [`.mcp.json`](../../.mcp.json) runs [@thadeu/trello-mcp](https://github.com/thadeu/trello-mcp) with the same credentials (`TRELLO_KEY` → `TRELLO_API_KEY`). The server can only use this board (`TRELLO_ALLOWED_BOARD_IDS`).
-- A card URL `https://trello.com/c/<shortLink>/...` gives the card id `<shortLink>`.
+- A card URL `https://trello.com/c/<shortLink>/...` gives the API card id `<shortLink>`. Use it only in API calls; people know the card by its `LND` id (see [Board conventions](#board-conventions)).
 
 | List | id |
 |---|---|
@@ -170,7 +171,7 @@ Cloudflare Workers is the current binding, not a fixed choice. See [AGENTS.md �
 | Form spam check | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) ([js/forms.js](../../js/forms.js), [worker/turnstile.js](../../worker/turnstile.js)) | Any captcha + a server check |
 | CMS login | Worker `GET /api/auth`, `GET /api/callback` ([worker/oauth.js](../../worker/oauth.js)) | Any serverless function that does the GitHub OAuth flow |
 
-The production domain <https://nellisarchitecture.com> stays on WordPress until the DNS cutover (card 9).
+The production domain <https://nellisarchitecture.com> stays on WordPress until the DNS cutover (LND-052).
 
 - Worker: **landing** — <https://landing.nellisarchitecture.workers.dev>. It serves the repo root as [static assets](https://developers.cloudflare.com/workers/static-assets/).
 - Config: [wrangler.jsonc](../../wrangler.jsonc). [.assetsignore](../../.assetsignore) lists the root entries that the Worker does not publish.
