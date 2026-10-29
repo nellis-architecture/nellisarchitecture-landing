@@ -398,6 +398,15 @@ function assertNoResult(html, name) {
   assert.equal(count(html, NO_RESULT), 1, name);
 }
 
+test('the privacy page heading and breadcrumb say Privacy Policy', () => {
+  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  assert.ok(html.includes('<h1 class="visually-hidden">Privacy Policy</h1>'));
+  const ld = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+  const crumbs = JSON.parse(ld)['@graph'].find((n) => n['@type'] === 'BreadcrumbList');
+  assert.deepEqual(crumbs.itemListElement.map((i) => i.name), ['Home', 'Privacy Policy']);
+  assert.ok(!html.includes('Political'));
+});
+
 test('every page carries one well-formed "No result" span in the nav search', () => {
   renderPages(ROOT, '/news/', undefined, POSTS).forEach((p) => assertNoResult(p.html, p.file));
   const [entry] = loadProjects(ROOT);
