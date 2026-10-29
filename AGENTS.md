@@ -78,7 +78,7 @@ Change the source file, then run the commands. Never edit a generated file by ha
 | The project switch on a project page | `js/project-switch.js` | `npm run lint && npm test && npm run test:browser` |
 | The contact and the brief form in the browser | `js/forms.js` | `npm run lint && npm test && npm run test:browser` |
 | The form endpoints, the uploads, the CMS login | `worker/*.js` | `npm run lint && npm test`, then `npx wrangler dev` to test the endpoints locally ([development.md → Hosting](docs/workflow/development.md#hosting--cloudflare-workers)) |
-| The CMS preview pane | `build/lib/preview.js` | `npm run build && npm run lint && npm test` |
+| The CMS preview pane, the CMS fixes for Decap bugs | `build/lib/preview.js` | `npm run build && npm run lint && npm test` |
 | A theme script (burger, modal, swiper, fancybox) | `wp-content/themes/nellis/assets/JS/` | `npm run test:browser` (theme code is not linted) |
 
 ### Look

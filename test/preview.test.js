@@ -29,6 +29,34 @@ function run(window = {}) {
   return window;
 }
 
+/* A fake window.CMS: the preview templates, the widgets that patchCms wraps, the editor
+   components. */
+function fakeCms() {
+  const templates = {};
+  const widgets = {
+    image: { control: 'ImageControl', preview: 'ImagePreview', schema: { s: 1 } },
+    markdown: { control: 'MarkdownControl', preview: 'MarkdownPreview', schema: { s: 2 } },
+  };
+  const components = {};
+  return {
+    templates,
+    widgets,
+    components,
+    registerPreviewTemplate: (n, c) => {
+      templates[n] = c;
+    },
+    getWidget: (n) => widgets[n],
+    registerWidget: (w) => {
+      widgets[w.name] = {
+        control: w.controlComponent, preview: w.previewComponent, schema: w.schema,
+      };
+    },
+    registerEditorComponent: (c) => {
+      components[c.id] = c;
+    },
+  };
+}
+
 const { NellisPreview } = run();
 
 test('previewPages: the PAGES pages without news and contact', () => {
@@ -62,7 +90,9 @@ test('edited content gives the same output in the preview and in the build', () 
 
 test('the script registers one preview template per page, each a file of admin/config.yml', () => {
   const names = [];
-  run({ CMS: { registerPreviewTemplate: (n) => names.push(n) }, h: () => null });
+  const cms = fakeCms();
+  cms.registerPreviewTemplate = (n) => names.push(n);
+  run({ CMS: cms, h: () => null });
   assert.deepEqual(names, PAGES.map((p) => p.content));
   const config = fs.readFileSync(path.join(ROOT, 'admin', 'config.yml'), 'utf8');
   names.forEach((n) => assert.ok(config.includes(`name: "${n}"`), n));
@@ -118,16 +148,7 @@ test('register shows the render error in the pane and does not throw', () => {
 });
 
 test('the preview pane of a page is a sandboxed iframe without scripts', () => {
-  const templates = {};
-  const window = {
-    CMS: {
-      registerPreviewTemplate: (n, c) => {
-        templates[n] = c;
-      },
-    },
-    h: (tag, props) => ({ tag, props }),
-  };
-  run(window);
+  const { templates } = run({ CMS: fakeCms(), h: (tag, props) => ({ tag, props }) }).CMS;
   const props = { entry: { get: () => ({ toJS: () => content('privacy') }) }, getAsset: null };
   const out = templates.privacy(props);
   assert.equal(out.tag, 'iframe');
@@ -140,16 +161,9 @@ test('the preview pane of a page is a sandboxed iframe without scripts', () => {
 });
 
 test('the preview shows an unsaved upload and names the file of a bad schema', () => {
-  const templates = {};
-  const window = {
-    CMS: {
-      registerPreviewTemplate: (n, c) => {
-        templates[n] = c;
-      },
-    },
-    h: (tag, props, text) => ({ tag, props, text }),
-  };
-  run(window);
+  const { templates } = run({
+    CMS: fakeCms(), h: (tag, props, text) => ({ tag, props, text }),
+  }).CMS;
   const data = content('studio');
   data.intro.photo.src = '/wp-content/uploads/pages/draft-new.jpg';
   const media = [{ path: 'wp-content/uploads/pages/draft-new.jpg', url: 'blob:x/1' }];
@@ -162,6 +176,40 @@ test('the preview shows an unsaved upload and names the file of a bad schema', (
   const bad = { ...data, seo: { ...data.seo, schema: '{"a":' } };
   const message = templates.studio({ entry: entry(bad) }).text;
   assert.match(message, /content\/pages\/studio\.json: schema/);
+});
+
+test('patchCms: the image widget and the body preview show an unpublished upload', () => {
+  const cms = fakeCms();
+  run({ CMS: cms, h: (type, props) => ({ type, props }) });
+  const media = [{ path: 'wp-content/uploads/news/draft-new.jpg', url: 'blob:x/1' }];
+  const entry = { get: (key) => (key === 'mediaFiles' ? { toJS: () => media } : undefined) };
+  const getAsset = (p, field) => `asset:${p}:${field}`;
+  const draft = '/wp-content/uploads/news/draft-new.jpg';
+  const published = '/wp-content/uploads/2025/02/logo.png';
+  const { image, markdown } = cms.widgets;
+  const control = image.control({ getEntry: () => entry, getAsset, value: draft });
+  assert.equal(control.type, 'ImageControl');
+  assert.equal(control.props.value, draft);
+  assert.equal(control.props.getAsset(draft, 'f'), 'blob:x/1');
+  assert.equal(control.props.getAsset(published, 'f'), `asset:${published}:f`);
+  [image.preview({ entry, getAsset }), markdown.preview({ entry, getAsset })].forEach((out, i) => {
+    assert.equal(out.type, ['ImagePreview', 'MarkdownPreview'][i]);
+    assert.equal(out.props.getAsset(draft), 'blob:x/1');
+    assert.equal(out.props.getAsset(published, 'f'), `asset:${published}:f`);
+  });
+  assert.equal(markdown.control, 'MarkdownControl');
+  assert.deepEqual([image.schema, markdown.schema], [{ s: 1 }, { s: 2 }]);
+});
+
+test('patchCms: "---" is a block that keeps its blank line', () => {
+  const cms = fakeCms();
+  run({ CMS: cms, h: () => null });
+  const { separator } = cms.components;
+  assert.ok(separator.pattern.test('---'));
+  assert.ok(!separator.pattern.test('----') && !separator.pattern.test('--- x'));
+  assert.equal(Object.keys(separator.fromBlock(['---'])).length, 0);
+  assert.equal(separator.toBlock({}), '\n---');
+  assert.equal(separator.toPreview({}), '<hr />');
 });
 
 test('pathShim matches node:path.posix', () => {

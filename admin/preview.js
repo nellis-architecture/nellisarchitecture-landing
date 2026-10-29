@@ -1436,6 +1436,13 @@ function renderPage(load, pages, newsHref, site, name, content) {
     manifest: load('build/lib/images.js').readManifest('.'),
   });
 }
+function draftUrl(entry, p) {
+  const files = entry && entry.get('mediaFiles');
+  const list = files && files.toJS ? files.toJS() : [];
+  const file = (Array.isArray(list) ? list : [])
+    .find((f) => f.url && f.path && `/${f.path.replace(/^\//, '')}` === p);
+  return file ? file.url : null;
+}
 function forPreview(html, manifest, getAsset) {
   return html.replace(/<img\b[^>]*>/g, (tag) => {
     let t = tag;
@@ -1462,13 +1469,8 @@ function forPreview(html, manifest, getAsset) {
 function register(cms, h, pages, render, prepare, manifest) {
   pages.forEach(({ content }) => {
     cms.registerPreviewTemplate(content, (props) => {
-      const files = props.entry.get('mediaFiles');
-      const drafts = {};
-      const list = files && files.toJS ? files.toJS() : [];
-      (Array.isArray(list) ? list : []).forEach((f) => {
-        if (f.url && f.path) drafts[`/${f.path.replace(/^\//, '')}`] = f.url;
-      });
-      const getAsset = (p) => drafts[p] || (props.getAsset ? props.getAsset(p) : p);
+      const getAsset = (p) => draftUrl(props.entry, p)
+        || (props.getAsset ? props.getAsset(p) : p);
       let html;
       try {
         html = prepare(render(content, props.entry.get('data').toJS()), manifest, getAsset);
@@ -1481,6 +1483,34 @@ function register(cms, h, pages, render, prepare, manifest) {
         style: { border: 0, width: '100%', height: '100vh' },
       });
     });
+  });
+}
+function patchCms(cms, h) {
+  const withDrafts = (widget, entryOf) => (props) => h(widget, {
+    ...props,
+    getAsset: (p, field) => draftUrl(entryOf(props), p) || props.getAsset(p, field),
+  });
+  const wrap = (name, entryOfControl) => {
+    const w = cms.getWidget(name);
+    cms.registerWidget({
+      name,
+      controlComponent: entryOfControl ? withDrafts(w.control, entryOfControl) : w.control,
+      previewComponent: withDrafts(w.preview, (props) => props.entry),
+      schema: w.schema,
+      allowMapValue: w.allowMapValue,
+      globalStyles: w.globalStyles,
+    });
+  };
+  wrap('image', (props) => props.getEntry && props.getEntry());
+  wrap('markdown', null);
+  cms.registerEditorComponent({
+    id: 'separator',
+    label: 'Separator',
+    fields: [],
+    pattern: /^---$/,
+    fromBlock: () => ({}),
+    toBlock: () => '\n---',
+    toPreview: () => '<hr />',
   });
 }
 var path = pathShim();
@@ -1498,5 +1528,8 @@ function render(name, content) {
   return renderPage(load, PAGES, NEWS_HREF, SITE, name, content);
 }
 window.NellisPreview = { render: render, forPreview: forPreview };
-if (window.CMS) register(window.CMS, window.h, PAGES, render, forPreview, manifest);
+if (window.CMS) {
+  patchCms(window.CMS, window.h);
+  register(window.CMS, window.h, PAGES, render, forPreview, manifest);
+}
 }());

@@ -164,18 +164,59 @@ function forPreview(html, manifest, getAsset) {
   });
 }
 
-/* One Decap preview template per page. No allow-scripts: the theme JS does not run.
-   An upload that is not saved yet exists only as a blob: URL in the entry's mediaFiles. */
+/* The blob: URL of an upload of the entry that is not published yet, else null.
+   Decap 3.10+ takes a root-relative value such as /wp-content/uploads/news/x.jpg for a
+   published URL (decap-cms #7639), so it does not find the upload in memory. */
+function draftUrl(entry, p) {
+  const files = entry && entry.get('mediaFiles');
+  const list = files && files.toJS ? files.toJS() : [];
+  const file = (Array.isArray(list) ? list : [])
+    .find((f) => f.url && f.path && `/${f.path.replace(/^\//, '')}` === p);
+  return file ? file.url : null;
+}
+
+/* Workarounds for Decap bugs (LND-035):
+   - the image widget (its thumbnail and preview) and the body preview show an unpublished
+     upload: draftUrl first, then Decap's getAsset;
+   - "---" is a block component. Most posts start with "---": Decap's Slate serializer reads
+     a leading bare thematic break as inline content and empties the body on any Rich Text
+     edit. toBlock keeps the blank line before it: a body that starts with "---" does not
+     save (gray-matter reads it as front matter). */
+function patchCms(cms, h) {
+  const withDrafts = (widget, entryOf) => (props) => h(widget, {
+    ...props,
+    getAsset: (p, field) => draftUrl(entryOf(props), p) || props.getAsset(p, field),
+  });
+  const wrap = (name, entryOfControl) => {
+    const w = cms.getWidget(name);
+    cms.registerWidget({
+      name,
+      controlComponent: entryOfControl ? withDrafts(w.control, entryOfControl) : w.control,
+      previewComponent: withDrafts(w.preview, (props) => props.entry),
+      schema: w.schema,
+      allowMapValue: w.allowMapValue,
+      globalStyles: w.globalStyles,
+    });
+  };
+  wrap('image', (props) => props.getEntry && props.getEntry());
+  wrap('markdown', null);
+  cms.registerEditorComponent({
+    id: 'separator',
+    label: 'Separator',
+    fields: [],
+    pattern: /^---$/,
+    fromBlock: () => ({}),
+    toBlock: () => '\n---',
+    toPreview: () => '<hr />',
+  });
+}
+
+/* One Decap preview template per page. No allow-scripts: the theme JS does not run. */
 function register(cms, h, pages, render, prepare, manifest) {
   pages.forEach(({ content }) => {
     cms.registerPreviewTemplate(content, (props) => {
-      const files = props.entry.get('mediaFiles');
-      const drafts = {};
-      const list = files && files.toJS ? files.toJS() : [];
-      (Array.isArray(list) ? list : []).forEach((f) => {
-        if (f.url && f.path) drafts[`/${f.path.replace(/^\//, '')}`] = f.url;
-      });
-      const getAsset = (p) => drafts[p] || (props.getAsset ? props.getAsset(p) : p);
+      const getAsset = (p) => draftUrl(props.entry, p)
+        || (props.getAsset ? props.getAsset(p) : p);
       let html;
       try {
         html = prepare(render(content, props.entry.get('data').toJS()), manifest, getAsset);
@@ -211,8 +252,10 @@ ${pathShim}
 ${virtualFs}
 ${loader}
 ${renderPage}
+${draftUrl}
 ${forPreview}
 ${register}
+${patchCms}
 var path = pathShim();
 var empty = {};
 var load = loader(MODULES, {
@@ -228,7 +271,10 @@ function render(name, content) {
   return renderPage(load, PAGES, NEWS_HREF, SITE, name, content);
 }
 window.NellisPreview = { render: render, forPreview: forPreview };
-if (window.CMS) register(window.CMS, window.h, PAGES, render, forPreview, manifest);
+if (window.CMS) {
+  patchCms(window.CMS, window.h);
+  register(window.CMS, window.h, PAGES, render, forPreview, manifest);
+}
 }());
 `;
 }

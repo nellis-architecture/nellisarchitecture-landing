@@ -8,9 +8,10 @@
   <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
 </head>
 <body>
-  <!-- Decap CMS: the news editing interface for the SEO team -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <!-- Preview pane: the generated page for the Pages files (npm run build makes preview.js) -->
+  <!-- Decap CMS: the news editing interface for the SEO team. Pinned: preview.js patches its
+       image and markdown widgets (LND-035); test a new version before you change it. -->
+  <script src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"></script>
+  <!-- Preview pane: the generated page for the Pages files, and fixes for Decap bugs (npm run build makes preview.js) -->
   <script src="/admin/preview.js"></script>
   <!-- Preview pane: use the site's theme styles -->
   <script>CMS.registerPreviewStyle('/wp-content/themes/nellis/assets/scss/main.css');</script>
