@@ -207,6 +207,12 @@ Rules:
 - Run `npm run infra` only after the deployed branch has the `deploy` script in `package.json`.
 - Do not change the build settings in the dashboard. Change `infra/cloudflare.js` or `wrangler.jsonc`, then run `npm run infra`.
 
+### Analytics — Google Analytics 4
+
+- Measurement ID `G-5D57DNBBLX`, the same as the WordPress site. One snippet: [build/lib/partials/analytics.html](../../build/lib/partials/analytics.html), in every page through `{{ANALYTICS}}`. No Google Tag Manager: the live container `GTM-W7R9MFW2` has no tags.
+- Cookie consent (LND-098): [consent mode](https://developers.google.com/tag-platform/security/guides/consent) keeps analytics storage denied in the EEA, the UK and Switzerland until the visitor accepts. [js/consent.js](../../js/consent.js) shows the banner when the browser timezone is in those regions; the choice is in `localStorage` (`nellis-consent`). "Cookie settings" in the footer opens it again.
+- New-build marker (LND-099): every hit sends `site_build: 'static'`. WordPress hits have no value. Bootstrap (operator, one time): GA4 Admin → Data display → Custom definitions → Create custom dimension: name `Site build`, scope Event, event parameter `site_build` ([custom dimensions](https://support.google.com/analytics/answer/14240153)).
+
 ### Cloudflare limits
 
 The Worker uses the Free plan. See [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) and [Workers Builds limits](https://developers.cloudflare.com/workers/ci-cd/builds/limits-and-pricing/).

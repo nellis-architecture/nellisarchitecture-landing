@@ -75,10 +75,11 @@ after(async () => {
   if (shared) (await shared).close();
 });
 
-/* Opens BASE + pathname in a new context with the given viewport. */
-async function visit(pathname, viewport = DESKTOP) {
+/* Opens BASE + pathname in a new context with the given viewport. The timezone is Dubai unless
+   `options` says otherwise, so the cookie banner (EEA, UK and CH timezones) stays away. */
+async function visit(pathname, viewport = DESKTOP, options = {}) {
   const browser = await connect();
-  const context = await browser.newContext({ viewport });
+  const context = await browser.newContext({ viewport, timezoneId: 'Asia/Dubai', ...options });
   const apiCalls = [];
   await context.route('**/*', (route) => {
     const request = route.request();

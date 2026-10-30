@@ -1,0 +1,18 @@
+<!-- Google tag (gtag.js). Consent mode: analytics waits for consent in the EEA, the UK and Switzerland (LND-098); site_build marks the new build (LND-099). -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5D57DNBBLX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+    region: ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH'],
+    wait_for_update: 500
+  });
+  try {
+    var choice = localStorage.getItem('nellis-consent');
+    if (choice === 'granted' || choice === 'denied') gtag('consent', 'update', { analytics_storage: choice });
+  } catch (e) {}
+  gtag('js', new Date());
+  gtag('config', 'G-5D57DNBBLX', { site_build: 'static' });
+</script>
+<script src="/js/consent.js" defer></script>

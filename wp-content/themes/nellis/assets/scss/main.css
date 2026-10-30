@@ -7069,4 +7069,58 @@ h5, h6 {
   clip: rect(0 0 0 0);
   overflow: hidden;
 }
+
+/* Cookie consent (LND-098, js/consent.js). Under the form modals (.modalBG, 100000). */
+.footer .polit .cookieSettings {
+  margin-left: 16px;
+}
+
+.consentBanner {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 24px);
+  padding: 8px 10px;
+  background: var(--col-green);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.consentBanner[hidden] {
+  display: none;
+}
+
+.consentBanner p {
+  margin: 0;
+}
+
+.consentBanner a {
+  color: var(--col-bej);
+  text-decoration: underline;
+}
+
+.consentBanner__buttons {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.consentBanner button {
+  padding: 3px 10px;
+  border: 1px solid var(--col-bej);
+  background: transparent;
+  color: var(--col-bej);
+  font: inherit;
+  cursor: pointer;
+}
+
+.consentBanner button[data-consent="granted"] {
+  background: var(--col-bej);
+  color: var(--col-green);
+}
 /*# sourceMappingURL=main.css.map */

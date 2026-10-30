@@ -77,6 +77,7 @@ Change the source file, then run the commands. Never edit a generated file by ha
 | The filter and news shim (the WordPress AJAX calls) | `js/static-backend.js` | `npm run lint && npm test && npm run test:browser` |
 | The project switch on a project page | `js/project-switch.js` | `npm run lint && npm test && npm run test:browser` |
 | The contact and the brief form in the browser | `js/forms.js` | `npm run lint && npm test && npm run test:browser` |
+| The cookie banner and the analytics consent | `js/consent.js`, `build/lib/partials/analytics.html` | `npm run build && npm run lint && npm test && npm run test:browser` |
 | The form endpoints, the uploads, the CMS login | `worker/*.js` | `npm run lint && npm test`, then `npx wrangler dev` to test the endpoints locally ([development.md → Hosting](docs/workflow/development.md#hosting--cloudflare-workers)) |
 | The CMS preview pane, the CMS fixes for Decap bugs | `build/lib/preview.js` | `npm run build && npm run lint && npm test` |
 | A theme script (burger, modal, swiper, fancybox) | `wp-content/themes/nellis/assets/JS/` | `npm run test:browser` (theme code is not linted) |
@@ -101,6 +102,7 @@ Each test file owns a flow:
 - `browser/pages.js` — the `/projects/` hub, the category pages, the menu links, and the sweep of every page for JS errors and horizontal overflow.
 - `browser/news.js` — the `/news/` index, a post, the switcher, the sidebar.
 - `browser/forms.js` — the contact form and the brief: the submit, the honeypot, the 5 MB guard, the file slots.
+- `browser/consent.js` — the cookie banner: a European timezone, Decline, Cookie settings, Accept; no banner in Dubai.
 
 A change to a flow changes its test in the same commit. A new flow gets a new test.
 
@@ -118,7 +120,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Plain JavaScript. No TypeScript. No framework.
 - Build scripts run on Node with zero runtime dependencies. Add a dependency only when a card needs it. Dev tools go in `devDependencies`.
 - Browser code runs without a bundler. Keep the existing theme scripts working.
-- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/make-images.js`, `build/lib/**/*.js`, `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `worker/**`, `test/`, `browser/**`, `eslint.config.mjs`. Add new own files to the config.
+- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/make-images.js`, `build/lib/**/*.js`, `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `js/consent.js`, `worker/**`, `test/`, `browser/**`, `eslint.config.mjs`. Add new own files to the config.
 - Build scripts: synchronous `fs` calls and `console` output are allowed (`n/no-sync`, `no-console` off).
 - Browser scripts: `'use strict'` inside the IIFE (`strict: function`). Underscore fields are allowed for shim internals (`no-underscore-dangle` off).
 - Build scripts export their pure functions and run only when called directly (`require.main === module`), so tests can import them.

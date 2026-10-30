@@ -16,6 +16,7 @@ function head(values) {
     SCHEMA_EXTRA: '',
     OG_IMAGE,
     IMAGES_CSS: loadPartial('images-css'),
+    ANALYTICS: loadPartial('analytics'),
     ...values,
   });
 }

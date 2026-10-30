@@ -303,6 +303,7 @@ function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
     .replaceAll('{{SCHEMA}}', articleSchema(p, img.url))
     .replaceAll('{{NEWS_IMG}}', newsImg(p, manifest))
     .replaceAll('{{IMAGES_CSS}}', loadPartial('images-css'))
+    .replaceAll('{{ANALYTICS}}', () => loadPartial('analytics'))
     .replaceAll('{{TITLE}}', p.title)
     .replaceAll('{{DATE}}', p.date || '')
     .replaceAll('{{CATEGORY_HREF}}', categoryHref(p.category))

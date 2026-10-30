@@ -152,14 +152,24 @@
 <link rel="apple-touch-icon" href="/wp-content/uploads/2025/05/cropped-фавикон-1-180x180.png" />
 <meta name="msapplication-TileImage" content="https://nellisarchitecture.com/wp-content/uploads/2025/05/cropped-фавикон-1-270x270.png" />
 	<meta name="google-site-verification" content="oH-pBevPeAKQSQQK7TGRFXu_EF9Qpd6fATJpvUPuwYE" />
-<!-- Google tag (gtag.js) --> 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5D57DNBBLX"></script> 
-<script> 
-  window.dataLayer = window.dataLayer || []; 
-  function gtag(){dataLayer.push(arguments);} 
-  gtag('js', new Date()); 
-  gtag('config', 'G-5D57DNBBLX'); 
+<!-- Google tag (gtag.js). Consent mode: analytics waits for consent in the EEA, the UK and Switzerland (LND-098); site_build marks the new build (LND-099). -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5D57DNBBLX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+    region: ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH'],
+    wait_for_update: 500
+  });
+  try {
+    var choice = localStorage.getItem('nellis-consent');
+    if (choice === 'granted' || choice === 'denied') gtag('consent', 'update', { analytics_storage: choice });
+  } catch (e) {}
+  gtag('js', new Date());
+  gtag('config', 'G-5D57DNBBLX', { site_build: 'static' });
 </script>
+<script src="/js/consent.js" defer></script>
 
 </head>
 
@@ -1086,6 +1096,7 @@
           <div class="copyright">© Nellis Architecture 2026</div>
           <div class="polit">
             <a href="/privacy/" target="_blank">Privacy policy</a>
+            <a href="/privacy/" class="cookieSettings">Cookie settings</a>
           </div>
         </div>
       </div>
@@ -1244,6 +1255,7 @@ Villa Amara embodies the perfect balance of luxury and nature, making it an idea
           <div class="copyright">© Nellis Architecture 2026</div>
           <div class="polit">
             <a href="/privacy/" target="_blank">Privacy policy</a>
+            <a href="/privacy/" class="cookieSettings">Cookie settings</a>
           </div>
         </div>
       </div>
@@ -1430,6 +1442,7 @@ Villa Amara embodies the perfect balance of luxury and nature, making it an idea
           <div class="copyright">© Nellis Architecture 2026</div>
           <div class="polit">
             <a href="/privacy/" target="_blank">Privacy policy</a>
+            <a href="/privacy/" class="cookieSettings">Cookie settings</a>
           </div>
         </div>
       </div>
@@ -1968,6 +1981,7 @@ Villa Amara embodies the perfect balance of luxury and nature, making it an idea
 
           <div class="polit">
             <a href="/privacy/" target="_blank">Privacy policy</a>
+            <a href="/privacy/" class="cookieSettings">Cookie settings</a>
           </div>
         </div>
       </footer>

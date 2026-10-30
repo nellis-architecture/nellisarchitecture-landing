@@ -25,6 +25,7 @@ export default [
       '!js/static-backend.js',
       '!js/project-switch.js',
       '!js/forms.js',
+      '!js/consent.js',
       '!test/',
       '!test/**',
       '!browser/',
@@ -75,7 +76,12 @@ export default [
   },
   {
     files: browserFiles,
-    languageOptions: { sourceType: 'script', globals: globals.browser },
+    languageOptions: {
+      sourceType: 'script',
+      globals: globals.browser,
+      ecmaVersion: 2022,
+      parserOptions: { ecmaVersion: 2022 },
+    },
     rules: {
       'no-underscore-dangle': 'off',
       strict: ['error', 'function'],
