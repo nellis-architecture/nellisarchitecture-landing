@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const privacy = require('../build/lib/pages/privacy');
 
-const { bodyLines, checkFileDays } = privacy;
+const { checkFileDays } = privacy;
 const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
 const project = require('../build/lib/pages/project');
@@ -14,23 +14,6 @@ const {
 } = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
 const { loadPosts } = require('../build-news');
-
-test('bodyLines ends every text line with <br><br>, except the last', () => {
-  assert.equal(bodyLines('one\ntwo\nlast'), 'one<br><br>\ntwo<br><br>\nlast');
-  assert.equal(bodyLines('only'), 'only');
-});
-
-test('bodyLines keeps blank lines blank and ignores outer blank lines', () => {
-  assert.equal(bodyLines('\n\na\n\n \nb\n\n'), 'a<br><br>\n\n\nb');
-  assert.equal(bodyLines(''), '');
-  assert.equal(bodyLines(undefined), '');
-});
-
-test('bodyLines escapes text and keeps a space before the break', () => {
-  assert.equal(bodyLines('>mail & <b>\nend'), '&gt;mail &amp; &lt;b&gt;<br><br>\nend');
-  assert.equal(bodyLines('that \nend'), 'that <br><br>\nend');
-  assert.equal(bodyLines('a\r\nb'), 'a<br><br>\nb');
-});
 
 const ROOT = path.join(__dirname, '..');
 const count = (s, sub) => s.split(sub).length - 1;
@@ -410,6 +393,17 @@ test('checkFileDays: the privacy text must state the file_days value as a whole 
   assert.doesNotThrow(() => checkFileDays('after 1 days', 1));
 });
 
+test('the privacy body is markdown: sections with ids, a Contents list that links to each', () => {
+  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  const ids = [...html.matchAll(/<h2 id="([^"]+)">/g)].map((m) => m[1]);
+  const links = [...html.matchAll(/<a href="#([^"]+)">/g)].map((m) => m[1]);
+  assert.ok(ids.length > 10, String(ids.length));
+  assert.deepEqual(links, ids.filter((id) => id !== 'contents'));
+  assert.ok(html.includes('<a href="mailto:hello@nellisarchitecture.com">'));
+  assert.doesNotMatch(html, /<br><br>|##|\]\(/);
+  assert.equal(count(html, '<ul>'), 5);
+});
+
 test('the privacy page names Cloudflare, Google Analytics and the file retention days', () => {
   const site = readSite(ROOT);
   const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
@@ -460,7 +454,9 @@ test('every page takes the mailto links from site.json and the year from the bui
   })]);
   pages.push([projects[0].url, project.render(projects[0], { site: changed, newsHref: '/news/' })]);
   const copyright = `© Nellis Architecture ${new Date().getUTCFullYear()}`;
-  pages.forEach(([name, html]) => {
+  pages.forEach(([name, page]) => {
+    /* The privacy text is CMS content: its own address is not part of the page chrome. */
+    const html = page.replace(/<div class="policyContent"[\s\S]*?<\/div>/, '');
     ['a@x.test', 'b@x.test'].forEach((email) => {
       assert.ok(html.includes(`mailto:${email}"`), `${name} ${email}`);
       assert.match(html, new RegExp(`>\\s*${email}</a`), `${name} ${email}`);

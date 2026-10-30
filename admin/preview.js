@@ -693,6 +693,77 @@ module.exports = {
 };
 
 },
+"build/lib/markdown.js": function (module, exports, require, __dirname, process) {
+const { escAttr } = require('./html');
+const { picture } = require('./images');
+
+/* The small markdown of the news posts and the privacy page: ## to #### headings, - lists,
+   > quotes, ---, links, images, **bold** and *italic*.
+
+   manifest: build/images.json. The images go through picture(); the markdown keeps the
+   original URLs. Finished markup (images, link start tags) waits as a \u0000n\u0000 token,
+   so the later rules do not change its attributes. Link schemes other than http(s), mailto
+   and tel lose the link and keep the text. */
+const SAFE_HREF = /^(?:https?:|mailto:|tel:|[^:]*(?:[/?#]|$))/i;
+
+/* eslint-disable no-control-regex -- NUL marks the tokens */
+function inlineMd(s, manifest = {}) {
+  const done = [];
+  const keep = (html) => `\u0000${done.push(html) - 1}\u0000`;
+  return s.replace(/\u0000/g, '')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => keep(picture({
+      src, alt, slot: 'post',
+    }, manifest)))
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m, text, href) => (
+      SAFE_HREF.test(href.replace(/[\u0000- ]/g, ''))
+        ? `${keep(`<a href="${escAttr(href)}">`)}${text}</a>` : text))
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/\u0000(\d+)\u0000/g, (m, i) => done[i]);
+}
+/* eslint-enable no-control-regex */
+
+/* The id of a heading, for a #fragment link: "Use of data" -> "use-of-data". */
+const headingId = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+function blockToHtml(b, manifest, ids) {
+  if (/^#{2,4}\s/.test(b)) {
+    const level = b.match(/^(#{2,4})/)[1].length;
+    const text = b.replace(/^#{2,4}\s*/, '');
+    const id = ids ? ` id="${headingId(text)}"` : '';
+    return `<h${level}${id}>${inlineMd(text, manifest)}</h${level}>\n`;
+  }
+  if (b === '---') return '<hr />\n';
+  if (/^(- )/m.test(b)) {
+    const items = b.split('\n')
+      .filter((l) => l.startsWith('- '))
+      .map((l) => `<li>${inlineMd(l.slice(2), manifest)}</li>`)
+      .join('');
+    return `<ul>${items}</ul>\n`;
+  }
+  if (b.startsWith('> ')) {
+    return `<blockquote>${inlineMd(b.replace(/^>\s?/gm, ''), manifest)}</blockquote>\n`;
+  }
+  const html = inlineMd(b, manifest);
+  if (/^<(?:img|picture)\b/.test(html)) return `${html}\n`;
+  return `<p>${inlineMd(b.replace(/\n/g, ' '), manifest)}</p>\n`;
+}
+
+/* ids: give each heading an id (the privacy page links its contents to them). */
+function mdToHtml(md, manifest = {}, { ids = false } = {}) {
+  return md.split(/\n{2,}/)
+    .map((b) => b.trim())
+    .filter(Boolean)
+    .map((b) => blockToHtml(b, manifest, ids))
+    .join('')
+    .trim();
+}
+
+module.exports = {
+  inlineMd, mdToHtml, headingId, SAFE_HREF,
+};
+
+},
 "build/lib/pages/category.js": function (module, exports, require, __dirname, process) {
 const fs = require('node:fs');
 const path = require('node:path');
@@ -994,6 +1065,7 @@ const {
 } = require('../chrome');
 const { seoTokens } = require('../seo');
 const { DEFAULT_DAYS } = require('../../../infra/lifecycle');
+const { mdToHtml } = require('../markdown');
 
 /* Fixed head values, raw HTML. SEO values come from content.seo (seoTokens). */
 /* eslint-disable @stylistic/max-len -- raw WordPress head values, kept byte for byte */
@@ -1004,15 +1076,6 @@ const HEAD = {
   SCHEMA: '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/","url":"https:\\/\\/nellisarchitecture.com\\/privacy\\/","name":"Privacy Policy | Data Protection & User Privacy | Nellis Architecture","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-03-10T18:42:08+00:00","dateModified":"2026-10-30T00:00:00+00:00","description":"Lees het privacybeleid van Nellis Architecture. Ontdek hoe wij persoonlijke gegevens verzamelen, gebruiken en beschermen volgens de geldende privacywetgeving.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/privacy\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Privacy Policy"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}',
 };
 /* eslint-enable @stylistic/max-len */
-
-/* Plain-text body: each text line ends with <br><br>, except the last; blank lines stay blank. */
-function bodyLines(text) {
-  const lines = String(text || '').trim().split(/\r?\n/);
-  return lines.map((line, i) => {
-    if (!line.trim()) return '';
-    return i === lines.length - 1 ? escText(line) : `${escText(line)}<br><br>`;
-  }).join('\n');
-}
 
 /* The policy states how long form files are kept. The CMS edits the days (site.json) and the
    text (privacy.json) separately, so the build stops when they disagree. */
@@ -1033,13 +1096,13 @@ function render(content, { site, page }) {
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       ...emailTokens(site),
       TITLE: escText(content.title),
-      BODY: bodyLines(content.body),
+      BODY: mdToHtml(content.body || '', {}, { ids: true }),
     }),
     footer(site),
   ].join('\n');
 }
 
-module.exports = { render, bodyLines, checkFileDays };
+module.exports = { render, checkFileDays };
 
 },
 "build/lib/pages/studio.js": function (module, exports, require, __dirname, process) {

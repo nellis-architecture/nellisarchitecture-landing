@@ -4,9 +4,10 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {
-  parseFrontMatter, inlineMd, mdToHtml, parseDate, monthIndex, esc, idNum, sitemap, loadPosts,
+  parseFrontMatter, parseDate, monthIndex, esc, idNum, sitemap, loadPosts,
   renderPost, fillSite, readingTime, newsImg, newsJsonEntry, newsList, articleSchema,
 } = require('../build-news');
+const { inlineMd, mdToHtml } = require('../build/lib/markdown');
 const { readManifest, SLOTS } = require('../build/lib/images');
 const { escAttr } = require('../build/lib/html');
 const { rss } = require('../build/lib/feed');

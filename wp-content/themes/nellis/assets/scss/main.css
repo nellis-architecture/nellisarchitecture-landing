@@ -7123,4 +7123,54 @@ h5, h6 {
   background: var(--col-bej);
   color: var(--col-green);
 }
+
+/* Privacy policy text (LND-100): markdown from content/pages/privacy.json. */
+.policyContent {
+  max-width: 760px;
+}
+
+.policyContent h2 {
+  margin: 48px 0 16px;
+  font-size: 24px;
+  line-height: 1.3;
+}
+
+.policyContent h3 {
+  margin: 32px 0 12px;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.policyContent p {
+  margin: 0 0 16px;
+  line-height: 1.6;
+}
+
+.policyContent ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.policyContent li {
+  margin-bottom: 6px;
+  line-height: 1.6;
+  letter-spacing: 1px;
+}
+
+.policyContent a {
+  color: var(--col-green);
+  text-decoration: underline;
+}
+
+.policyContent em {
+  font-style: italic;
+}
+
+@media (max-width: 759px) {
+  .policyContent h2 {
+    margin-top: 36px;
+    font-size: 20px;
+  }
+}
 /*# sourceMappingURL=main.css.map */

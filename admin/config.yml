@@ -141,7 +141,7 @@ collections:
             hint: "Page URL: https://nellisarchitecture.com/privacy/ (fixed, not editable)."
             fields: *seo_fields
           - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "text", hint: "Plain text, no HTML. Each line shows as a separate paragraph." }
+          - { label: "Body", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-two", "heading-three", "bulleted-list"], editor_components: [], media_library: *upload_limit, hint: "A section starts with a level-2 heading. A Contents link points to a section as #name-of-the-section. The file days must match Shared → Forms." }
       - name: "studio"
         label: "Studio"
         file: "content/pages/studio.json"
