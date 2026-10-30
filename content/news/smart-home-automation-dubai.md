@@ -5,6 +5,7 @@ slug: "smart-home-automation-dubai"
 category: "dubai-lifestyle-trends"
 date: "June 28, 2026"
 description: "Not all smart home technology belongs in a luxury villa. A guide to what genuinely improves how a home performs, and what architects in Dubai consider before any system is specified."
+og_title: "Smart Home Automation Dubai: What’s Actually Worth It in a Luxury Villa"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/06/Smart-Home-Automation-Dubai-What-Belongs-in-a-Luxury-Villa-Nellis-Architecture-scaled.jpg"
 hero_alt: "Smart Home Automation Dubai"
 ---

@@ -5,6 +5,7 @@ slug: "one-year-anniversary-at-nellis-architecture-a-journey-of-vision-craft-and
 category: "studio-news-culture"
 date: "November 6, 2024"
 description: "Nellis Architecture turns one: a year of bold ideas and growth, 25 projects in the UAE, Greece, Russia, Scotland and India, and a team that feels like family."
+og_title: "One-Year Anniversary at Nellis Architecture: A Journey of Vision, Craft, and Growth - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/07/One-Year-Anniversary-Video-For-Website.mp4"
 hero_alt: "One-Year Anniversary at Nellis Architecture: A Journey of Vision, Craft, and Growth"
 link: "https://www.linkedin.com/posts/nellis-architecture_today-we-celebrate-our-first-year-anniversary-activity-7259837803318943745-4g5p?utm_source=li_share&utm_content=feedcontent&utm_medium=g_dt_web&utm_campaign=copy"

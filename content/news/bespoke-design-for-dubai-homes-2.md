@@ -5,6 +5,7 @@ slug: "bespoke-design-for-dubai-homes-2"
 category: "interior-design"
 date: "September 24, 2025"
 description: "Bespoke design for Dubai homes: statement kitchens, spa-like bathrooms and custom joinery that fit how you live, with materials and proportion that last."
+og_title: "Bespoke Design for Dubai Homes - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/09/Bespoke-Design-for-Dubai-Homes.png"
 hero_alt: "Bespoke Design for Dubai Homes"
 ---

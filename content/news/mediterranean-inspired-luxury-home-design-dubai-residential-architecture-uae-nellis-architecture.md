@@ -5,6 +5,7 @@ slug: "mediterranean-inspired-luxury-home-design-dubai-residential-architecture-
 category: "villa-design-architecture"
 date: "May 30, 2026"
 description: "How Mediterranean design principles shape luxury residential architecture in Dubai, focusing on light, shade and spaces designed for real everyday living."
+og_title: "From the Mediterranean to the Gulf, Designing Homes That Are Meant to Be Lived In"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/architectural-design-services-Nellis-Architecture-2.jpg"
 hero_alt: "From the Mediterranean to the Gulf, Designing Homes That Are Meant to Be Lived In"
 ---

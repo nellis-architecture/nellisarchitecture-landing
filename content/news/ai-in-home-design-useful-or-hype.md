@@ -5,6 +5,7 @@ slug: "ai-in-home-design-useful-or-hype"
 category: "dubai-lifestyle-trends"
 date: "November 01, 2025"
 description: "How AI helps Dubai villa design with 3D visualisation, layout tests and smart-home automation, and why the human decisions still belong to the architect."
+og_title: "AI In Home Design: Useful Or Hype? - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/11/jtju_WQC.jpeg"
 hero_alt: "AI In Home Design: Useful Or Hype?"
 ---

@@ -5,6 +5,7 @@ slug: "how-to-choose-an-architecture-firm-in-dubai-for-your-luxury-villa"
 category: "villa-design-architecture"
 date: "May 6, 2026"
 description: "How to choose the right architecture firm in Dubai for a luxury villa, focusing on design philosophy, integration, local expertise and long-term performance"
+og_title: "How to Choose an Architecture Firm in Dubai for Your Luxury Villa"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/architecture-firm-in-Dubai-Nellis-Architecture.jpg"
 hero_alt: "Architecture Firm in Dubai - Nellis Architecture"
 ---

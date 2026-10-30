@@ -5,6 +5,7 @@ slug: "why-international-clients-continue-to-choose-dubai-for-bespoke-residentia
 category: "dubai-lifestyle-trends"
 date: "Aug 14, 2026"
 description: "Many international clients arrive in Dubai having already built elsewhere. What keeps them choosing it, commission after commission, has less to do with the city than with the architects who understand both worlds. A look at why, through the lens of a luxury architect in Dubai."
+og_title: "Why International Clients Choose Dubai | Luxury Architect Dubai | Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/08/Why-International-Clients-Choose-Dubai-Luxury-Architect-Dubai-Nellis-Architecture.jpg"
 hero_alt: "Luxury Architect Dubai"
 ---

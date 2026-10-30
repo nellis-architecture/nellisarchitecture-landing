@@ -5,6 +5,7 @@ slug: "luxury-villa-design-psychology-dubai"
 category: "villa-design-architecture"
 date: "May 31, 2026"
 description: "A practical framework for luxury residential design in Dubai, exploring how architecture can support human behaviour through clarity and spatial alignment"
+og_title: "Why Some Luxury Villas Feel Calm and Others Feel Loud: The Psychology of Residential Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/05/Luxury-villa-exterior-in-Palm-Jumeirah-Nellis-Architecture.jpg"
 hero_alt: "• Luxury villa exterior in Palm Jumeirah or Emirates Hills showing layered transitions"
 ---

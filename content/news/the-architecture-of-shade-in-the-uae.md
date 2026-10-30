@@ -5,6 +5,7 @@ slug: "the-architecture-of-shade-in-the-uae"
 category: "villa-design-architecture"
 date: "March 30, 2026"
 description: "How solar control, shading strategy and climate responsive architecture are shaping luxury villa design and residential living across the UAE"
+og_title: "Solar Responsive Luxury Villa Design UAE | Architecture of Shade"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/03/luxury-villa-design-luxury-home-design-Dubai.jpg"
 hero_alt: "luxury villa design luxury home design Dubai"
 ---

@@ -49,6 +49,7 @@ collections:
           - { label: "Dubai Lifestyle & Trends", value: "dubai-lifestyle-trends" }
           - { label: "Studio News & Culture", value: "studio-news-culture" }
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
+      - { label: "Social title (og:title)", name: "og_title", widget: "string", required: false, hint: "Title for shared links. Leave empty to use the SEO title." }
       - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
       - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google. Also shows as the excerpt on /news/." }
       - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, required: false, hint: "On: Google does not show the article, and the sitemap does not list it. The article stays on the site and in the news list." }

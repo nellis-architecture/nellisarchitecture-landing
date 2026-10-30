@@ -5,6 +5,7 @@ slug: "designing-oceanfront-homes-that-feel-private"
 category: "villa-design-architecture"
 date: "July 30, 2026"
 description: "On Dubai's waterfront, privacy and view are usually treated as opposing demands. The most considered oceanfront homes are designed so that neither has to be sacrificed for the other."
+og_title: "Designing Oceanfront Homes That Feel Private | Luxury Home Design Dubai | Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/Luxury-home-design-Dubai-scaled.jpg"
 hero_alt: "Luxury home design Dubai"
 ---

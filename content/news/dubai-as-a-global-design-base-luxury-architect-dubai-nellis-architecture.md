@@ -5,6 +5,7 @@ slug: "dubai-as-a-global-design-base-luxury-architect-dubai-nellis-architecture"
 category: "dubai-lifestyle-trends"
 date: "July 2, 2026"
 description: "Dubai has become the city from which internationally minded clients choose to build. An examination of what makes it the natural home for serious residential architecture - and why the world’s most considered homes are increasingly commissioned here."
+og_title: "Dubai as a Global Design Base"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/Dubai-as-a-Global-Design-Base-Luxury-Architect-Dubai-Nellis-Architecture-scaled.jpg"
 hero_alt: "Luxury Architect Dubai"
 ---

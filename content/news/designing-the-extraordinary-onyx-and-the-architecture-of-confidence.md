@@ -5,6 +5,7 @@ slug: "designing-the-extraordinary-onyx-and-the-architecture-of-confidence"
 category: "villa-design-architecture"
 date: "December 24, 2025"
 description: "Onyx is an award winning luxury villa design shaped by yacht inspired architecture, cultural symbolism and contemporary craft. Discover how a Dubai based architectural firm created a bespoke, modern residence that balances confidence, context and elegance"
+og_title: "Designing the Extraordinary | Luxury Villa Design in Africa | Nellis Architecture"
 ---
 
 ---

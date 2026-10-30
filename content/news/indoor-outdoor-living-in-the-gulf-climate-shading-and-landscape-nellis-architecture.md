@@ -5,6 +5,7 @@ slug: "indoor-outdoor-living-in-the-gulf-climate-shading-and-landscape-nellis-ar
 category: "landscape-outdoor-living"
 date: "December 29, 2025"
 description: "A guide to indoor–outdoor living in the Gulf, exploring openable glazing, natural materials, cooling technologies, shading and landscape design. Discover how Nellis Architecture creates climate-responsive villas for year-round comfort."
+og_title: "Indoor–Outdoor Living in the Gulf | Climate, Shading and Landscape"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/12/Indoor-Outdoor-Living-in-the-Gulf.png"
 hero_alt: "indoor outdoor living gulf luxury villa design uae residential architecture middle east architecture design dubai sliding glazing villa pivot glazing villa gulf climate architecture landscape design gulf Dubai Villa Interior Design Best Architecture firms in Dubai Architecture firms in dubai"
 ---

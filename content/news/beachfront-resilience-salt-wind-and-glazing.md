@@ -5,6 +5,7 @@ slug: "beachfront-resilience-salt-wind-and-glazing"
 category: "villa-design-architecture"
 date: "November 07, 2025"
 description: "Designing Dubai beachfront villas for salt, wind, glare and humidity: marine-grade details, shaded courtyards and slim-frame glazing built for the coast."
+og_title: "Beachfront Resilience: Salt, Wind, And Glazing - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/11/qENpH5_A.jpeg"
 hero_alt: "Beachfront Resilience: Salt, Wind, And Glazing"
 ---

@@ -275,13 +275,8 @@ function newsImg(p, manifest = {}) {
   return `<div class="NewsImg">\n            ${inner}\n          </div>`;
 }
 
-const SITE_NAME = ' | Nellis Architecture';
-
-/* WordPress titles often end with the site name already: do not add it twice. */
-function seoTitle(p) {
-  if (p.seo_title) return p.seo_title;
-  return p.title.endsWith(SITE_NAME) ? p.title : `${p.title}${SITE_NAME}`;
-}
+/* As on live WordPress: the SEO title, else the post title, with no site name added. */
+const seoTitle = (p) => p.seo_title || p.title;
 
 function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
   const img = ogImage(p);
@@ -296,7 +291,7 @@ function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
     .replaceAll('{{ROBOTS}}', p.noindex ? NOINDEX : INDEX)
     .replaceAll('{{META_DESC}}', esc(p.description || ''))
     .replace(/\{\{SLUG\}\}/g, p.slug)
-    .replaceAll('{{OG_TITLE}}', esc(p.seo_title || p.title))
+    .replaceAll('{{OG_TITLE}}', esc(p.og_title || seoTitle(p)))
     .replaceAll('{{OG_DESC}}', esc(p.description || ''))
     .replaceAll('{{PUB_TIME}}', p.dateObj.toISOString())
     .replaceAll('{{MOD_TIME}}', p.dateObj.toISOString())

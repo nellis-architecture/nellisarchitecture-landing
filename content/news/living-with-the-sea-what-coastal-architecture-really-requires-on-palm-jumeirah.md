@@ -5,6 +5,7 @@ slug: "living-with-the-sea-what-coastal-architecture-really-requires-on-palm-jum
 category: "villa-design-architecture"
 date: "March 27, 2026"
 description: "A design led exploration of coastal architecture and long term luxury villa performance across Palm Jumeirah and Dubai waterfront residential developments"
+og_title: "Coastal Architecture Palm Jumeirah | Luxury Villa Design Dubai | Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/03/top-architectural-firm-Dubai-scaled.jpg"
 hero_alt: "architect design • design and architect • luxury architect Dubai • top architectural firm Dubai"
 ---

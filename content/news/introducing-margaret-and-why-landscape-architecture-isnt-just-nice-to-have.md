@@ -5,6 +5,7 @@ slug: "introducing-margaret-and-why-landscape-architecture-isnt-just-nice-to-hav
 category: "landscape-outdoor-living"
 date: "July 9, 2025"
 description: "Meet Margaret Pluta, our first dedicated landscape architect, and learn why landscape architecture shapes how a home feels, not just how its garden looks."
+og_title: "Introducing Margaret – and Why Landscape Architecture Isn’t Just “Nice to Have” - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/07/Margaret-for-linkedin-scaled.jpg"
 hero_alt: "Introducing Margaret – and Why Landscape Architecture Isn’t Just “Nice to Have”"
 link: "https://www.linkedin.com/posts/nellis-architecture_discover-how-margaret-pluta-is-redefining-activity-7348282568326242304-4p62?utm_source=share&utm_medium=member_desktop&rcm=ACoAAA8537EBPlGfSMMcZUVPKbi8s5i3jpm5Tqs"

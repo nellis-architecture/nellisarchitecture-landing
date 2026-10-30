@@ -5,6 +5,7 @@ slug: "future-proofing-a-palm-jumeirah-home-luxury-villa-design-dubai-nellis-arc
 category: "villa-design-architecture"
 date: "February 3, 2026"
 description: "A considered look at future-proofing a Palm Jumeirah villa through climate-responsive architecture, integrated interiors and smart home planning by a Dubai based architectural firm."
+og_title: "Future-Proofing a Palm Jumeirah Home"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/02/Future-Proofing-a-Palm-Jumeirah-Home-scaled.jpg"
 hero_alt: "architect Dubai architectural firm Dubai villa architect Dubai luxury villa design Dubai Dubai villa interior design architectural design services top architecture companies in Dubai architecture firms in Dubai best architecture firms in Dubai • smart home automation"
 ---

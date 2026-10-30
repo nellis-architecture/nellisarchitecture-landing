@@ -5,6 +5,7 @@ slug: "luxury-commercial-architecture-the-psychology-of-premium-retail-design"
 category: "interior-design"
 date: "Aug 11, 2026"
 description: "A well-designed retail space does more than display a product - it makes a case for why that product deserves its price. An examination of the psychology behind premium retail design, and what it means for brands building flagship space in the UAE."
+og_title: "Luxury Commercial Architecture & the Psychology of Premium Retail Design | Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/08/Luxury-Commercial-Architecture-scaled.jpg"
 hero_alt: "Luxury Commercial Architecture"
 ---

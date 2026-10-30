@@ -5,6 +5,7 @@ slug: "nellis-architecture-x-bauhaus-the-power-of-collaboration-in-property-proj
 category: "studio-news-culture"
 date: "December 20, 2024"
 description: "Lee Nellis and James Sharples of Bauhaus discuss collaboration in property projects, including Soul on La Mer, and how design and delivery stay aligned."
+og_title: "Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2024/12/Lees-talk-with-Bauhaus-photo.png"
 hero_alt: "Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects"
 link: "https://www.linkedin.com/feed/update/urn:li:activity:7275889805190746114"

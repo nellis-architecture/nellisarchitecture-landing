@@ -5,6 +5,7 @@ slug: "contemporary-luxury-architecture-what-the-worlds-best-homes-have-in-commo
 category: "villa-design-architecture"
 date: "July 28, 2026"
 description: "The world's best luxury homes are not defined by scale or spectacle. Discover the shared principles of luxury home design behind Nellis Architecture's approach to timeless residential architecture."
+og_title: "Contemporary Luxury Architecture | Luxury Home Design | Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2026/07/Contemporary-Luxury-Architecture-Luxury-Home-Design-Nellis-Architecture-scaled.jpg"
 hero_alt: "Luxury Home Design"
 ---

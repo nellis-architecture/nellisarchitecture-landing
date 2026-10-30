@@ -5,6 +5,7 @@ slug: "miraia-award-winning-5-star-single-residence-international-property-award
 category: "studio-news-culture"
 date: "November 24, 2025"
 description: "Miraia brings quiet to the coastline, uniting architectural design, landscape, and villa interior design in Dubai. Created by award-winning architects, the home pairs crafted detail with calm performance for modern family life."
+og_title: "Miraia, Award-Winning 5-Star Single Residence | International Property Awards 2025 - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/11/Miraia-Award-Winning-5-Star-Single-Residence-International-Property-Awards-2025.webp"
 hero_alt: "Miraia, Award-Winning 5-Star Single Residence | International Property Awards 2025"
 ---

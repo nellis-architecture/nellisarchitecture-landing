@@ -5,6 +5,7 @@ slug: "full-circle-moments-and-firsts-a-conversation-with-anastasia-intern-at-ne
 category: "studio-news-culture"
 date: "August 15, 2025"
 description: "Anastasia, an architecture student from Moscow, looks back on her one-month internship at Nellis Architecture in Dubai: her first time in a working studio."
+og_title: "Full Circle Moments and Firsts: A Conversation with Anastasia, Intern at Nellis Architecture - Nellis Architecture"
 hero: "https://nellisarchitecture.com/wp-content/uploads/2025/08/midjourney-editor-1755166501078.png"
 hero_alt: "Full Circle Moments and Firsts: A Conversation with Anastasia, Intern at Nellis Architecture"
 link: "https://www.linkedin.com/posts/viktoriia-sikorska-58167271_anastasias-internship-at-nellis-architecture-activity-7362043496188338176-Fv7l?utm_source=share&utm_medium=member_desktop&rcm=ACoAAA8537EBPlGfSMMcZUVPKbi8s5i3jpm5Tqs"
