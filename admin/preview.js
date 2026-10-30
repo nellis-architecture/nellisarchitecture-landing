@@ -734,9 +734,10 @@ function blockToHtml(b, manifest, ids) {
     return `<h${level}${id}>${inlineMd(text, manifest)}</h${level}>\n`;
   }
   if (b === '---') return '<hr />\n';
-  if (/^(- )/m.test(b)) {
+  /* "- " or "* ": the CMS rich-text editor saves lists with "* ". */
+  if (/^[-*] /m.test(b)) {
     const items = b.split('\n')
-      .filter((l) => l.startsWith('- '))
+      .filter((l) => /^[-*] /.test(l))
       .map((l) => `<li>${inlineMd(l.slice(2), manifest)}</li>`)
       .join('');
     return `<ul>${items}</ul>\n`;
@@ -759,8 +760,68 @@ function mdToHtml(md, manifest = {}, { ids = false } = {}) {
     .trim();
 }
 
+/* ---------- tiny front-matter + markdown parser ---------- */
+function parseFrontMatter(src, file = '') {
+  const m = src.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!m) throw new Error(`bad front matter: ${file}`);
+  const fm = {};
+  const lines = m[1].split('\n');
+  for (let i = 0; i < lines.length; i += 1) {
+    const kv = lines[i].match(/^([a-z][a-z0-9_]*):\s*("(?:[^"\\]|\\.)*"|.*)$/);
+    if (kv) {
+      let v = kv[2].trim();
+      /* Block scalar (Decap writes `|-`, or `>-` past 80 chars). Only `schema` uses it, as
+         JSON: `>` joins with a space, the blank lines drop, and the end is trimmed. */
+      const block = v.match(/^([|>])[-+]?$/);
+      if (!block) {
+        /* A CMS save folds a long plain or quoted value onto indented lines: join with a space. */
+        while (i + 1 < lines.length && /^\s+\S/.test(lines[i + 1])) {
+          i += 1;
+          v = `${v} ${lines[i].trim()}`;
+        }
+      }
+      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1).replace(/\\"/g, '"');
+      if (block) {
+        const rest = [];
+        while (i + 1 < lines.length && /^(\s|$)/.test(lines[i + 1])) {
+          i += 1;
+          rest.push(lines[i]);
+        }
+        const indent = (rest.find((l) => l.trim()) || '').match(/^\s*/)[0].length;
+        const text = rest.map((l) => l.slice(indent));
+        v = (block[1] === '|' ? text.join('\n') : text.filter((l) => l.trim()).join(' ')).trimEnd();
+      }
+      fm[kv[1]] = v;
+    }
+  }
+  return { fm, body: m[2].trim() };
+}
+
+/* A page in content/pages/<name>.md, as the page modules read a content/pages/<name>.json:
+   flat front matter like a news post (h1, seo_title, og_title, description, canonical,
+   noindex, schema) and a markdown body whose first line "# Title" is the page title. The CMS
+   preview passes the same flat fields, with the body. */
+function markdownPage(fm, body = '') {
+  /* The CMS preview passes the body with a leading newline. */
+  const text = String(body).trim();
+  const first = text.match(/^#\s+(.+)(?:\n+|$)/);
+  return {
+    h1: fm.h1 || '',
+    title: first ? first[1].trim() : '',
+    body: first ? text.slice(first[0].length) : text,
+    seo: {
+      title: fm.seo_title || '',
+      og_title: fm.og_title || '',
+      description: fm.description || '',
+      canonical: fm.canonical || '',
+      noindex: fm.noindex === true || fm.noindex === 'true',
+      schema: fm.schema || '',
+    },
+  };
+}
+
 module.exports = {
-  inlineMd, mdToHtml, headingId, SAFE_HREF,
+  inlineMd, mdToHtml, headingId, parseFrontMatter, markdownPage, SAFE_HREF,
 };
 
 },
@@ -1063,7 +1124,7 @@ const {
 const {
   head, top, affiliations, navPlain, footer, emailTokens,
 } = require('../chrome');
-const { seoTokens } = require('../seo');
+const { seoTokens, yoastString } = require('../seo');
 const { DEFAULT_DAYS } = require('../../../infra/lifecycle');
 const { mdToHtml } = require('../markdown');
 
@@ -1073,23 +1134,28 @@ const HEAD = {
   BEFORE: '\n\n',
   OG_TYPE: 'article',
   MODIFIED_TIME: '2026-10-30T00:00:00+00:00',
-  SCHEMA: '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/","url":"https:\\/\\/nellisarchitecture.com\\/privacy\\/","name":"Privacy Policy | Data Protection & User Privacy | Nellis Architecture","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-03-10T18:42:08+00:00","dateModified":"2026-10-30T00:00:00+00:00","description":"Lees het privacybeleid van Nellis Architecture. Ontdek hoe wij persoonlijke gegevens verzamelen, gebruiken en beschermen volgens de geldende privacywetgeving.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/privacy\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Privacy Policy"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}',
+  SCHEMA: '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/","url":"https:\\/\\/nellisarchitecture.com\\/privacy\\/","name":"Privacy Policy | Data Protection & User Privacy | Nellis Architecture","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-03-10T18:42:08+00:00","dateModified":"2026-10-30T00:00:00+00:00","description":"{{DESCRIPTION}}","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/privacy\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/privacy\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Privacy Policy"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}',
 };
 /* eslint-enable @stylistic/max-len */
 
 /* The policy states how long form files are kept. The CMS edits the days (site.json) and the
-   text (privacy.json) separately, so the build stops when they disagree. */
+   text (privacy.md) separately, so the build stops when they disagree. */
 function checkFileDays(body, days) {
   if (!new RegExp(`(^|\\D)${days} days\\b`).test(String(body || ''))) {
-    throw new Error(`content/pages/privacy.json must state ${days} days, `
+    throw new Error(`content/pages/privacy.md must state ${days} days, `
       + 'the value of forms.file_days in content/pages/site.json');
   }
 }
 
 function render(content, { site, page }) {
   checkFileDays(content.body, site.forms.file_days ?? DEFAULT_DAYS);
+  const description = yoastString((content.seo || {}).description);
   return [
-    head({ ...HEAD, ...seoTokens(content, page) }),
+    head({
+      ...HEAD,
+      SCHEMA: HEAD.SCHEMA.replace('{{DESCRIPTION}}', () => description),
+      ...seoTokens(content, page),
+    }),
     top(content.h1, site),
     fill(loadPartial('page-privacy'), {
       NAV: navPlain(site.nav),
@@ -1439,6 +1505,7 @@ module.exports = {
   seoTokens,
   titleOf,
   withOrganization,
+  yoastString,
   yoastPage,
 };
 
@@ -1527,7 +1594,7 @@ if (require.main === module) {
 
 }
 };
-var PAGES = [{"content":"index","slug":"","file":"build/lib/pages/index.js"},{"content":"studio","slug":"studio","file":"build/lib/pages/studio.js"},{"content":"people","slug":"people","file":"build/lib/pages/people.js"},{"content":"privacy","slug":"privacy","file":"build/lib/pages/privacy.js"},{"content":"projects","slug":"projects","category":"all","file":"build/lib/pages/category.js"},{"content":"projects-architecture","slug":"projects/architecture","category":"architecture","file":"build/lib/pages/category.js"},{"content":"projects-interior-design","slug":"projects/interior-design","category":"interior-design","file":"build/lib/pages/category.js"},{"content":"projects-landscape","slug":"projects/landscape","category":"landscape","file":"build/lib/pages/category.js"},{"content":"projects-master-planning","slug":"projects/master-planning","category":"master-planning","file":"build/lib/pages/category.js"}];
+var PAGES = [{"content":"index","slug":"","file":"build/lib/pages/index.js","md":false},{"content":"studio","slug":"studio","file":"build/lib/pages/studio.js","md":false},{"content":"people","slug":"people","file":"build/lib/pages/people.js","md":false},{"content":"privacy","slug":"privacy","file":"build/lib/pages/privacy.js","md":true},{"content":"projects","slug":"projects","category":"all","file":"build/lib/pages/category.js","md":false},{"content":"projects-architecture","slug":"projects/architecture","category":"architecture","file":"build/lib/pages/category.js","md":false},{"content":"projects-interior-design","slug":"projects/interior-design","category":"interior-design","file":"build/lib/pages/category.js","md":false},{"content":"projects-landscape","slug":"projects/landscape","category":"landscape","file":"build/lib/pages/category.js","md":false},{"content":"projects-master-planning","slug":"projects/master-planning","category":"master-planning","file":"build/lib/pages/category.js","md":false}];
 var NEWS_HREF = "/news/";
 var SITE = {"affiliations":[{"src":"/wp-content/uploads/2025/02/partner1.png","alt":"","width":52,"height":52},{"src":"/wp-content/uploads/2025/02/partner2.png","alt":"","width":52,"height":52},{"src":"/wp-content/uploads/2026/04/riba_resized_7x_smaller.jpg","alt":"","width":123,"height":54}],"forms":{"contact":{"title":"Have a project?","description":"Please take a moment to complete the form below.","button":"Send message","email":"hello@nellisarchitecture.com"},"skills":{"title":"Got skills?","description":"Please take a moment to complete the form below.","button":"Send message","email":"people@nellisarchitecture.com"},"file_days":90},"nav":[{"label":"Projects","link":"/projects/"},{"label":"Studio","link":"/studio/"},{"label":"People","link":"/people/"},{"label":"News","link":"/news/"},{"label":"Contact","link":"/contact/"}],"follow":[{"label":"Instagram","link":"https://www.instagram.com/nellis.architecture/"},{"label":"LinkedIn","link":"https://www.linkedin.com/company/nellis-architecture/"},{"label":"YouTube","link":"https://www.youtube.com/@NellisArchitecture"}]};
 function pathShim() {
@@ -1599,9 +1666,10 @@ function loader(modules, builtins, shim) {
   }
   return load;
 }
-function renderPage(load, pages, newsHref, site, name, content) {
+function renderPage(load, pages, newsHref, site, name, data) {
   const page = pages.find((p) => p.content === name);
   if (!page) throw new Error(`no preview for ${name}`);
+  const content = page.md ? load('build/lib/markdown.js').markdownPage(data, data.body) : data;
   return load(page.file).render(content, {
     site,
     newsHref,

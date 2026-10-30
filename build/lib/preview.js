@@ -14,10 +14,15 @@ const key = (root, file) => path.relative(root, file).split(path.sep).join('/');
 
 const moduleFile = (mod) => Object.values(require.cache).find((m) => m.exports === mod).filename;
 
-/* The CMS preview pages: PAGES without the news index (needs the posts) and contact. */
+/* The CMS preview pages: PAGES without the news index (needs the posts) and contact.
+   md: the page is content/pages/<name>.md, so the CMS gives flat front matter and a body. */
 function previewPages(root) {
   return PAGES.filter((p) => p.module !== news && p.module !== contact).map((p) => ({
-    content: p.content, slug: p.slug, category: p.category, file: key(root, moduleFile(p.module)),
+    content: p.content,
+    slug: p.slug,
+    category: p.category,
+    file: key(root, moduleFile(p.module)),
+    md: fs.existsSync(path.join(root, 'content', 'pages', `${p.content}.md`)),
   }));
 }
 
@@ -124,9 +129,10 @@ function loader(modules, builtins, shim) {
 }
 
 /* The renderPages context, with root '.' (the keys of the virtual fs). site: readSite() result. */
-function renderPage(load, pages, newsHref, site, name, content) {
+function renderPage(load, pages, newsHref, site, name, data) {
   const page = pages.find((p) => p.content === name);
   if (!page) throw new Error(`no preview for ${name}`);
+  const content = page.md ? load('build/lib/markdown.js').markdownPage(data, data.body) : data;
   return load(page.file).render(content, {
     site,
     newsHref,

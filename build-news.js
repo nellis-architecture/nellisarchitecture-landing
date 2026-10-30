@@ -45,7 +45,7 @@ const {
 const {
   ensureVariants, readManifest, picture, heroVideo, preloadLink,
 } = require('./build/lib/images');
-const { mdToHtml } = require('./build/lib/markdown');
+const { mdToHtml, parseFrontMatter } = require('./build/lib/markdown');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -73,43 +73,6 @@ const FALLBACK_IMG = {
   height: 504,
   type: 'image/png',
 };
-
-/* ---------- tiny front-matter + markdown parser ---------- */
-function parseFrontMatter(src, file = '') {
-  const m = src.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-  if (!m) throw new Error(`bad front matter: ${file}`);
-  const fm = {};
-  const lines = m[1].split('\n');
-  for (let i = 0; i < lines.length; i += 1) {
-    const kv = lines[i].match(/^([a-z_]+):\s*("(?:[^"\\]|\\.)*"|.*)$/);
-    if (kv) {
-      let v = kv[2].trim();
-      /* Block scalar (Decap writes `|-`, or `>-` past 80 chars). Only `schema` uses it, as
-         JSON: `>` joins with a space, the blank lines drop, and the end is trimmed. */
-      const block = v.match(/^([|>])[-+]?$/);
-      if (!block) {
-        /* A CMS save folds a long plain or quoted value onto indented lines: join with a space. */
-        while (i + 1 < lines.length && /^\s+\S/.test(lines[i + 1])) {
-          i += 1;
-          v = `${v} ${lines[i].trim()}`;
-        }
-      }
-      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1).replace(/\\"/g, '"');
-      if (block) {
-        const rest = [];
-        while (i + 1 < lines.length && /^(\s|$)/.test(lines[i + 1])) {
-          i += 1;
-          rest.push(lines[i]);
-        }
-        const indent = (rest.find((l) => l.trim()) || '').match(/^\s*/)[0].length;
-        const text = rest.map((l) => l.slice(indent));
-        v = (block[1] === '|' ? text.join('\n') : text.filter((l) => l.trim()).join(' ')).trimEnd();
-      }
-      fm[kv[1]] = v;
-    }
-  }
-  return { fm, body: m[2].trim() };
-}
 
 function parseDate(s) {
   const m = (s || '').match(/([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})/);
@@ -427,7 +390,6 @@ function build(manifest = readManifest(ROOT)) {
 if (require.main === module) ensureVariants(ROOT).then((manifest) => build(manifest));
 
 module.exports = {
-  parseFrontMatter,
   parseDate,
   monthIndex,
   esc,

@@ -11,6 +11,7 @@ const { loadProjects } = require('../build/lib/projects');
 const { readManifest } = require('../build/lib/images');
 const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
+const { parseFrontMatter } = require('../build/lib/markdown');
 
 delete process.env.TURNSTILE_SITEKEY;
 
@@ -19,9 +20,15 @@ const NEWS = '/news/';
 const MANIFEST = readManifest(ROOT);
 const SCRIPT = previewScript(ROOT, MANIFEST, NEWS);
 const PAGES = previewPages(ROOT);
-const content = (name) => JSON.parse(
-  fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
-);
+/* The entry data the CMS passes: JSON pages as they are, .md pages as front matter + body. */
+const content = (name) => {
+  const md = path.join(ROOT, 'content', 'pages', `${name}.md`);
+  if (fs.existsSync(md)) {
+    const { fm, body } = parseFrontMatter(fs.readFileSync(md, 'utf8'), md);
+    return { ...fm, body };
+  }
+  return JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'));
+};
 
 /* Only `window`: no real require, fs or process. */
 function run(window = {}) {

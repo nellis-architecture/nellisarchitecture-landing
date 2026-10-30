@@ -4,10 +4,10 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {
-  parseFrontMatter, parseDate, monthIndex, esc, idNum, sitemap, loadPosts,
+  parseDate, monthIndex, esc, idNum, sitemap, loadPosts,
   renderPost, fillSite, readingTime, newsImg, newsJsonEntry, newsList, articleSchema,
 } = require('../build-news');
-const { inlineMd, mdToHtml } = require('../build/lib/markdown');
+const { inlineMd, mdToHtml, parseFrontMatter } = require('../build/lib/markdown');
 const { readManifest, SLOTS } = require('../build/lib/images');
 const { escAttr } = require('../build/lib/html');
 const { rss } = require('../build/lib/feed');
@@ -95,6 +95,13 @@ test('inlineMd keeps safe link schemes and drops the link of other schemes', () 
   const js = ['java', 'script:'].join('');
   [`${js}void0`, `${js.toUpperCase()}x`, 'java\tscript:x', ' data:text/html,x', 'vbscript:x']
     .forEach((h) => assert.equal(inlineMd(`[t](${h})`), 't'));
+});
+
+test('mdToHtml reads "* " lists as the CMS rich-text editor saves them, not *italic* lines', () => {
+  const list = '<ul><li>one</li><li><a href="#t">two</a></li></ul>';
+  assert.equal(mdToHtml('* one\n* [two](#t)'), list);
+  assert.equal(mdToHtml('- a\n* b'), '<ul><li>a</li><li>b</li></ul>');
+  assert.equal(mdToHtml('*Updated on May 1.*'), '<p><em>Updated on May 1.</em></p>');
 });
 
 test('mdToHtml renders each block type', () => {

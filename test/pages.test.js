@@ -10,9 +10,10 @@ const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
 const project = require('../build/lib/pages/project');
 const {
-  PAGES, renderPages, readSite, validateSite,
+  PAGES, renderPages, readContent, readSite, validateSite,
 } = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
+const { markdownPage } = require('../build/lib/markdown');
 const { loadPosts } = require('../build-news');
 
 const ROOT = path.join(__dirname, '..');
@@ -381,11 +382,32 @@ function assertNoResult(html, name) {
   assert.equal(count(html, NO_RESULT), 1, name);
 }
 
+test('a .md page: the first "# " line is the title, flat front matter becomes seo', () => {
+  const page = readContent(ROOT, 'privacy');
+  assert.equal(page.title, 'Privacy policy');
+  assert.equal(page.h1, 'Privacy Policy');
+  assert.ok(page.body.startsWith('We respect your privacy'));
+  assert.equal(page.seo.title, 'Privacy Policy | Data Protection & User Privacy');
+  assert.equal(page.seo.noindex, false);
+  const cms = markdownPage({ h1: 'H', noindex: true, seo_title: 'S' }, '# T\n\nText\n\n## A');
+  assert.deepEqual(cms, {
+    h1: 'H',
+    title: 'T',
+    body: 'Text\n\n## A',
+    seo: {
+      title: 'S', og_title: '', description: '', canonical: '', noindex: true, schema: '',
+    },
+  });
+  assert.equal(markdownPage({}, 'No heading').title, '');
+  assert.equal(markdownPage({ noindex: 'true' }, '').seo.noindex, true);
+  assert.equal(markdownPage({}, '\n# T\n\nText').title, 'T', 'the CMS preview body');
+});
+
 test('checkFileDays: the privacy text must state the file_days value as a whole number', () => {
   ['Files are deleted after 90 days.', '90 days', 'kept 90 days, then'].forEach((body) => {
     assert.doesNotThrow(() => checkFileDays(body, 90), body);
   });
-  const named = /privacy\.json must state 90 days.*site\.json/;
+  const named = /privacy\.md must state 90 days.*site\.json/;
   ['after 190 days', 'after 900 days', 'after 60 days', 'after 90 dayss', '', undefined]
     .forEach((body) => {
       assert.throws(() => checkFileDays(body, 90), named, body);
@@ -411,10 +433,20 @@ test('the privacy page names Cloudflare, Google Analytics and the file retention
     .forEach((s) => assert.ok(html.includes(s), s));
   assert.doesNotMatch(html, /Netlify|outside your country of residence/);
   const other = { ...site, forms: { ...site.forms, file_days: site.forms.file_days + 1 } };
-  const file = path.join(ROOT, 'content/pages/privacy.json');
-  const content = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const content = readContent(ROOT, 'privacy');
   const page = { slug: 'privacy' };
   assert.throws(() => privacy.render(content, { site: other, page }), /must state/);
+});
+
+test('the privacy page: meta, og and JSON-LD description are the one English value', () => {
+  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  const { description } = readContent(ROOT, 'privacy').seo;
+  assert.match(description, /^Read the Nellis Architecture privacy policy/);
+  assert.ok(html.includes(`<meta name="description" content="${description}" />`));
+  assert.ok(html.includes(`<meta property="og:description" content="${description}" />`));
+  const ld = JSON.parse(html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1]);
+  assert.equal(ld['@graph'].find((n) => n['@type'] === 'WebPage').description, description);
+  assert.ok(!html.includes('Lees het'));
 });
 
 test('the privacy page heading and breadcrumb say Privacy Policy', () => {
@@ -446,10 +478,7 @@ test('every page takes the mailto links from site.json and the year from the bui
     },
   };
   const projects = loadProjects(ROOT);
-  const read = (name) => JSON.parse(
-    fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
-  );
-  const pages = PAGES.map((p) => [p.slug, p.module.render(p.data || read(p.content), {
+  const pages = PAGES.map((p) => [p.slug, p.module.render(p.data || readContent(ROOT, p.content), {
     site: changed, newsHref: '/news/', page: p, root: ROOT, projects, posts: POSTS,
   })]);
   pages.push([projects[0].url, project.render(projects[0], { site: changed, newsHref: '/news/' })]);
@@ -501,11 +530,8 @@ test('no page and no news template has an empty phone link', () => {
 });
 
 test('a CMS schema adds one block after the generated one; project pages stay unchanged', () => {
-  const read = (name) => JSON.parse(
-    fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
-  );
   const site = readSite(ROOT);
-  const content = read('privacy');
+  const content = readContent(ROOT, 'privacy');
   const page = { slug: 'privacy', content: 'privacy' };
   const plain = privacy.render(content, { site, newsHref: '/news/', page });
   const html = privacy.render(

@@ -10,6 +10,7 @@ const news = require('./pages/news');
 const contact = require('./pages/contact');
 const { CATEGORY_KEYS, loadProjects } = require('./projects');
 const { readManifest } = require('./images');
+const { parseFrontMatter, markdownPage } = require('./markdown');
 
 /* slug is fixed in code: the page URL is /<slug>/ (Home: /). */
 const PAGES = [
@@ -57,7 +58,13 @@ const PAGES = [
 
 const pageFile = (slug) => (slug ? `${slug}/index.html` : 'index.html');
 
+/* A page is content/pages/<name>.md (markdown, see markdownPage) or content/pages/<name>.json. */
 function readContent(root, name) {
+  const md = path.join(root, 'content', 'pages', `${name}.md`);
+  if (fs.existsSync(md)) {
+    const { fm, body } = parseFrontMatter(fs.readFileSync(md, 'utf8'), md);
+    return markdownPage(fm, body);
+  }
   return JSON.parse(fs.readFileSync(path.join(root, 'content', 'pages', `${name}.json`), 'utf8'));
 }
 
@@ -144,5 +151,5 @@ function writePages(root, newsHref, projects, posts, manifest) {
 }
 
 module.exports = {
-  PAGES, renderPages, writePages, readSite, validateSite,
+  PAGES, renderPages, writePages, readContent, readSite, validateSite,
 };

@@ -30,6 +30,7 @@ js/static-backend.js  # intercepts the theme's old AJAX calls, serves data/ inst
 js/project-switch.js  # project pages: switch the open project in place
 content/news/*.md     # news source of truth (edited via the CMS)
 content/pages/*.json  # page content source of truth (edited via the CMS)
+content/pages/*.md    # text pages (privacy): front matter + markdown, first "# " line = title
 content/redirects.json # CMS redirects (301), source of truth (edited via the CMS)
 _redirects            # redirects (generated from build/redirects.txt + content/redirects.json + news slugs)
 build/redirects.txt   # fixed redirects (200 and 301, hand-kept)

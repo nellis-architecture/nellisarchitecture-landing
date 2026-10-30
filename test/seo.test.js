@@ -6,16 +6,14 @@ const path = require('node:path');
 const {
   LOGO, customSchema, organization, pageUrl, sameAs, seoTokens, withOrganization, yoastPage,
 } = require('../build/lib/seo');
-const { PAGES, renderPages } = require('../build/lib/pages');
+const { PAGES, readContent, renderPages } = require('../build/lib/pages');
 // eslint-disable-next-line import-x/no-useless-path-segments -- Home page module
 const index = require('../build/lib/pages/index');
 const { loadProjects } = require('../build/lib/projects');
 
 const ROOT = path.join(__dirname, '..');
 const DOMAIN = 'https://nellisarchitecture.com';
-const read = (name) => JSON.parse(
-  fs.readFileSync(path.join(ROOT, 'content', 'pages', `${name}.json`), 'utf8'),
-);
+const read = (name) => readContent(ROOT, name);
 const FOLLOW = read('site').follow;
 const pageOf = (name) => PAGES.find((p) => p.content === name);
 const count = (s, sub) => s.split(sub).length - 1;

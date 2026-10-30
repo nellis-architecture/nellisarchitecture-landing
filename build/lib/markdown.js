@@ -38,9 +38,10 @@ function blockToHtml(b, manifest, ids) {
     return `<h${level}${id}>${inlineMd(text, manifest)}</h${level}>\n`;
   }
   if (b === '---') return '<hr />\n';
-  if (/^(- )/m.test(b)) {
+  /* "- " or "* ": the CMS rich-text editor saves lists with "* ". */
+  if (/^[-*] /m.test(b)) {
     const items = b.split('\n')
-      .filter((l) => l.startsWith('- '))
+      .filter((l) => /^[-*] /.test(l))
       .map((l) => `<li>${inlineMd(l.slice(2), manifest)}</li>`)
       .join('');
     return `<ul>${items}</ul>\n`;
@@ -63,6 +64,66 @@ function mdToHtml(md, manifest = {}, { ids = false } = {}) {
     .trim();
 }
 
+/* ---------- tiny front-matter + markdown parser ---------- */
+function parseFrontMatter(src, file = '') {
+  const m = src.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!m) throw new Error(`bad front matter: ${file}`);
+  const fm = {};
+  const lines = m[1].split('\n');
+  for (let i = 0; i < lines.length; i += 1) {
+    const kv = lines[i].match(/^([a-z][a-z0-9_]*):\s*("(?:[^"\\]|\\.)*"|.*)$/);
+    if (kv) {
+      let v = kv[2].trim();
+      /* Block scalar (Decap writes `|-`, or `>-` past 80 chars). Only `schema` uses it, as
+         JSON: `>` joins with a space, the blank lines drop, and the end is trimmed. */
+      const block = v.match(/^([|>])[-+]?$/);
+      if (!block) {
+        /* A CMS save folds a long plain or quoted value onto indented lines: join with a space. */
+        while (i + 1 < lines.length && /^\s+\S/.test(lines[i + 1])) {
+          i += 1;
+          v = `${v} ${lines[i].trim()}`;
+        }
+      }
+      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1).replace(/\\"/g, '"');
+      if (block) {
+        const rest = [];
+        while (i + 1 < lines.length && /^(\s|$)/.test(lines[i + 1])) {
+          i += 1;
+          rest.push(lines[i]);
+        }
+        const indent = (rest.find((l) => l.trim()) || '').match(/^\s*/)[0].length;
+        const text = rest.map((l) => l.slice(indent));
+        v = (block[1] === '|' ? text.join('\n') : text.filter((l) => l.trim()).join(' ')).trimEnd();
+      }
+      fm[kv[1]] = v;
+    }
+  }
+  return { fm, body: m[2].trim() };
+}
+
+/* A page in content/pages/<name>.md, as the page modules read a content/pages/<name>.json:
+   flat front matter like a news post (h1, seo_title, og_title, description, canonical,
+   noindex, schema) and a markdown body whose first line "# Title" is the page title. The CMS
+   preview passes the same flat fields, with the body. */
+function markdownPage(fm, body = '') {
+  /* The CMS preview passes the body with a leading newline. */
+  const text = String(body).trim();
+  const first = text.match(/^#\s+(.+)(?:\n+|$)/);
+  return {
+    h1: fm.h1 || '',
+    title: first ? first[1].trim() : '',
+    body: first ? text.slice(first[0].length) : text,
+    seo: {
+      title: fm.seo_title || '',
+      og_title: fm.og_title || '',
+      description: fm.description || '',
+      canonical: fm.canonical || '',
+      noindex: fm.noindex === true || fm.noindex === 'true',
+      schema: fm.schema || '',
+    },
+  };
+}
+
 module.exports = {
-  inlineMd, mdToHtml, headingId, SAFE_HREF,
+  inlineMd, mdToHtml, headingId, parseFrontMatter, markdownPage, SAFE_HREF,
 };

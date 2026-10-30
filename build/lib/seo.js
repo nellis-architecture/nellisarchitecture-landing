@@ -89,5 +89,6 @@ module.exports = {
   seoTokens,
   titleOf,
   withOrganization,
+  yoastString,
   yoastPage,
 };
