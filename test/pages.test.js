@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const privacy = require('../build/lib/pages/privacy');
 
-const { bodyLines } = privacy;
+const { bodyLines, checkFileDays } = privacy;
 const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
 const project = require('../build/lib/pages/project');
@@ -397,6 +397,31 @@ function assertNoResult(html, name) {
   assert.equal(count(html, 'noResult'), 1, name);
   assert.equal(count(html, NO_RESULT), 1, name);
 }
+
+test('checkFileDays: the privacy text must state the file_days value as a whole number', () => {
+  ['Files are deleted after 90 days.', '90 days', 'kept 90 days, then'].forEach((body) => {
+    assert.doesNotThrow(() => checkFileDays(body, 90), body);
+  });
+  const named = /privacy\.json must state 90 days.*site\.json/;
+  ['after 190 days', 'after 900 days', 'after 60 days', 'after 90 dayss', '', undefined]
+    .forEach((body) => {
+      assert.throws(() => checkFileDays(body, 90), named, body);
+    });
+  assert.doesNotThrow(() => checkFileDays('after 1 days', 1));
+});
+
+test('the privacy page names Cloudflare, Google Analytics and the file retention days', () => {
+  const site = readSite(ROOT);
+  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  ['run on Cloudflare infrastructure', 'Google Analytics', `after ${site.forms.file_days} days`]
+    .forEach((s) => assert.ok(html.includes(s), s));
+  assert.doesNotMatch(html, /Netlify|outside your country of residence/);
+  const other = { ...site, forms: { ...site.forms, file_days: site.forms.file_days + 1 } };
+  const file = path.join(ROOT, 'content/pages/privacy.json');
+  const content = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const page = { slug: 'privacy' };
+  assert.throws(() => privacy.render(content, { site: other, page }), /must state/);
+});
 
 test('the privacy page heading and breadcrumb say Privacy Policy', () => {
   const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
