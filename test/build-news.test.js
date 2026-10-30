@@ -273,6 +273,12 @@ test('renderPost breadcrumb schema links News to /news/', () => {
   ]);
 });
 
+test('renderPost gives each post its own hidden h1', () => {
+  const html = renderPost(TEMPLATE, post({ title: 'Post A' }), '');
+  assert.ok(html.includes('<h1 class="visually-hidden">Post A</h1>'));
+  assert.ok(!html.includes('Miraia'));
+});
+
 test('renderPost adds the site name to <title> once', () => {
   const title = (over) => renderPost(TEMPLATE, post(over), '').match(/<title>([^<]*)<\/title>/)[1];
   const name = ' | Nellis Architecture';
