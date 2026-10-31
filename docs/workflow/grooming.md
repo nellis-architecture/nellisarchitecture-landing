@@ -40,5 +40,6 @@ A card is ready when it has all of these:
 | `seo` | purple | URLs, redirects, meta tags, sitemap, structured data. | `6acf67111cc66adaf0db8d91` |
 | `infra` | yellow | Cloudflare, DNS, CMS setup, build, tooling. | `6acf67111cc66adaf0db8d93` |
 | `debt` | orange | Clean-up with no visible change. | `6acf67111cc66adaf0db8d97` |
+| `after migration` | black | The work waits for the DNS cutover (LND-052). Pick it up after the switch. | `6ae656f9b6b31231a3e5f59f` |
 
 Add a label: `curl -s -X POST "$T/cards/<shortLink>/idLabels?value=<label-id>&$A"`.
