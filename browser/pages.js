@@ -21,7 +21,8 @@ const MENU = {
 const SWEEP = ['/', '/projects/', ...CATEGORY_KEYS.map((cat) => `/projects/${cat}/`),
   '/projects/architecture/zoya/', '/news/', '/news/category/interior-design/',
   '/news/ai-in-home-design-useful-or-hype/',
-  '/contact/', '/studio/', '/people/', '/privacy/'];
+  '/contact/', '/studio/', '/studio/architecture-design/', '/studio/landscape-architecture/',
+  '/people/', '/privacy/'];
 
 const VIEWPORTS = [['desktop', DESKTOP], ['mobile', MOBILE]];
 

@@ -25,7 +25,10 @@ test('renderPages writes each page to its folder and fills every token', () => {
   assert.deepEqual(
     pages.map((p) => p.file),
     [
-      'index.html', 'studio/index.html', 'people/index.html', 'privacy/index.html',
+      'index.html', 'studio/index.html',
+      'studio/architecture-design/index.html', 'studio/interior-design/index.html',
+      'studio/landscape-architecture/index.html', 'studio/master-planning/index.html',
+      'people/index.html', 'privacy/index.html',
       'projects/index.html', 'contact/index.html',
       'projects/architecture/index.html', 'projects/interior-design/index.html',
       'projects/landscape/index.html', 'projects/master-planning/index.html',
@@ -34,6 +37,31 @@ test('renderPages writes each page to its folder and fills every token', () => {
   pages.forEach((p) => {
     assert.ok(!p.html.includes('{{'), p.file);
   });
+});
+
+test('the 4 Studio service pages: breadcrumb, own SEO, a link to their projects', () => {
+  const pages = renderPages(ROOT, '/news/');
+  const studioHtml = pages.find((p) => p.file === 'studio/index.html').html;
+  [['architecture-design', 'architecture'], ['interior-design', 'interior-design'],
+    ['landscape-architecture', 'landscape'], ['master-planning', 'master-planning']]
+    .forEach(([slug, cat]) => {
+      const { html } = pages.find((p) => p.file === `studio/${slug}/index.html`);
+      const content = readContent(ROOT, `studio-${slug}`);
+      const canonical = `https://nellisarchitecture.com/studio/${slug}/`;
+      assert.ok(html.includes('<a href="/studio/">Studio</a>'), slug);
+      assert.ok(html.includes(`<h1>${content.title}</h1>`), slug);
+      assert.ok(html.includes(`<link rel="canonical" href="${canonical}"`), slug);
+      assert.ok(html.includes(`<a href="/projects/${cat}/">`), slug);
+      assert.ok(content.seo.title.length <= 60, slug);
+      assert.ok(content.seo.title.endsWith('| Nellis Architecture'), slug);
+      const len = content.seo.description.length;
+      assert.ok(len >= 150 && len <= 160, `${slug} ${len}`);
+      const raw = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+      const crumbs = JSON.parse(raw)['@graph'].find((n) => n['@type'] === 'BreadcrumbList');
+      const names = crumbs.itemListElement.map((c) => c.name);
+      assert.deepEqual(names, ['Home', 'Studio', content.title], slug);
+      assert.ok(studioHtml.includes(`<a href="/studio/${slug}/"`), `Studio links ${slug}`);
+    });
 });
 
 const NAV_PROJECTS = new RegExp('<a href="([^"]*)" class="(?:projectPage|nav-item)"[^>]*>'

@@ -8,9 +8,14 @@ const people = require('./pages/people');
 const category = require('./pages/category');
 const news = require('./pages/news');
 const contact = require('./pages/contact');
+const service = require('./pages/service');
 const { CATEGORY_KEYS, loadProjects } = require('./projects');
 const { readManifest } = require('./images');
 const { parseFrontMatter, markdownPage } = require('./markdown');
+
+/* The Studio services: /studio/<slug>/ from content/pages/studio-<slug>.md. */
+const SERVICES = ['architecture-design', 'interior-design', 'landscape-architecture',
+  'master-planning'];
 
 /* slug is fixed in code: the page URL is /<slug>/ (Home: /). */
 const PAGES = [
@@ -20,6 +25,9 @@ const PAGES = [
   {
     slug: 'studio', content: 'studio', module: studio, priority: '0.8',
   },
+  ...SERVICES.map((s) => ({
+    slug: `studio/${s}`, content: `studio-${s}`, module: service, priority: '0.7',
+  })),
   {
     slug: 'people', content: 'people', module: people, priority: '0.8',
   },

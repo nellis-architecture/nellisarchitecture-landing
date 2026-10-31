@@ -295,6 +295,30 @@ collections:
           - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, hint: "On: Google does not show the page, and the sitemap does not list it." }
           - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
           - { label: "Body", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "bulleted-list"], editor_components: [], media_library: *upload_limit, hint: "The first line, a level-1 heading, is the page title. A section starts with a level-2 heading. A Contents link points to a section as #name-of-the-section. The file days must match Shared → Forms." }
+      - name: "studio-architecture-design"
+        label: "Studio service: Architecture"
+        file: "content/pages/studio-architecture-design.md"
+        fields: &service_fields
+          - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab and Google result title. Leave empty to use the page title. Page URL: /studio/<service>/ (fixed)." }
+          - { label: "Social title (og:title)", name: "og_title", widget: "string", required: false, hint: "Title for shared links. Leave empty to use the SEO title." }
+          - { label: "Meta description", name: "description", widget: "text", hint: "150–160 characters shown under the title in Google." }
+          - { label: "Canonical URL", name: "canonical", widget: "string", required: false, pattern: ['^$|^https://nellisarchitecture\.com/', "Leave empty, or start with https://nellisarchitecture.com/"], hint: "Leave empty to use the page URL." }
+          - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, hint: "On: Google does not show the page, and the sitemap does not list it." }
+          - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
+          - { label: "Body", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-one", "heading-two", "heading-three", "bulleted-list"], editor_components: [], media_library: *upload_limit, hint: "The first line, a level-1 heading, is the page title (also the last breadcrumb). A section starts with a level-2 heading. End with a link to the matching project category page." }
+      - name: "studio-interior-design"
+        label: "Studio service: Interior Design"
+        file: "content/pages/studio-interior-design.md"
+        fields: *service_fields
+      - name: "studio-landscape-architecture"
+        label: "Studio service: Landscape"
+        file: "content/pages/studio-landscape-architecture.md"
+        fields: *service_fields
+      - name: "studio-master-planning"
+        label: "Studio service: Master Planning"
+        file: "content/pages/studio-master-planning.md"
+        fields: *service_fields
 
   - name: "redirects"
     label: "Redirects"

@@ -2,6 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://nellisarchitecture.com/</loc><priority>1.0</priority></url>
   <url><loc>https://nellisarchitecture.com/studio/</loc><priority>0.8</priority></url>
+  <url><loc>https://nellisarchitecture.com/studio/architecture-design/</loc><priority>0.7</priority></url>
+  <url><loc>https://nellisarchitecture.com/studio/interior-design/</loc><priority>0.7</priority></url>
+  <url><loc>https://nellisarchitecture.com/studio/landscape-architecture/</loc><priority>0.7</priority></url>
+  <url><loc>https://nellisarchitecture.com/studio/master-planning/</loc><priority>0.7</priority></url>
   <url><loc>https://nellisarchitecture.com/people/</loc><priority>0.8</priority></url>
   <url><loc>https://nellisarchitecture.com/privacy/</loc><priority>0.2</priority></url>
   <url><loc>https://nellisarchitecture.com/projects/</loc><priority>0.7</priority></url>

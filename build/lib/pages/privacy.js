@@ -37,10 +37,11 @@ function render(content, { site, page }) {
       ...seoTokens(content, page),
     }),
     top(content.h1, site),
-    fill(loadPartial('page-privacy'), {
+    fill(loadPartial('page-text'), {
       NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       ...emailTokens(site),
+      CRUMBS: '',
       TITLE: escText(content.title),
       BODY: mdToHtml(content.body || '', {}, { ids: true }),
     }),

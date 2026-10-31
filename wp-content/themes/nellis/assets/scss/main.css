@@ -7158,6 +7158,19 @@ h5, h6 {
   letter-spacing: 1px;
 }
 
+/* The breadcrumb of a text page (Studio services, LND-016): as on the category pages. */
+.FirstBlock .projectBreadcrumbs {
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.FirstBlock .projectBreadcrumbs a {
+  color: inherit;
+}
+
 .policyContent a {
   color: var(--col-green);
   text-decoration: underline;

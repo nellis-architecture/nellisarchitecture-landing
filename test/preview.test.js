@@ -68,7 +68,9 @@ const { NellisPreview } = run();
 
 test('previewPages: the PAGES pages without news and contact', () => {
   assert.deepEqual(PAGES.map((p) => p.content), [
-    'index', 'studio', 'people', 'privacy', 'projects', 'projects-architecture',
+    'index', 'studio', 'studio-architecture-design', 'studio-interior-design',
+    'studio-landscape-architecture', 'studio-master-planning', 'people', 'privacy', 'projects',
+    'projects-architecture',
     'projects-interior-design', 'projects-landscape', 'projects-master-planning',
   ]);
 });

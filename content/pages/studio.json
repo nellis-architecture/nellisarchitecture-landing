@@ -24,23 +24,23 @@
   },
   "services": {
     "title": "OUR SERVICES",
-    "button": "View projects",
+    "button": "Discover",
     "items": [
       {
         "title": "Architecture",
-        "link": "/projects/architecture/"
+        "link": "/studio/architecture-design/"
       },
       {
         "title": "Master Planning",
-        "link": "/projects/master-planning/"
+        "link": "/studio/master-planning/"
       },
       {
         "title": "Interior Design",
-        "link": "/projects/interior-design/"
+        "link": "/studio/interior-design/"
       },
       {
         "title": "Landscape",
-        "link": "/projects/landscape/"
+        "link": "/studio/landscape-architecture/"
       }
     ]
   },

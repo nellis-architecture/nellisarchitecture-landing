@@ -90,7 +90,7 @@ function navSite(items) {
   }).join('\n');
 }
 
-/* Shape C: page-privacy, page-news, page-contact, page-category.
+/* Shape C: page-text (privacy, services), page-news, page-contact, page-category.
    The fixed nav-item class sits on the <a>, the hook on the <li>. */
 function navPlain(items) {
   return items.map((it) => `${PAD.cLink}<a href="${escAttr(it.link)}" class="nav-item">\n`
