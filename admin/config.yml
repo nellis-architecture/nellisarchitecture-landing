@@ -344,6 +344,88 @@ collections:
       - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
       - { label: "Body", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-two", "heading-three", "heading-four", "bulleted-list", "quote"], editor_components: ["image", "separator"], media_library: *upload_limit, hint: "The Title is the page heading. Do not type it again here. Files must be smaller than 25 MB (26214 kB)." }
 
+  # Projects: content/projects/<slug>.json builds /projects/<category>/<slug>/ (LND-037).
+  # The name is not "projects": a preview template of that name exists for the hub page.
+  - name: "project-pages"
+    label: "Projects"
+    label_singular: "Project"
+    folder: "content/projects"
+    format: "json"
+    extension: "json"
+    create: true
+    delete: false
+    slug: "{{fields.slug}}"
+    identifier_field: name
+    summary: "{{name}} — {{order}}"
+    sortable_fields:
+      - { field: "order", default_sort: "asc" }
+    media_folder: "/wp-content/uploads/projects"
+    public_folder: "/wp-content/uploads/projects"
+    fields:
+      - { label: "Name", name: "name", widget: "string", hint: "Shows on the project page, in the grid and in the lists. Two projects cannot have the same name." }
+      - { label: "URL slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Use lowercase letters, digits and single dashes only"], hint: "The page URL is /projects/<category>/<slug>/. Lowercase words separated by dashes. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        hint: "A category change moves the URL. Add a 301 in Redirects. Publish the move first, then add the 301: a 301 to a page that does not exist stops the build."
+        options: &project_categories
+          - { label: "Architecture", value: "architecture" }
+          - { label: "Interior Design", value: "interior-design" }
+          - { label: "Landscape", value: "landscape" }
+          - { label: "Master Planning", value: "master-planning" }
+      - { label: "Also in", name: "also_in", widget: "select", multiple: true, required: false, options: *project_categories, hint: "The project also shows in these categories. The URL does not change." }
+      - label: "Type"
+        name: "type"
+        widget: "select"
+        hint: "The residential / commercial filter of the project lists."
+        options:
+          - { label: "Residential", value: "residential" }
+          - { label: "Commercial", value: "commercial" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", hint: "The lists show the lowest number first. Use a number between two others to put a project between them." }
+      - { label: "Area", name: "area", widget: "string", required: false, hint: "For example Palm Jumeirah." }
+      - { label: "Region", name: "region", widget: "string", required: false, hint: "For example Dubai, UAE." }
+      - { label: "Text 1", name: "text_1", widget: "list", required: false, field: { label: "Paragraph", name: "paragraph", widget: "text" }, hint: "Shows after the first slider. The first paragraph is the default meta description. HTML shows as it is: for example &amp; or <br>." }
+      - { label: "Text 2", name: "text_2", widget: "list", required: false, field: { label: "Paragraph", name: "paragraph", widget: "text" }, hint: "Shows after Image 2. HTML shows as it is: for example &amp; or <br>." }
+      - { label: "Text 3", name: "text_3", widget: "list", required: false, field: { label: "Paragraph", name: "paragraph", widget: "text" }, hint: "Shows after the second slider. HTML shows as it is: for example &amp; or <br>." }
+      - label: "Facts"
+        name: "facts"
+        widget: "list"
+        required: false
+        summary: "{{fields.label}} {{fields.value}}"
+        hint: "The lines at the end of the project. HTML shows as it is: for example &amp; or <br>."
+        fields:
+          - { label: "Label", name: "label", widget: "string", hint: "For example Plot size:" }
+          - { label: "Value", name: "value", widget: "string", hint: "For example 1,904 SQM." }
+      - { label: "Hero", name: "hero", widget: "file", media_library: *upload_limit, hint: "An image or an mp4 video. An mp4 from the CMS has no poster: the page shows the video without one. Files must be smaller than 25 MB (26214 kB)." }
+      - { label: "Hero alt text", name: "hero_alt", widget: "string", required: false, hint: "Leave empty to use the name." }
+      - label: "Slider 1"
+        name: "slider_1"
+        widget: "list"
+        required: false
+        summary: "{{fields.src}}"
+        fields: &project_images
+          - { label: "Image", name: "src", widget: "image", media_library: *upload_limit, hint: "Files must be smaller than 25 MB (26214 kB)." }
+          - { label: "Alt text", name: "alt", widget: "string", required: false, hint: "Leave empty to use the name." }
+      - { label: "Image 2", name: "image_2", widget: "list", required: false, summary: "{{fields.src}}", fields: *project_images }
+      - { label: "Slider 2", name: "slider_2", widget: "list", required: false, summary: "{{fields.src}}", fields: *project_images }
+      - { label: "Last images", name: "last_images", widget: "list", required: false, summary: "{{fields.src}}", fields: *project_images }
+      - { label: "Card image", name: "card_image", widget: "image", media_library: *upload_limit, hint: "The image of the project in the grid. Files must be smaller than 25 MB (26214 kB)." }
+      - { label: "Card alt text", name: "card_alt", widget: "string", required: false, hint: "Leave empty to use the name." }
+      - { label: "List image", name: "list_image", widget: "image", required: false, media_library: *upload_limit, hint: "The image in the filter lists, the category pages and the search. Leave empty to use the card image. Files must be smaller than 25 MB (26214 kB)." }
+      - label: "SEO"
+        name: "seo"
+        widget: "object"
+        required: false
+        collapsed: true
+        hint: "Leave a field empty to use the generated value."
+        fields:
+          - { label: "SEO title", name: "title", widget: "string", required: false, hint: "Browser tab and Google result title. Leave empty for: name, area, Nellis Architecture." }
+          - { label: "Social title (og:title)", name: "og_title", widget: "string", required: false, hint: "Title for shared links. Leave empty to use the SEO title." }
+          - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google. Leave empty to use the start of Text 1." }
+          - { label: "Canonical URL", name: "canonical", widget: "string", required: false, pattern: ['^$|^https://nellisarchitecture\.com/', "Leave empty, or start with https://nellisarchitecture.com/"], hint: "Leave empty to use the page URL." }
+          - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, required: false, hint: "On: Google does not show the page, and the sitemap does not list it. The project stays in the grid." }
+          - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
+
   - name: "redirects"
     label: "Redirects"
     format: "json"
@@ -357,7 +439,7 @@ collections:
             name: "redirects"
             widget: "list"
             summary: "{{fields.from}} → {{fields.to}}"
-            hint: "Each rule sends an old URL to a new URL with a permanent (301) redirect. A changed news or landing slug gets its rule automatically."
+            hint: "Each rule sends an old URL to a new URL with a permanent (301) redirect. A changed news, landing or project slug gets its rule automatically."
             fields:
               - { label: "From", name: "from", widget: "string", pattern: ['^/(?!.*(\.\.|//))[A-Za-z0-9._~/-]*$', "Start with /. Use letters, digits and . _ ~ - / only. No .. or //."], hint: "Old path, starts with /, e.g. /old-page/. Upper and lower case are different." }
               - { label: "To", name: "to", widget: "string", pattern: ['^(/(?!/)(?!.*(\.\.|//))|https://)', "Start with / or https://. No .. or //."], hint: "New path on this site, e.g. /studio/, or a full https:// URL." }

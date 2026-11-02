@@ -4,7 +4,7 @@ const {
 const {
   head, top, affiliations, navSite, follow, footer, emailTokens, year,
 } = require('../chrome');
-const { DOMAIN, INDEX } = require('../seo');
+const { DOMAIN, seoTokens } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
 const {
   picture, zoomSrc, readManifest, heroVideo, preloadLink,
@@ -191,23 +191,19 @@ function panel(entry, projects, manifest, site, followHtml) {
 function render(entry, { site, projects, manifest = readManifest() }) {
   const { name, p } = entry;
   const followHtml = follow(site.follow);
-  const pageTitle = title(name, p);
-  const desc = description((p.text_1 || [])[0]);
-  const url = DOMAIN + entry.url;
+  const seo = p.seo || {};
+  const pageTitle = seo.title || title(name, p);
+  const desc = seo.description || description((p.text_1 || [])[0]);
   const headHtml = head({
     BEFORE: '',
     PRELOAD: isVideo(p.hero) ? preloadLink(heroVideo(p.hero, manifest).href) : '',
     OG_IMAGE: ogImage(p),
-    TITLE: escText(pageTitle),
-    ROBOTS: INDEX,
-    DESCRIPTION: escAttr(desc),
-    CANONICAL: escAttr(url),
     OG_TYPE: 'article',
-    OG_TITLE: escAttr(pageTitle),
-    OG_DESCRIPTION: escAttr(desc),
-    OG_URL: escAttr(url),
     MODIFIED_TIME: '',
     SCHEMA: schema(entry, pageTitle, desc),
+    ...seoTokens({ seo: { ...seo, title: pageTitle, description: desc } }, {
+      slug: entry.url.slice(1, -1), source: `content/projects/${entry.filename}.json`,
+    }),
   // Shortcut: the data has no dates, so drop the empty modified_time line.
   // Upgrade: a head token for the whole line.
   }).replace('\t<meta property="article:modified_time" content="" />\n', '');

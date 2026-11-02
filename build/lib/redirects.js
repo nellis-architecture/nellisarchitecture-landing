@@ -104,6 +104,12 @@ function autoLandingRules(pages) {
     .map((p) => ({ from: `/${p.filename}/`, to: `/${p.slug}/` }));
 }
 
+function autoProjectRules(projects) {
+  return projects
+    .filter((e) => e.filename !== e.slug)
+    .map((e) => ({ from: `/projects/${e.cat}/${e.filename}/`, to: e.url }));
+}
+
 /* Manual rules win. An auto rule that hits a live URL or a manual "from" is dropped. */
 function mergeRules(manual, auto, exists) {
   const froms = new Set(manual.map((r) => norm(String(r.from))));
@@ -129,6 +135,7 @@ module.exports = {
   validate,
   autoNewsRules,
   autoLandingRules,
+  autoProjectRules,
   mergeRules,
   render,
 };

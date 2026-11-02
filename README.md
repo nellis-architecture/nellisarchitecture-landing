@@ -24,17 +24,18 @@ news/category/<slug>/index.html                                    # 5 news cate
 <slug>/index.html                                                  # landing pages (generated from content/landing/*.md)
 projects/index.html                                                # projects hub: all projects + category links (generated)
 projects/<category>/index.html                                     # 4 category pages (generated)
-projects/<category>/<slug>/index.html                              # 32 project pages (generated from data/projects.json)
+projects/<category>/<slug>/index.html                              # project pages (generated from content/projects/*.json)
 wp-content/                                                        # theme assets + images
-data/                 # static "backend": projects, search index, filters, news JSON
+data/                 # static "backend", generated: search index, filters, news JSON
 js/static-backend.js  # intercepts the theme's old AJAX calls, serves data/ instead
 js/project-switch.js  # project pages: switch the open project in place
 content/news/*.md     # news source of truth (edited via the CMS)
 content/pages/*.json  # page content source of truth (edited via the CMS)
 content/pages/*.md    # text pages (privacy): front matter + markdown, first "# " line = title
 content/landing/*.md  # landing pages: flat front matter + markdown body (edited via the CMS)
+content/projects/*.json # projects, source of truth (edited via the CMS)
 content/redirects.json # CMS redirects (301), source of truth (edited via the CMS)
-_redirects            # redirects (generated from build/redirects.txt + content/redirects.json + news and landing slugs)
+_redirects            # redirects (generated from build/redirects.txt + content/redirects.json + news, landing and project slugs)
 build/redirects.txt   # fixed redirects (200 and 301, hand-kept)
 _headers              # security + cache headers (hand-kept)
 build/news-template.html
@@ -84,6 +85,17 @@ npm run serve
 ```
 
 To use the CMS on your computer, see [Local CMS](docs/workflow/development.md#commands).
+
+## Updating projects
+
+1. Open `<site>/admin/`, then **Projects**. The list shows the projects by **Order**, lowest first.
+2. New Project. Fill the name, URL slug, category, type, order, hero and card image. All other fields are optional.
+   Each upload must be smaller than 25 MB. **Text** and **Facts** show HTML as it is.
+3. Publish → the site rebuilds: the project page, the Home grid, the filter lists, the category pages, the search and the sitemap.
+4. A slug change adds a 301 from the old URL. A second slug change needs a manual rule in **Redirects**.
+   A category change moves the URL: publish the move first, then add the 301 in **Redirects**.
+5. To hide a project from Google, turn on **SEO → Hide from search (noindex)**. The sitemap drops it; the grid keeps it.
+6. A hero mp4 from the CMS has no poster. To add one, follow the poster rule in [AGENTS.md](AGENTS.md#content--seo).
 
 ## Notes
 

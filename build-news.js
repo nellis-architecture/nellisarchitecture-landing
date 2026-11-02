@@ -17,8 +17,8 @@
  *   7. Builds projects/<category>/<slug>/index.html, data/filters/*.html and data/search.json
  *      from content/projects/*.json
  *   8. Deletes news/<dir>/ and projects/ folders that no post or project owns
- *   9. Writes _redirects from build/redirects.txt, content/redirects.json and changed news
- *      and landing slugs
+ *   9. Writes _redirects from build/redirects.txt, content/redirects.json and changed news,
+ *      landing and project slugs
  *  10. Writes feed.xml (RSS 2.0, 10 newest posts; build/redirects.txt serves it at /feed/)
  *  11. Writes robots.txt from content/robots.json (plus the Sitemap line)
  *  12. Builds <slug>/index.html from content/landing/*.md, deletes the stale landing folders
@@ -258,7 +258,8 @@ function newsJsonEntry(p, manifest) {
 function sitemap(posts, pages, projects = []) {
   const urls = [
     ...pages.filter((p) => !p.noindex).map((p) => ({ loc: pageUrl(p.slug), pr: p.priority })),
-    ...projects.map((e) => ({ loc: `${DOMAIN}${e.url}`, pr: '0.7' })),
+    ...projects.filter((e) => !(e.p.seo || {}).noindex)
+      .map((e) => ({ loc: `${DOMAIN}${e.url}`, pr: '0.7' })),
     ...posts.filter((p) => !p.noindex).map((p) => ({
       loc: `${DOMAIN}/news/${p.slug}/`, pr: '0.6', lastmod: p.dateObj.toISOString().slice(0, 10),
     })),
@@ -341,15 +342,23 @@ function writeProjectData(root, list, manifest) {
 }
 
 /* Run after every page write: the checks read the final tree. */
-function writeRedirects(root, posts, landing = []) {
+function writeRedirects(root, posts, landing = [], projects = []) {
   const exists = redirects.onDisk(root);
   const json = fs.readFileSync(path.join(root, 'content', 'redirects.json'), 'utf8');
   const manual = redirects.parseRules(json);
-  const auto = [...redirects.autoNewsRules(posts), ...redirects.autoLandingRules(landing)];
+  const auto = [
+    ...redirects.autoNewsRules(posts),
+    ...redirects.autoLandingRules(landing),
+    ...redirects.autoProjectRules(projects),
+  ];
   const rules = redirects.mergeRules(manual, auto, exists);
   const fixedText = fs.readFileSync(path.join(root, redirects.FIXED_FILE), 'utf8');
   const fixed = redirects.parseFixed(fixedText);
   const fixedFroms = redirects.fixedFroms(fixed);
+  projects.forEach((e) => {
+    const file = redirects.hitsFixed(e.url, fixedFroms);
+    if (file) throw new Error(`content/projects/${e.filename}.json: ${e.url} matches ${file}`);
+  });
   const errors = redirects.validate(rules, { exists, fixedFroms });
   if (errors.length) throw new Error(`content/redirects.json:\n${errors.join('\n')}`);
   fs.writeFileSync(path.join(root, '_redirects'), redirects.render(rules, fixed));
@@ -399,7 +408,7 @@ function build(manifest = readManifest(ROOT)) {
   fs.writeFileSync(path.join(ROOT, 'feed.xml'), rss(posts));
   const robotsJson = fs.readFileSync(path.join(ROOT, 'content', 'robots.json'), 'utf8');
   fs.writeFileSync(path.join(ROOT, 'robots.txt'), robots(JSON.parse(robotsJson).rules));
-  const rules = writeRedirects(ROOT, posts, landing);
+  const rules = writeRedirects(ROOT, posts, landing, projects);
 
   console.log(`built ${posts.length} news pages; newest: ${newest.slug}; `
     + `${projects.length} project pages; ${rules.length} redirects`);

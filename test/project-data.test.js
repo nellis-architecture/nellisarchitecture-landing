@@ -10,7 +10,7 @@ const category = require('../build/lib/pages/category');
 // eslint-disable-next-line import-x/no-useless-path-segments -- Home page module
 const index = require('../build/lib/pages/index');
 const { PAGES, readContent } = require('../build/lib/pages');
-const { sitemap, writeProjectData } = require('../build-news');
+const { sitemap, writeProjectData, writeRedirects } = require('../build-news');
 
 const ROOT = path.join(__dirname, '..');
 const LIST = loadProjects(ROOT);
@@ -219,4 +219,125 @@ test('writeProjectData writes the filter files and data/search.json', () => {
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
+});
+
+const pageOf = (p) => {
+  const [e] = load({ 'fixture.json': p });
+  return project.render(e, {
+    site, newsHref: '/news/', projects: [e], manifest: {},
+  });
+};
+const DOMAIN = 'https://nellisarchitecture.com';
+
+test('an empty SEO object keeps the generated title and description', () => {
+  const text = { text_1: ['First text.'] };
+  const html = pageOf(proj(text));
+  assert.equal(pageOf(proj({ ...text, seo: {} })), html);
+  assert.equal(pageOf(proj({
+    ...text,
+    seo: {
+      title: '', og_title: '', description: '', canonical: '', noindex: false, schema: '',
+    },
+  })), html);
+  assert.ok(html.includes('<title>Fixture &lt;b&gt; | Area | Nellis Architecture</title>'));
+  assert.ok(html.includes('<meta name="description" content="First text." />'));
+  assert.ok(html.includes("<meta name='robots' content='index, follow"));
+  const url = `${DOMAIN}/projects/landscape/fixture/`;
+  assert.ok(html.includes(`<link rel="canonical" href="${url}" />`));
+});
+
+test('each SEO field overrides its generated value', () => {
+  const html = (seo) => pageOf(proj({ seo }));
+  assert.ok(html({ title: 'T <x>' }).includes('<title>T &lt;x&gt;</title>'));
+  assert.ok(html({ title: 'T' }).includes('<meta property="og:title" content="T" />'));
+  assert.ok(html({ og_title: 'O' }).includes('<meta property="og:title" content="O" />'));
+  const desc = html({ description: 'D' });
+  assert.ok(desc.includes('<meta name="description" content="D" />'));
+  assert.ok(desc.includes('<meta property="og:description" content="D" />'));
+  const canonical = `${DOMAIN}/studio/`;
+  assert.ok(html({ canonical }).includes(`<link rel="canonical" href="${canonical}" />`));
+  assert.throws(() => html({ canonical: 'https://x.com/' }), /seo\.canonical must start/);
+  const custom = html({ schema: '{"@type":"Thing"}' });
+  assert.ok(custom.includes('<script type="application/ld+json">{"@type":"Thing"}</script>'));
+  assert.throws(() => html({ schema: '{' }), /fixture.json: schema is not valid/);
+  assert.ok(html({ noindex: true }).includes('<meta name="robots" content="noindex">'));
+});
+
+test('a noindex project leaves the sitemap and stays in the grid', () => {
+  const list = load({
+    'a.json': proj({ name: 'A', slug: 'a', seo: { noindex: true } }),
+    'b.json': proj({ name: 'B', slug: 'b' }),
+  });
+  const xml = sitemap([], [], list);
+  assert.ok(!xml.includes('/projects/landscape/a/'));
+  assert.ok(xml.includes('/projects/landscape/b/'));
+  assert.ok(grid(list).includes('href="/projects/landscape/a/"'));
+});
+
+function redirectRoot(fixed = '') {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'moved-'));
+  fs.mkdirSync(path.join(dir, 'content'));
+  fs.mkdirSync(path.join(dir, 'build'));
+  fs.mkdirSync(path.join(dir, 'projects', 'landscape', 'new'), { recursive: true });
+  fs.writeFileSync(path.join(dir, 'projects', 'landscape', 'new', 'index.html'), 'x');
+  fs.writeFileSync(path.join(dir, 'content', 'redirects.json'), '{"redirects":[]}');
+  fs.writeFileSync(path.join(dir, 'build', 'redirects.txt'), fixed);
+  return dir;
+}
+
+test('a changed slug gives a 301 from the file name URL', () => {
+  const dir = redirectRoot();
+  try {
+    const list = load({ 'old.json': proj({ slug: 'new' }) });
+    writeRedirects(dir, [], [], list);
+    assert.ok(fs.readFileSync(path.join(dir, '_redirects'), 'utf8')
+      .includes('/projects/landscape/old/ /projects/landscape/new/ 301'));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('an unchanged slug gives no 301; a URL under a fixed rule stops the build', () => {
+  const dir = redirectRoot('/projects/landscape/* /projects/ 301\n');
+  const list = load({ 'new.json': proj({ slug: 'new' }) });
+  try {
+    assert.throws(
+      () => writeRedirects(dir, [], [], list),
+      /content\/projects\/new\.json: \/projects\/landscape\/new\/ matches build\/redirects\.txt/,
+    );
+    fs.writeFileSync(path.join(dir, 'build', 'redirects.txt'), '');
+    assert.deepEqual(writeRedirects(dir, [], [], list), []);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('the CMS collection of the projects', () => {
+  const config = fs.readFileSync(path.join(ROOT, 'admin', 'config.yml'), 'utf8');
+  const start = config.indexOf('name: "project-pages"');
+  const block = config.slice(start, config.indexOf('name: "redirects"'));
+  [
+    'folder: "content/projects"', 'format: "json"', 'extension: "json"', 'create: true',
+    'delete: false', 'slug: "{{fields.slug}}"', 'identifier_field: name',
+    '{ field: "order", default_sort: "asc" }',
+    'media_folder: "/wp-content/uploads/projects"',
+    'public_folder: "/wp-content/uploads/projects"',
+    'name: "order", widget: "number", value_type: "int"',
+    'name: "hero", widget: "file"',
+    'A category change moves the URL. Add a 301 in Redirects.',
+  ].forEach((line) => assert.ok(block.includes(line), line));
+  const optional = ['also_in', 'area', 'region', 'text_1', 'text_2', 'text_3', 'hero_alt',
+    'image_2', 'slider_2', 'last_images', 'card_alt', 'list_image', 'alt', 'title', 'og_title',
+    'description', 'canonical', 'noindex', 'schema'];
+  optional.forEach((name) => assert.match(
+    block,
+    new RegExp(`name: "${name}",.*required: false`),
+    name,
+  ));
+  ['facts', 'slider_1', 'seo'].forEach((name) => assert.match(
+    block,
+    new RegExp(`name: "${name}"\\n[^-]*required: false`),
+    name,
+  ));
+  assert.ok(config.includes('A changed news, landing or project slug gets its rule'));
 });
