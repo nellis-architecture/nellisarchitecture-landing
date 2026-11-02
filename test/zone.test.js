@@ -114,7 +114,7 @@ const tmpRoot = (records) => {
   return dir;
 };
 
-test('readRecords: rejects NS, SOA, unknown types, no ttl or proxied, names under forms', () => {
+test('readRecords: rejects bad types, missing fields, forms.* names, a long comment', () => {
   const bad = [
     rec('NS', APEX, { content: 'ns1.example.com' }),
     rec('SOA', APEX, { content: 'soa' }),
@@ -128,6 +128,7 @@ test('readRecords: rejects NS, SOA, unknown types, no ttl or proxied, names unde
     rec('MX', SUB, { content: 'x.example.com', priority: 1 }),
     rec('TXT', `a.${SUB}`, { content: 'x' }),
     rec('MX', APEX, { content: 'x.example.com' }),
+    rec('TXT', APEX, { content: 'x', comment: 'c'.repeat(101) }),
   ];
   bad.forEach((r) => assert.throws(() => readRecords(tmpRoot([r])), /infra\/dns\.json/));
 });
@@ -237,6 +238,7 @@ const zoneRoutes = (status, records) => ({
   'GET /zones/z/settings/ssl': { id: 'ssl', value: 'full' },
   'GET /accounts/acc/email/routing/addresses': [],
   'GET /zones/z/email/routing': { enabled: false, status: 'unconfigured' },
+  'GET /zones/z/email/auth/dmarc-reports': { enabled: true },
 });
 
 test('run plan: a missing zone prints "would create" and writes nothing', async (t) => {
@@ -258,12 +260,16 @@ test('run plan: a pending zone with differences writes nothing', async (t) => {
   assert.match(out(), /routing: would enable on forms/);
 });
 
-test('run plan: an active zone without routing would enable forms.*, writes nothing', async (t) => {
+test('run plan: an active zone without routing or DMARC reports would enable both', async (t) => {
   const out = quiet(t);
-  const { api, calls } = noWrite(zoneRoutes('active', withIds(readRecords())));
+  const { api, calls } = noWrite({
+    ...zoneRoutes('active', withIds(readRecords())),
+    'GET /zones/z/email/auth/dmarc-reports': { enabled: false },
+  });
   await run({ api, acct: 'acc', write: false });
   assert.ok(calls.every((c) => c.method === 'GET'));
   assert.match(out(), /routing: would enable on forms.nellisarchitecture.com/);
+  assert.match(out(), /dmarc reports: would enable/);
 });
 
 test('run write: the guard throws when the apex MX changes after routing', async (t) => {

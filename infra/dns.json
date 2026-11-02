@@ -20,6 +20,7 @@
   {"type": "MX", "name": "nellisarchitecture.com", "content": "mx3-usg2.ppe-hosted.com", "priority": 0, "ttl": 1, "proxied": false},
   {"type": "TXT", "name": "nellisarchitecture.com", "content": "\"NETORGFT14520862.onmicrosoft.com\"", "ttl": 1, "proxied": false},
   {"type": "TXT", "name": "nellisarchitecture.com", "content": "\"v=spf1 include:_spf-usg2.ppe-hosted.com include:secureserver.net ~all\"", "ttl": 1, "proxied": false},
+  {"type": "TXT", "name": "_dmarc.nellisarchitecture.com", "content": "\"v=DMARC1; p=none; rua=mailto:f475d059814846ceaaddc1b8ab1789bc@dmarc-reports.cloudflare.net\"", "ttl": 1, "proxied": false, "comment": "LND-105: p=none, reports in DMARC Management. Review by 2026-11-30."},
   {"type": "SRV", "name": "_sip._tls.nellisarchitecture.com", "data": {"priority": 100, "weight": 1, "port": 443, "target": "sipdir.online.lync.com"}, "ttl": 1, "proxied": false},
   {"type": "SRV", "name": "_sipfederationtls._tcp.nellisarchitecture.com", "data": {"priority": 100, "weight": 1, "port": 5061, "target": "sipfed.online.lync.com"}, "ttl": 1, "proxied": false}
 ]

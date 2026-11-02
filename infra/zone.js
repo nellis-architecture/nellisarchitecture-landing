@@ -33,6 +33,7 @@ const readRecords = (root = ROOT) => {
     if (r.type === 'MX' && !Number.isInteger(r.priority)) fail('MX needs priority');
     if (!Number.isInteger(r.ttl)) fail('no ttl');
     if (typeof r.proxied !== 'boolean') fail('no proxied');
+    if (r.comment && r.comment.length > 100) fail('comment longer than 100 characters');
     if (under(r.name, sub)) fail(`${sub} is for Email Routing only`);
   });
   return records;
@@ -153,6 +154,14 @@ const run = async ({
     console.log(`setting: ${pre}set ${id} ${value}`);
     changes += 1;
   }), Promise.resolve());
+
+  // DMARC Management: Cloudflare reads the reports sent to the rua of _dmarc in infra/dns.json.
+  const dmarcPath = `/zones/${zone.id}/email/auth/dmarc-reports`;
+  if (!(await api(dmarcPath)).enabled) {
+    if (write) await api(dmarcPath, { method: 'PATCH', body: { enabled: true } });
+    console.log(`dmarc reports: ${pre}enable`);
+    changes += 1;
+  }
 
   const addrPath = `/accounts/${acct}/email/routing/addresses`;
   const addr = addressPlan(await api(addrPath), DESIRED_ADDRESSES);
