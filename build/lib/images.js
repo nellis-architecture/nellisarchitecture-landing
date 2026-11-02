@@ -21,7 +21,7 @@ const FORMATS = {
 };
 const SOURCES = [
   'build/lib/partials', 'build/news-template.html', 'data/filters', 'data/projects.json',
-  'data/search.json', 'content/news', 'content/pages',
+  'data/search.json', 'content/news', 'content/pages', 'content/landing',
 ];
 const PAGES = ['index.html', 'projects', 'news', 'studio', 'people', 'privacy', 'contact'];
 const DOMAIN = '(?:https://nellisarchitecture\\.com)?/?';

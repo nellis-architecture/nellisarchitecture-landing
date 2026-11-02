@@ -3,14 +3,16 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
+const { loadLanding } = require('../build/lib/landing');
 
-const SITE = [
+const FIXED = [
   'admin', 'contact', 'data', 'js', 'news', 'people', 'privacy', 'projects', 'studio', 'wp-content',
   'robots.txt', 'sitemap.xml', 'feed.xml', '_redirects', '_headers',
 ];
-const isPublic = (entry) => entry.endsWith('.html') || SITE.includes(entry);
-
 const root = path.join(__dirname, '..');
+const SITE = [...FIXED, ...loadLanding(root).map((p) => p.slug)];
+const isPublic = (entry, site = SITE) => entry.endsWith('.html') || site.includes(entry);
+
 const ignores = fs.readFileSync(path.join(root, '.assetsignore'), 'utf8')
   .split('\n').map((line) => line.trim()).filter((line) => line && !line.startsWith('#'));
 const ignored = (entry, isDir) => ignores.some((line) => {
@@ -42,6 +44,13 @@ test('no public root entry is in .assetsignore', () => {
     const hit = ignored(entry, true) || ignored(entry, false);
     assert.ok(!hit, `.assetsignore: "${entry}" is ignored`);
   });
+});
+
+test('a landing slug is public, a stale landing folder is not', () => {
+  const site = [...FIXED, 'dubai-villas'];
+  assert.ok(isPublic('dubai-villas', site));
+  assert.ok(!isPublic('old-villas', site));
+  assert.ok(!ignored('old-villas', true));
 });
 
 test('a symlink to a folder counts as a folder', () => {

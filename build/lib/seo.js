@@ -73,7 +73,7 @@ function seoTokens(content, page) {
     CANONICAL: escAttr(url),
     OG_URL: escAttr(url),
     ROBOTS: seo.noindex ? NOINDEX : INDEX,
-    SCHEMA_EXTRA: customSchema(seo.schema, `content/pages/${page.content}.json`),
+    SCHEMA_EXTRA: customSchema(seo.schema, page.source || `content/pages/${page.content}.json`),
   };
 }
 

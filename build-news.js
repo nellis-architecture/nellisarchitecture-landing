@@ -16,9 +16,11 @@
  *   6. Regenerates sitemap.xml
  *   7. Builds projects/<category>/<slug>/index.html from data/projects.json
  *   8. Deletes news/<dir>/ and projects/ folders that no post or project owns
- *   9. Writes _redirects from build/redirects.txt, content/redirects.json and changed news slugs
+ *   9. Writes _redirects from build/redirects.txt, content/redirects.json and changed news
+ *      and landing slugs
  *  10. Writes feed.xml (RSS 2.0, 10 newest posts; build/redirects.txt serves it at /feed/)
  *  11. Writes robots.txt from content/robots.json (plus the Sitemap line)
+ *  12. Builds <slug>/index.html from content/landing/*.md, deletes the stale landing folders
  *  First, on Workers Builds only: makes the image variants that build/images.json lacks
  *  (build/lib/images.js)
  */
@@ -45,10 +47,10 @@ const {
 const {
   ensureVariants, readManifest, picture, heroVideo, preloadLink,
 } = require('./build/lib/images');
-const { mdToHtml, parseFrontMatter } = require('./build/lib/markdown');
+const { mdToHtml, parseFrontMatter, SLUG } = require('./build/lib/markdown');
+const { loadLanding, pruneLanding } = require('./build/lib/landing');
 
 const ROOT = __dirname;
-const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MONTHS = [
   'january', 'february', 'march', 'april', 'may', 'june',
   'july', 'august', 'september', 'october', 'november', 'december',
@@ -327,11 +329,12 @@ function writeProjects(root, list, newsHref, manifest, site) {
 }
 
 /* Run after every page write: the checks read the final tree. */
-function writeRedirects(root, posts) {
+function writeRedirects(root, posts, landing = []) {
   const exists = redirects.onDisk(root);
   const json = fs.readFileSync(path.join(root, 'content', 'redirects.json'), 'utf8');
   const manual = redirects.parseRules(json);
-  const rules = redirects.mergeRules(manual, redirects.autoNewsRules(posts), exists);
+  const auto = [...redirects.autoNewsRules(posts), ...redirects.autoLandingRules(landing)];
+  const rules = redirects.mergeRules(manual, auto, exists);
   const fixedText = fs.readFileSync(path.join(root, redirects.FIXED_FILE), 'utf8');
   const fixed = redirects.parseFixed(fixedText);
   const fixedFroms = redirects.fixedFroms(fixed);
@@ -343,6 +346,7 @@ function writeRedirects(root, posts) {
 
 /* manifest: build/images.json, plus the variants that CI made (ensureVariants). */
 function build(manifest = readManifest(ROOT)) {
+  const landing = loadLanding(ROOT);
   const posts = loadPosts(path.join(ROOT, 'content', 'news'), manifest);
   if (!posts.length) {
     console.log('no posts');
@@ -372,7 +376,8 @@ function build(manifest = readManifest(ROOT)) {
   const newest = posts[0];
   const newsHref = '/news/';
   const projects = loadProjects(ROOT);
-  const pages = writePages(ROOT, newsHref, projects, posts, manifest);
+  const pages = writePages(ROOT, newsHref, projects, posts, manifest, landing);
+  pruneLanding(ROOT, landing);
   writeProjects(ROOT, projects, newsHref, manifest, site);
   writePreview(ROOT, manifest, newsHref);
 
@@ -381,7 +386,7 @@ function build(manifest = readManifest(ROOT)) {
   fs.writeFileSync(path.join(ROOT, 'feed.xml'), rss(posts));
   const robotsJson = fs.readFileSync(path.join(ROOT, 'content', 'robots.json'), 'utf8');
   fs.writeFileSync(path.join(ROOT, 'robots.txt'), robots(JSON.parse(robotsJson).rules));
-  const rules = writeRedirects(ROOT, posts);
+  const rules = writeRedirects(ROOT, posts, landing);
 
   console.log(`built ${posts.length} news pages; newest: ${newest.slug}; `
     + `${projects.length} project pages; ${rules.length} redirects`);

@@ -7141,6 +7141,12 @@ h5, h6 {
   line-height: 1.3;
 }
 
+.policyContent h4 {
+  margin: 24px 0 8px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
 .policyContent p {
   margin: 0 0 16px;
   line-height: 1.6;
@@ -7178,6 +7184,24 @@ h5, h6 {
 
 .policyContent em {
   font-style: italic;
+}
+
+.policyContent blockquote {
+  margin: 0 0 16px;
+  padding-left: 16px;
+  border-left: 2px solid var(--col-green);
+  line-height: 1.6;
+}
+
+.policyContent hr {
+  margin: 32px 0;
+  border: 0;
+  border-top: 1px solid var(--col-green);
+}
+
+.policyContent img {
+  max-width: 100%;
+  height: auto;
 }
 
 @media (max-width: 759px) {

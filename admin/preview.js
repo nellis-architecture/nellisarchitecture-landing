@@ -285,7 +285,7 @@ const FORMATS = {
 };
 const SOURCES = [
   'build/lib/partials', 'build/news-template.html', 'data/filters', 'data/projects.json',
-  'data/search.json', 'content/news', 'content/pages',
+  'data/search.json', 'content/news', 'content/pages', 'content/landing',
 ];
 const PAGES = ['index.html', 'projects', 'news', 'studio', 'people', 'privacy', 'contact'];
 const DOMAIN = '(?:https://nellisarchitecture\\.com)?/?';
@@ -705,13 +705,14 @@ const { picture } = require('./images');
    so the later rules do not change its attributes. Link schemes other than http(s), mailto
    and tel lose the link and keep the text. */
 const SAFE_HREF = /^(?:https?:|mailto:|tel:|[^:]*(?:[/?#]|$))/i;
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /* eslint-disable no-control-regex -- NUL marks the tokens */
 function inlineMd(s, manifest = {}) {
   const done = [];
   const keep = (html) => `\u0000${done.push(html) - 1}\u0000`;
   return s.replace(/\u0000/g, '')
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => keep(picture({
+    .replace(/!\[([^\]]*)\]\(([^)]+?)(?:\s+"[^"]*")?\)/g, (m, alt, src) => keep(picture({
       src, alt, slot: 'post',
     }, manifest)))
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m, text, href) => (
@@ -821,7 +822,7 @@ function markdownPage(fm, body = '') {
 }
 
 module.exports = {
-  inlineMd, mdToHtml, headingId, parseFrontMatter, markdownPage, SAFE_HREF,
+  inlineMd, mdToHtml, headingId, parseFrontMatter, markdownPage, SAFE_HREF, SLUG,
 };
 
 },
@@ -1182,18 +1183,23 @@ const {
 } = require('../seo');
 const { mdToHtml } = require('../markdown');
 
-/* A Studio service page (/studio/<service>/): a markdown text page (content/pages/
-   studio-<service>.md) under Home › Studio. */
+/* A markdown text page with a breadcrumb: a Studio service (/studio/<service>/, content/pages/
+   studio-<service>.md) under Home › Studio, or a landing page (/<slug>/, content/landing/)
+   under Home. */
 
 const SEP = '<span aria-hidden="true">›</span>';
 
-function crumbs(title) {
+const inStudio = (page) => page.slug.startsWith('studio/');
+
+function crumbs(title, studio) {
+  const parent = studio ? `<a href="/studio/">Studio</a> ${SEP} ` : '';
   return '<nav class="projectBreadcrumbs" aria-label="Breadcrumb">'
-    + `<a href="/">Home</a> ${SEP} <a href="/studio/">Studio</a> ${SEP} `
+    + `<a href="/">Home</a> ${SEP} ${parent}`
     + `<span aria-current="page">${escText(title)}</span></nav>\n            `;
 }
 
-function schema(url, name, description, title) {
+function schema(url, name, description, title, studio) {
+  const parent = studio ? [{ name: 'Studio', item: `${DOMAIN}/studio/` }] : [];
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -1209,28 +1215,22 @@ function schema(url, name, description, title) {
       {
         '@type': 'BreadcrumbList',
         '@id': `${url}#breadcrumb`,
-        itemListElement: [
-          {
-            '@type': 'ListItem', position: 1, name: 'Home', item: `${DOMAIN}/`,
-          },
-          {
-            '@type': 'ListItem', position: 2, name: 'Studio', item: `${DOMAIN}/studio/`,
-          },
-          { '@type': 'ListItem', position: 3, name: title },
-        ],
+        itemListElement: [{ name: 'Home', item: `${DOMAIN}/` }, ...parent, { name: title }]
+          .map((crumb, i) => ({ '@type': 'ListItem', position: i + 1, ...crumb })),
       },
     ],
   }).replace(/</g, '\\u003c');
 }
 
-function render(content, { site, page }) {
+function render(content, { site, page, manifest }) {
   const seo = content.seo || {};
   const url = seo.canonical || pageUrl(page.slug);
+  const studio = inStudio(page);
   const headHtml = head({
-    BEFORE: '',
+    BEFORE: page.before || '',
     OG_TYPE: 'article',
     MODIFIED_TIME: '',
-    SCHEMA: schema(url, titleOf(content), seo.description || '', content.title),
+    SCHEMA: schema(url, titleOf(content), seo.description || '', content.title, studio),
     ...seoTokens(content, page),
   // Shortcut: no dates, so drop the empty modified_time line (as on the category pages).
   }).replace('\t<meta property="article:modified_time" content="" />\n', '');
@@ -1241,9 +1241,9 @@ function render(content, { site, page }) {
       NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       ...emailTokens(site),
-      CRUMBS: crumbs(content.title),
+      CRUMBS: crumbs(content.title, studio),
       TITLE: escText(content.title),
-      BODY: mdToHtml(content.body || '', {}, { ids: true }),
+      BODY: mdToHtml(content.body || '', manifest, { ids: true }),
     }),
     footer(site),
   ].join('\n');
@@ -1570,7 +1570,7 @@ function seoTokens(content, page) {
     CANONICAL: escAttr(url),
     OG_URL: escAttr(url),
     ROBOTS: seo.noindex ? NOINDEX : INDEX,
-    SCHEMA_EXTRA: customSchema(seo.schema, `content/pages/${page.content}.json`),
+    SCHEMA_EXTRA: customSchema(seo.schema, page.source || `content/pages/${page.content}.json`),
   };
 }
 

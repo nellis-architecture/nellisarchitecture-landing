@@ -320,6 +320,29 @@ collections:
         file: "content/pages/studio-master-planning.md"
         fields: *service_fields
 
+  # Landing pages: content/landing/<slug>.md builds /<slug>/ (LND-031).
+  - name: "landing"
+    label: "Landing pages"
+    label_singular: "Landing page"
+    folder: "content/landing"
+    format: "frontmatter"
+    create: true
+    delete: false
+    slug: "{{fields.slug}}"
+    identifier_field: h1
+    media_folder: "/wp-content/uploads/pages"
+    public_folder: "/wp-content/uploads/pages"
+    fields:
+      - { label: "Title (H1)", name: "h1", widget: "string", hint: "Shows as the page heading and as the last breadcrumb." }
+      - { label: "URL slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Use lowercase letters, digits and single dashes only"], hint: "The page URL is /<slug>/. Lowercase words separated by dashes. A name that the site uses stops the build. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
+      - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab and Google result title. Leave empty to use the page title." }
+      - { label: "Social title (og:title)", name: "og_title", widget: "string", required: false, hint: "Title for shared links. Leave empty to use the SEO title." }
+      - { label: "Meta description", name: "description", widget: "text", hint: "150–160 characters shown under the title in Google." }
+      - { label: "Canonical URL", name: "canonical", widget: "string", required: false, pattern: ['^$|^https://nellisarchitecture\.com/', "Leave empty, or start with https://nellisarchitecture.com/"], hint: "Leave empty to use the page URL." }
+      - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, hint: "On: Google does not show the page, and the sitemap does not list it. Retire with noindex. A CMS redirect from a live page fails." }
+      - { label: "Custom JSON-LD", name: "schema", widget: "text", required: false, hint: "Optional. Extra JSON-LD, added after the generated schema. Must be a JSON object or array. Write the JSON on more than one line." }
+      - { label: "Body", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "heading-two", "heading-three", "heading-four", "bulleted-list", "quote"], editor_components: ["image", "separator"], media_library: *upload_limit, hint: "The Title is the page heading. Do not type it again here. Files must be smaller than 25 MB (26214 kB)." }
+
   - name: "redirects"
     label: "Redirects"
     format: "json"
@@ -333,7 +356,7 @@ collections:
             name: "redirects"
             widget: "list"
             summary: "{{fields.from}} → {{fields.to}}"
-            hint: "Each rule sends an old URL to a new URL with a permanent (301) redirect. A changed news slug gets its rule automatically."
+            hint: "Each rule sends an old URL to a new URL with a permanent (301) redirect. A changed news or landing slug gets its rule automatically."
             fields:
               - { label: "From", name: "from", widget: "string", pattern: ['^/(?!.*(\.\.|//))[A-Za-z0-9._~/-]*$', "Start with /. Use letters, digits and . _ ~ - / only. No .. or //."], hint: "Old path, starts with /, e.g. /old-page/. Upper and lower case are different." }
               - { label: "To", name: "to", widget: "string", pattern: ['^(/(?!/)(?!.*(\.\.|//))|https://)', "Start with / or https://. No .. or //."], hint: "New path on this site, e.g. /studio/, or a full https:// URL." }

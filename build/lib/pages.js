@@ -12,6 +12,7 @@ const service = require('./pages/service');
 const { CATEGORY_KEYS, loadProjects } = require('./projects');
 const { readManifest } = require('./images');
 const { parseFrontMatter, markdownPage } = require('./markdown');
+const { loadLanding, checkLanding } = require('./landing');
 
 /* The Studio services: /studio/<slug>/ from content/pages/studio-<slug>.md. */
 const SERVICES = ['architecture-design', 'interior-design', 'landscape-architecture',
@@ -125,6 +126,7 @@ function readSite(root) {
 /* Each result also carries what the sitemap needs: slug, priority, noindex.
    projects: loadProjects() result, read once by the build. posts: loadPosts() result.
    manifest: build/images.json (the build passes it with the variants that CI made).
+   landing: loadLanding() result.
    Shortcut: without posts (unit tests) the /news/ page is left out.
    Upgrade: load the posts here once loadPosts moves to build/lib/. */
 function renderPages(
@@ -133,9 +135,10 @@ function renderPages(
   projects = loadProjects(root),
   posts = null,
   manifest = readManifest(root),
+  landing = loadLanding(root),
 ) {
   const site = readSite(root);
-  return PAGES.filter((p) => posts || p.module !== news).map((p) => {
+  return [...PAGES.filter((p) => posts || p.module !== news), ...landing].map((p) => {
     const content = p.data || readContent(root, p.content);
     return {
       file: pageFile(p.slug),
@@ -149,8 +152,9 @@ function renderPages(
   });
 }
 
-function writePages(root, newsHref, projects, posts, manifest) {
-  const pages = renderPages(root, newsHref, projects, posts, manifest);
+function writePages(root, newsHref, projects, posts, manifest, landing = loadLanding(root)) {
+  checkLanding(root, landing);
+  const pages = renderPages(root, newsHref, projects, posts, manifest, landing);
   pages.forEach((p) => {
     fs.mkdirSync(path.dirname(path.join(root, p.file)), { recursive: true });
     fs.writeFileSync(path.join(root, p.file), p.html);

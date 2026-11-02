@@ -9,13 +9,14 @@ const { picture } = require('./images');
    so the later rules do not change its attributes. Link schemes other than http(s), mailto
    and tel lose the link and keep the text. */
 const SAFE_HREF = /^(?:https?:|mailto:|tel:|[^:]*(?:[/?#]|$))/i;
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /* eslint-disable no-control-regex -- NUL marks the tokens */
 function inlineMd(s, manifest = {}) {
   const done = [];
   const keep = (html) => `\u0000${done.push(html) - 1}\u0000`;
   return s.replace(/\u0000/g, '')
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => keep(picture({
+    .replace(/!\[([^\]]*)\]\(([^)]+?)(?:\s+"[^"]*")?\)/g, (m, alt, src) => keep(picture({
       src, alt, slot: 'post',
     }, manifest)))
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m, text, href) => (
@@ -125,5 +126,5 @@ function markdownPage(fm, body = '') {
 }
 
 module.exports = {
-  inlineMd, mdToHtml, headingId, parseFrontMatter, markdownPage, SAFE_HREF,
+  inlineMd, mdToHtml, headingId, parseFrontMatter, markdownPage, SAFE_HREF, SLUG,
 };

@@ -1,5 +1,6 @@
-const { test } = require('node:test');
+const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const path = require('node:path');
 const {
   DESKTOP, MOBILE, visit, check,
@@ -7,8 +8,49 @@ const {
 const {
   CATEGORY_KEYS, inCategory, loadProjects,
 } = require('../build/lib/projects');
+const service = require('../build/lib/pages/service');
+const { readSite } = require('../build/lib/pages');
+const { readManifest } = require('../build/lib/images');
+const { markdownPage } = require('../build/lib/markdown');
+const { MARK } = require('../build/lib/landing');
 
-const LIST = loadProjects(path.join(__dirname, '..'));
+const ROOT = path.join(__dirname, '..');
+const LIST = loadProjects(ROOT);
+const FIXTURE = path.join(ROOT, 'landing-sweep');
+const FIXTURE_BODY = `Intro with **bold**, *italic* and [a link](/contact/).
+
+## Second level
+
+### Third level
+
+#### Fourth level
+
+- One item
+- Two items
+
+> A quote.
+
+---
+
+![Sweep](/wp-content/uploads/2024/01/Untitled-design-1.jpg)`;
+
+/* No landing page is in the repo: the sweep renders one. A crashed run leaves the folder, and
+   test/assets-deny.test.js then fails. */
+before(() => {
+  const content = {
+    ...markdownPage({ h1: 'Landing sweep', noindex: 'true' }, FIXTURE_BODY),
+    title: 'Landing sweep',
+  };
+  const html = service.render(content, {
+    site: readSite(ROOT),
+    page: { slug: 'landing-sweep', before: MARK },
+    manifest: readManifest(ROOT),
+  });
+  fs.mkdirSync(FIXTURE, { recursive: true });
+  fs.writeFileSync(path.join(FIXTURE, 'index.html'), html);
+});
+
+after(() => fs.rmSync(FIXTURE, { recursive: true, force: true }));
 
 const MENU = {
   Projects: '/projects/',
@@ -22,7 +64,7 @@ const SWEEP = ['/', '/projects/', ...CATEGORY_KEYS.map((cat) => `/projects/${cat
   '/projects/architecture/zoya/', '/news/', '/news/category/interior-design/',
   '/news/ai-in-home-design-useful-or-hype/',
   '/contact/', '/studio/', '/studio/architecture-design/', '/studio/landscape-architecture/',
-  '/people/', '/privacy/'];
+  '/people/', '/privacy/', '/landing-sweep/'];
 
 const VIEWPORTS = [['desktop', DESKTOP], ['mobile', MOBILE]];
 

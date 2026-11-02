@@ -21,6 +21,7 @@ index.html, {studio,people,privacy,contact}/index.html             # pages (gene
 news/index.html                                                    # news index: all articles, newest first (generated)
 news/<slug>/index.html                                             # 58 articles (generated)
 news/category/<slug>/index.html                                    # 5 news category pages (generated)
+<slug>/index.html                                                  # landing pages (generated from content/landing/*.md)
 projects/index.html                                                # projects hub: all projects + category links (generated)
 projects/<category>/index.html                                     # 4 category pages (generated)
 projects/<category>/<slug>/index.html                              # 32 project pages (generated from data/projects.json)
@@ -31,8 +32,9 @@ js/project-switch.js  # project pages: switch the open project in place
 content/news/*.md     # news source of truth (edited via the CMS)
 content/pages/*.json  # page content source of truth (edited via the CMS)
 content/pages/*.md    # text pages (privacy): front matter + markdown, first "# " line = title
+content/landing/*.md  # landing pages: flat front matter + markdown body (edited via the CMS)
 content/redirects.json # CMS redirects (301), source of truth (edited via the CMS)
-_redirects            # redirects (generated from build/redirects.txt + content/redirects.json + news slugs)
+_redirects            # redirects (generated from build/redirects.txt + content/redirects.json + news and landing slugs)
 build/redirects.txt   # fixed redirects (200 and 301, hand-kept)
 _headers              # security + cache headers (hand-kept)
 build/news-template.html
@@ -69,6 +71,8 @@ test/                 # unit tests (npm test)
 4. To hide an article from Google, turn on **Hide from search (noindex)**. The sitemap drops it; the site and the news list keep it.
 
 To edit page texts (Home, Studio, People, Privacy, the News index, shared affiliations and forms), open **Pages** in `/admin`.
+
+To add a page at `/<slug>/`, open **Landing pages** in `/admin`. To retire a page, turn on **Hide from search (noindex)**. A redirect from a live page needs a developer.
 
 ### Manual alternative (no CMS)
 
