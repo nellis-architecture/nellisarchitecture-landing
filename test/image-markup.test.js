@@ -146,3 +146,10 @@ test('every video hero has a poster file and a manifest entry: run ffmpeg, npm r
     assert.ok(manifest[poster], `${poster}: no manifest entry`);
   });
 });
+
+test('every upload and variant file name is ASCII (LND-106)', () => {
+  const files = ['uploads', 'variants']
+    .flatMap((dir) => walk(path.join(ROOT, 'wp-content', dir))).map(rel);
+  assert.ok(files.length > 100);
+  assert.deepEqual(files.filter((f) => /[^\x20-\x7e]/.test(f)), []);
+});

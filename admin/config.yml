@@ -10,6 +10,11 @@ backend:
 
 publish_mode: editorial_workflow
 
+# ASCII file names for media uploads and new entry slugs (LND-106).
+slug:
+  encoding: "ascii"
+  clean_accents: true
+
 # Local editing: run `npm run cms` with `npm run serve`, then open http://localhost:8000/admin/.
 # Decap uses this only on localhost.
 local_backend: true
