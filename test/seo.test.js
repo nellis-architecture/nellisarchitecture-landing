@@ -126,7 +126,8 @@ test('noindex replaces the robots line', () => {
 });
 
 test('renderPages marks noindex pages for the sitemap', () => {
-  renderPages(ROOT, '/n/').forEach((p) => assert.equal(p.noindex, false, p.file));
+  const pages = renderPages(ROOT, '/n/', undefined, null, undefined, []);
+  pages.forEach((p) => assert.equal(p.noindex, false, p.file));
 });
 
 test('SEO values are escaped and $& stays literal', () => {

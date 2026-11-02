@@ -20,23 +20,40 @@ const ROOT = path.join(__dirname, '..');
 const count = (s, sub) => s.split(sub).length - 1;
 const POSTS = loadPosts(path.join(ROOT, 'content', 'news'));
 
+const REGISTRY = [
+  'index.html', 'studio/index.html',
+  'studio/architecture-design/index.html', 'studio/interior-design/index.html',
+  'studio/landscape-architecture/index.html', 'studio/master-planning/index.html',
+  'people/index.html', 'privacy/index.html',
+  'projects/index.html', 'contact/index.html',
+  'projects/architecture/index.html', 'projects/interior-design/index.html',
+  'projects/landscape/index.html', 'projects/master-planning/index.html',
+];
+/* The registry pages only: the list must not change when content/landing/ gets a file. */
+const registryPages = () => renderPages(ROOT, '/news/', undefined, null, undefined, []);
+
 test('renderPages writes each page to its folder and fills every token', () => {
-  const pages = renderPages(ROOT, '/news/');
-  assert.deepEqual(
-    pages.map((p) => p.file),
-    [
-      'index.html', 'studio/index.html',
-      'studio/architecture-design/index.html', 'studio/interior-design/index.html',
-      'studio/landscape-architecture/index.html', 'studio/master-planning/index.html',
-      'people/index.html', 'privacy/index.html',
-      'projects/index.html', 'contact/index.html',
-      'projects/architecture/index.html', 'projects/interior-design/index.html',
-      'projects/landscape/index.html', 'projects/master-planning/index.html',
-    ],
-  );
+  const pages = registryPages();
+  assert.deepEqual(pages.map((p) => p.file), REGISTRY);
   pages.forEach((p) => {
     assert.ok(!p.html.includes('{{'), p.file);
   });
+});
+
+test('a noindex file in content/landing/ stays out of the registry test render', (t) => {
+  const dir = path.join(ROOT, 'content', 'landing');
+  const file = path.join(dir, 'x.md');
+  const { existsSync, readdirSync, readFileSync } = fs;
+  t.mock.method(fs, 'existsSync', (p) => p === dir || existsSync(p));
+  t.mock.method(fs, 'readdirSync', (p, o) => (p === dir ? ['x.md'] : readdirSync(p, o)));
+  t.mock.method(fs, 'readFileSync', (p, o) => (
+    p === file ? '---\nslug: x\nh1: X\nnoindex: true\n---\nText\n' : readFileSync(p, o)
+  ));
+  const noindex = renderPages(ROOT, '/news/').filter((p) => p.noindex).map((p) => p.file);
+  assert.deepEqual(noindex, ['x/index.html']);
+  const pages = registryPages();
+  assert.deepEqual(pages.map((p) => p.file), REGISTRY);
+  pages.forEach((p) => assert.equal(p.noindex, false, p.file));
 });
 
 test('the 4 Studio service pages: breadcrumb, own SEO, a link to their projects', () => {

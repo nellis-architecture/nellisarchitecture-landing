@@ -22,6 +22,28 @@ test('parseFrontMatter reads plain and quoted values', () => {
   assert.equal(body, 'Body text');
 });
 
+const readValue = (line) => parseFrontMatter(`---\n${line}\n---\n`).fm.v;
+
+test('parseFrontMatter reads the YAML single quotes that Decap writes', () => {
+  assert.equal(
+    readValue('v: \'{"@context":"https://schema.org","a":"b"}\''),
+    '{"@context":"https://schema.org","a":"b"}',
+  );
+  assert.equal(readValue('v: \'"Best" villas\''), '"Best" villas');
+  assert.equal(readValue('v: \'Dubai\'\'s "best"\''), 'Dubai\'s "best"');
+  assert.equal(readValue("v: ''"), '');
+  assert.equal(readValue("v: '|-'"), '|-');
+  assert.equal(readValue('v: \'a "b"\n  c\''), 'a "b" c');
+});
+
+test('parseFrontMatter keeps the double-quoted form and a lone or inner single quote', () => {
+  assert.equal(readValue('v: "{\\"@type\\":\\"FAQPage\\"}"'), '{"@type":"FAQPage"}');
+  assert.equal(readValue('v: "\'a\'"'), "'a'");
+  assert.equal(readValue('v: "it\'s ok"'), "it's ok");
+  assert.equal(readValue("v: it's ok"), "it's ok");
+  assert.equal(readValue("v: '"), "'");
+});
+
 test('parseFrontMatter ignores lines that are not keys', () => {
   const { fm } = parseFrontMatter('---\ntitle: T\n- stray\nBad-Key: x\n---\n');
   assert.deepEqual(fm, { title: 'T' });

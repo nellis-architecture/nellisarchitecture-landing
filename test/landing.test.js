@@ -156,6 +156,23 @@ test('the own marked folder is not a collision', () => {
   checkLanding(dir, loadLanding(dir));
 });
 
+test('a CRLF checkout keeps the mark: the own folder is no collision, a stale folder goes', () => {
+  const crlf = '<!-- landing -->\r\n<!DOCTYPE html>';
+  const dir = tempSite(page('villas', { 'villas/index.html': crlf, 'old/index.html': crlf }));
+  const landing = loadLanding(dir);
+  checkLanding(dir, landing);
+  pruneLanding(dir, landing);
+  assert.ok(fs.existsSync(path.join(dir, 'villas/index.html')));
+  assert.ok(!fs.existsSync(path.join(dir, 'old')));
+});
+
+test('a single-quoted schema and h1 from Decap render as the values', () => {
+  const schema = 'schema: \'{"@type":"FAQPage"}\'';
+  const { html } = renderLanding(['slug: villas', 'h1: \'"Best" villas\'', schema]);
+  assert.equal(ldJson(html)[1]['@type'], 'FAQPage');
+  assert.ok(html.includes('<h1>"Best" villas</h1>'));
+});
+
 test('a changed slug gets a 301 and loses the stale marked folder', () => {
   const dir = tempSite({
     'content/landing/old.md': entry('new'),

@@ -36,7 +36,7 @@ function loadLanding(root) {
 
 function isLanding(root, name) {
   const file = path.join(root, name, 'index.html');
-  return fs.existsSync(file) && fs.readFileSync(file, 'utf8').startsWith(MARK);
+  return fs.existsSync(file) && fs.readFileSync(file, 'utf8').startsWith(MARK.trim());
 }
 
 /* The slug must not hit a root entry (x.html counts as x), a reserved name or a fixed rule. */

@@ -781,7 +781,12 @@ function parseFrontMatter(src, file = '') {
           v = `${v} ${lines[i].trim()}`;
         }
       }
-      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1).replace(/\\"/g, '"');
+      if (v.startsWith('"') && v.endsWith('"')) {
+        v = v.slice(1, -1).replace(/\\"/g, '"');
+      } else if (/^'.*'$/.test(v)) {
+        /* Decap writes a value that holds a double quote in YAML single quotes. */
+        v = v.slice(1, -1).replace(/''/g, "'");
+      }
       if (block) {
         const rest = [];
         while (i + 1 < lines.length && /^(\s|$)/.test(lines[i + 1])) {
