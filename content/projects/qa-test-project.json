@@ -1,9 +1,9 @@
 {
   "seo": {
-    "noindex": false
+    "noindex": true
   },
   "name": "QA Test Project",
-  "slug": "qa-test-project",
+  "slug": "qa-test-project-2",
   "category": "landscape",
   "type": "commercial",
   "order": 5,
