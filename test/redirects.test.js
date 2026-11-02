@@ -185,9 +185,9 @@ test('old news category URLs: the index and the Russian URL go to /news/, other 
   });
 });
 
-test('every fixed rule has both slash forms', () => {
+test('every fixed rule has both slash forms (an image file needs none)', () => {
   const froms = new Set(FIXED.map((r) => r.from));
-  FIXED.forEach(({ from }) => {
+  FIXED.filter(({ from }) => !/\.(png|jpe?g)$/.test(from)).forEach(({ from }) => {
     let others = [`${from}/`, `${from}/*`];
     if (from.endsWith('/*')) others = [from.slice(0, -2)];
     else if (from.endsWith('/')) others = [from.slice(0, -1)];
