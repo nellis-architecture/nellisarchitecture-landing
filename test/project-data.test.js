@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { loadProjects, earlyScript } = require('../build/lib/projects');
+const { loadProjects, checkUploads, earlyScript } = require('../build/lib/projects');
 const { grid, filterFiles, searchJson } = require('../build/lib/pages/grid');
 const project = require('../build/lib/pages/project');
 const category = require('../build/lib/pages/category');
@@ -167,6 +167,44 @@ test('a project with only the required fields gives no "undefined"', () => {
     ...Object.values(filterFiles([e], {})),
     searchJson([e], {}),
   ].forEach((html) => assert.ok(!html.includes('undefined'), html.slice(0, 200)));
+});
+
+test('checkUploads names the project of a missing file, in each image field', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'uploads-'));
+  try {
+    const known = '/wp-content/uploads/fixture/here.jpg';
+    fs.mkdirSync(path.join(dir, 'wp-content', 'uploads', 'fixture'), { recursive: true });
+    fs.writeFileSync(path.join(dir, known), '');
+    const entry = (over) => ({
+      filename: 'x',
+      p: {
+        hero: known, card_image: known, ...over,
+      },
+    });
+    assert.doesNotThrow(() => checkUploads(dir, [entry({ slider_1: [{ src: known }] })]));
+    const gone = '/wp-content/uploads/fixture/gone.jpg';
+    [{ hero: gone }, { card_image: gone }, { list_image: gone },
+      ...['slider_1', 'image_2', 'slider_2', 'last_images'].map((k) => ({ [k]: [{ src: gone }] }))]
+      .forEach((over) => assert.throws(
+        () => checkUploads(dir, [entry(over)]),
+        /content\/projects\/x\.json: file not found: \/wp-content\/uploads\/fixture\/gone\.jpg/,
+      ));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('every image of the real projects is on disk', () => {
+  assert.doesNotThrow(() => checkUploads(ROOT, LIST));
+});
+
+test('a name that differs only in case is a duplicate: #proj= ignores case', () => {
+  assert.throws(
+    () => load({
+      'a.json': proj({ name: 'AUREA', slug: 'a' }), 'b.json': proj({ name: 'aurea', slug: 'b' }),
+    }),
+    /b\.json: duplicate name "aurea"/,
+  );
 });
 
 test('loadProjects refuses a duplicate URL and a duplicate name', () => {

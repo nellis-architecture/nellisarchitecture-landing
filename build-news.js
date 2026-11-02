@@ -33,7 +33,7 @@ const {
   customSchema, pageUrl, DOMAIN, INDEX, LOGO, NOINDEX,
 } = require('./build/lib/seo');
 const redirects = require('./build/lib/redirects');
-const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
+const { loadProjects, checkUploads, CATEGORY_KEYS } = require('./build/lib/projects');
 const project = require('./build/lib/pages/project');
 const { filterFiles, searchJson } = require('./build/lib/pages/grid');
 const { rss } = require('./build/lib/feed');
@@ -397,6 +397,7 @@ function build(manifest = readManifest(ROOT)) {
   const newest = posts[0];
   const newsHref = '/news/';
   const projects = loadProjects(ROOT);
+  checkUploads(ROOT, projects);
   const pages = writePages(ROOT, newsHref, projects, posts, manifest, landing);
   pruneLanding(ROOT, landing);
   writeProjects(ROOT, projects, newsHref, manifest, site);

@@ -1460,13 +1460,26 @@ function loadProjects(root) {
     check(p, source);
     const url = `/projects/${p.category}/${p.slug}/`;
     if (urls.has(url)) throw new Error(`${source}: duplicate URL ${url}`);
-    if (names.has(p.name)) throw new Error(`${source}: duplicate name "${p.name}"`);
+    const key = p.name.toLowerCase();
+    if (names.has(key)) throw new Error(`${source}: duplicate name "${p.name}"`);
     urls.add(url);
-    names.add(p.name);
+    names.add(key);
     return {
       name: p.name, p, slug: p.slug, cat: p.category, url, filename: f.slice(0, -5),
     };
   }).sort((x, y) => x.p.order - y.p.order || x.name.localeCompare(y.name));
+}
+
+/* Build only: the virtual fs of the CMS preview has no uploads. */
+function checkUploads(root, list) {
+  list.forEach(({ p, filename }) => {
+    const slides = IMAGE_LISTS.flatMap((k) => (p[k] || []).map((item) => item.src));
+    [p.hero, p.card_image, p.list_image, ...slides].filter(Boolean)
+      .filter((src) => !fs.existsSync(path.join(root, src)))
+      .forEach((src) => {
+        throw new Error(`content/projects/${filename}.json: file not found: ${src}`);
+      });
+  });
 }
 
 /* Runs in the browser too (earlyScript): keep it self-contained ES2015.
@@ -1545,6 +1558,7 @@ module.exports = {
   listImage,
   cardAlt,
   loadProjects,
+  checkUploads,
   hashTarget,
   earlyScript,
   description,
