@@ -60,8 +60,9 @@ function customSchema(raw, file) {
 /* Head tokens from the page's `seo` object. The slug is fixed in the PAGES registry. */
 function seoTokens(content, page) {
   const seo = content.seo || {};
+  const source = page.source || `content/pages/${page.content}.json`;
   if (seo.canonical && !seo.canonical.startsWith(`${DOMAIN}/`)) {
-    throw new Error(`seo.canonical must start with ${DOMAIN}/: ${seo.canonical}`);
+    throw new Error(`${source}: seo.canonical must start with ${DOMAIN}/: ${seo.canonical}`);
   }
   const title = titleOf(content);
   const url = seo.canonical || pageUrl(page.slug);
@@ -73,7 +74,7 @@ function seoTokens(content, page) {
     CANONICAL: escAttr(url),
     OG_URL: escAttr(url),
     ROBOTS: seo.noindex ? NOINDEX : INDEX,
-    SCHEMA_EXTRA: customSchema(seo.schema, page.source || `content/pages/${page.content}.json`),
+    SCHEMA_EXTRA: customSchema(seo.schema, source),
   };
 }
 

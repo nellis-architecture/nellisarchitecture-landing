@@ -149,10 +149,10 @@ test('usedImages counts a variant URL as its upload', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'used-'));
   try {
     fs.mkdirSync(path.join(dir, 'build'));
-    fs.mkdirSync(path.join(dir, 'data', 'filters'), { recursive: true });
+    fs.mkdirSync(path.join(dir, 'news', 'x'), { recursive: true });
     fs.writeFileSync(path.join(dir, images.MANIFEST), JSON.stringify(MANIFEST));
     const html = picture({ src: `/${JPG}`, slot: 'card' }, MANIFEST);
-    fs.writeFileSync(path.join(dir, 'data', 'filters', 'a.html'), html);
+    fs.writeFileSync(path.join(dir, 'news', 'x', 'index.html'), html);
     assert.deepEqual(images.usedImages(dir), [JPG]);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });

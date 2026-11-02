@@ -91,9 +91,9 @@ function body(name, p, manifest) {
   ].filter(Boolean).join('\n');
 }
 
-/* og:image: the hero, or the first slide when the hero is a video. */
+/* og:image: the hero. A video hero gives the first slide, else the card image. */
 function ogImage(p) {
-  const src = isVideo(p.hero) ? ((p.slider_1 || [])[0] || {}).src : p.hero;
+  const src = isVideo(p.hero) ? ((p.slider_1 || [])[0] || {}).src || p.card_image : p.hero;
   return src ? `  <meta property="og:image" content="${escAttr(DOMAIN + src)}">` : '';
 }
 

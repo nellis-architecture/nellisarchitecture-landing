@@ -39,7 +39,8 @@ function load(files) {
   try {
     fs.mkdirSync(path.join(dir, 'content', 'projects'), { recursive: true });
     Object.entries(files).forEach(([name, p]) => {
-      fs.writeFileSync(path.join(dir, 'content', 'projects', name), JSON.stringify(p));
+      const text = typeof p === 'string' ? p : JSON.stringify(p);
+      fs.writeFileSync(path.join(dir, 'content', 'projects', name), text);
     });
     return loadProjects(dir);
   } finally {
@@ -65,12 +66,13 @@ test('loadProjects sorts by order, then by name, and keeps the file name', () =>
   });
 });
 
+const fails = (over, re) => assert.throws(() => load({ 'x.json': proj(over) }), (err) => {
+  assert.match(err.message, /^content\/projects\/x\.json: /);
+  assert.match(err.message, re);
+  return true;
+});
+
 test('loadProjects names the file in each validation error', () => {
-  const fails = (over, re) => assert.throws(() => load({ 'x.json': proj(over) }), (err) => {
-    assert.match(err.message, /^content\/projects\/x\.json: /);
-    assert.match(err.message, re);
-    return true;
-  });
   ['name', 'slug', 'category', 'type', 'hero', 'card_image'].forEach((key) => {
     fails({ [key]: undefined }, new RegExp(`${key} is required`));
     fails({ [key]: ' ' }, new RegExp(`${key} is required`));
@@ -81,6 +83,90 @@ test('loadProjects names the file in each validation error', () => {
   fails({ category: 'gardens' }, /unknown category "gardens"/);
   fails({ type: 'mixed' }, /unknown type "mixed"/);
   fails({ also_in: ['gardens'] }, /unknown also_in category "gardens"/);
+});
+
+test('loadProjects refuses a field of the wrong shape', () => {
+  ['also_in', 'facts', 'text_1', 'text_2', 'text_3', 'slider_1', 'image_2', 'slider_2',
+    'last_images'].forEach((key) => {
+    fails({ [key]: 'text' }, new RegExp(`${key} must be a list`));
+    fails({ [key]: { a: 1 } }, new RegExp(`${key} must be a list`));
+  });
+  ['text_1', 'text_2', 'text_3'].forEach((key) => {
+    fails({ [key]: ['ok', 3] }, new RegExp(`${key} items must be text`));
+    fails({ [key]: [null] }, new RegExp(`${key} items must be text`));
+  });
+  ['slider_1', 'image_2', 'slider_2', 'last_images'].forEach((key) => {
+    fails({ [key]: [{ alt: 'no src' }] }, new RegExp(`${key} items need src`));
+    fails({ [key]: ['/wp-content/uploads/a.jpg'] }, new RegExp(`${key} items need src`));
+    fails({ [key]: [null] }, new RegExp(`${key} items need src`));
+    fails({ [key]: [{ src: '/uploads/a.jpg' }] }, new RegExp(`${key} src must start`));
+  });
+  fails({ facts: [{ label: 'Type:' }] }, /facts items need label and value/);
+  fails({ facts: [{ value: 'Villa' }] }, /facts items need label and value/);
+  fails({ facts: ['Type:'] }, /facts items need label and value/);
+  fails({ seo: { noindex: 'true' } }, /seo\.noindex must be true or false: "true"/);
+  fails({ seo: { noindex: 1 } }, /seo\.noindex must be true or false: "1"/);
+});
+
+test('loadProjects refuses an image outside the uploads and a hero of another type', () => {
+  ['hero', 'card_image', 'list_image'].forEach((key) => {
+    fails({ [key]: 'https://x.com/a.jpg' }, new RegExp(`${key} must start`));
+    fails({ [key]: 'wp-content/uploads/a.jpg' }, new RegExp(`${key} must start`));
+  });
+  fails({ list_image: 5 }, /list_image must start/);
+  fails({ hero: '/wp-content/uploads/a.pdf' }, /hero must be an image or an mp4/);
+  fails({ hero: '/wp-content/uploads/a.webm' }, /hero must be an image or an mp4/);
+  fails({ hero: '/wp-content/uploads/a' }, /hero must be an image or an mp4/);
+  ['a.jpg', 'a.JPEG', 'a.png', 'a.webp', 'a.mp4'].forEach((name) => {
+    assert.equal(load({ 'x.json': proj({ hero: `/wp-content/uploads/${name}` }) }).length, 1);
+  });
+});
+
+test('loadProjects accepts an empty value in each optional field', () => {
+  const over = { list_image: '', seo: {} };
+  ['also_in', 'facts', 'text_1', 'slider_1', 'last_images'].forEach((key) => {
+    [[], null, ''].forEach((value) => {
+      assert.equal(load({ 'x.json': proj({ ...over, [key]: value }) }).length, 1, key);
+    });
+  });
+});
+
+test('loadProjects names the file of bad JSON', () => {
+  const named = (re) => (err) => re.test(err.message);
+  assert.throws(
+    () => load({ 'x.json': '{ "name": ' }),
+    named(/^content\/projects\/x\.json: not valid JSON/),
+  );
+  assert.throws(
+    () => load({ 'x.json': 'null' }),
+    named(/^content\/projects\/x\.json: must be a JSON object/),
+  );
+});
+
+test('a project with only the required fields gives no "undefined"', () => {
+  const [e] = load({
+    'minimal.json': {
+      name: 'Minimal',
+      slug: 'minimal',
+      category: 'landscape',
+      type: 'residential',
+      order: 1,
+      hero: '/wp-content/uploads/minimal/hero.jpg',
+      card_image: '/wp-content/uploads/minimal/card.jpg',
+    },
+  });
+  const page = project.render(e, {
+    site, newsHref: '/news/', projects: [e], manifest: {},
+  });
+  const start = page.indexOf('<div class="currentProject-heroImg');
+  assert.ok(start > 0);
+  [
+    page.slice(0, page.indexOf('<script')),
+    page.slice(start),
+    grid([e]),
+    ...Object.values(filterFiles([e], {})),
+    searchJson([e], {}),
+  ].forEach((html) => assert.ok(!html.includes('undefined'), html.slice(0, 200)));
 });
 
 test('loadProjects refuses a duplicate URL and a duplicate name', () => {
@@ -256,11 +342,23 @@ test('each SEO field overrides its generated value', () => {
   assert.ok(desc.includes('<meta property="og:description" content="D" />'));
   const canonical = `${DOMAIN}/studio/`;
   assert.ok(html({ canonical }).includes(`<link rel="canonical" href="${canonical}" />`));
-  assert.throws(() => html({ canonical: 'https://x.com/' }), /seo\.canonical must start/);
+  assert.throws(
+    () => html({ canonical: 'https://x.com/' }),
+    (err) => err.message.startsWith('content/projects/fixture.json: seo.canonical must start'),
+  );
   const custom = html({ schema: '{"@type":"Thing"}' });
   assert.ok(custom.includes('<script type="application/ld+json">{"@type":"Thing"}</script>'));
   assert.throws(() => html({ schema: '{' }), /fixture.json: schema is not valid/);
   assert.ok(html({ noindex: true }).includes('<meta name="robots" content="noindex">'));
+});
+
+test('og:image of a video hero: the first slide, else the card image', () => {
+  const video = { hero: '/wp-content/uploads/fixture/hero.mp4' };
+  const og = (src) => `<meta property="og:image" content="${DOMAIN}${src}">`;
+  const slide = { src: '/wp-content/uploads/fixture/slide.jpg' };
+  assert.ok(pageOf(proj({ ...video, slider_1: [slide] })).includes(og(slide.src)));
+  assert.ok(pageOf(proj(video)).includes(og('/wp-content/uploads/fixture/card.jpg')));
+  assert.ok(pageOf(proj()).includes(og('/wp-content/uploads/fixture/hero.jpg')));
 });
 
 test('a noindex project leaves the sitemap and stays in the grid', () => {

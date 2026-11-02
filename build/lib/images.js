@@ -19,8 +19,8 @@ const FORMATS = {
   png: ['png', { compressionLevel: 9 }],
 };
 const SOURCES = [
-  'build/lib/partials', 'build/news-template.html', 'data/filters', 'content/projects',
-  'data/search.json', 'content/news', 'content/pages', 'content/landing',
+  'build/lib/partials', 'build/news-template.html', 'content/projects',
+  'content/news', 'content/pages', 'content/landing',
 ];
 const PAGES = ['index.html', 'projects', 'news', 'studio', 'people', 'privacy', 'contact'];
 const DOMAIN = '(?:https://nellisarchitecture\\.com)?/?';

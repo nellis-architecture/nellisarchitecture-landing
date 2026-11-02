@@ -153,15 +153,17 @@ test('usedImages finds upload refs in sources, skips videos, SVG and GIF', () =>
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'images-'));
   try {
     fs.mkdirSync(path.join(dir, 'content', 'news'), { recursive: true });
-    fs.mkdirSync(path.join(dir, 'data'));
+    fs.mkdirSync(path.join(dir, 'content', 'pages'));
     fs.writeFileSync(path.join(dir, 'content', 'news', 'a.md'), [
       'hero: /wp-content/uploads/2025/01/a.jpg',
       '![x](https://nellisarchitecture.com/wp-content/uploads/2025/01/b%20c.PNG)',
       '/wp-content/uploads/2025/01/v.mp4 /wp-content/uploads/2025/01/s.svg',
       '/wp-content/uploads/g.gif',
     ].join('\n'));
-    const search = '{"m":"\\/wp-content\\/uploads\\/d.webp"}';
-    fs.writeFileSync(path.join(dir, 'data', 'search.json'), search);
+    fs.writeFileSync(
+      path.join(dir, 'content', 'pages', 'a.json'),
+      '{"m":"/wp-content/uploads/d.webp"}',
+    );
     fs.mkdirSync(path.join(dir, 'news', 'x'), { recursive: true });
     const page = '<img srcset="/wp-content/uploads/e.jpeg 1x, /wp-content/uploads/f.jpg 2x">';
     fs.writeFileSync(path.join(dir, 'news', 'x', 'index.html'), page);

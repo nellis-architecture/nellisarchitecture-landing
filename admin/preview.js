@@ -283,8 +283,8 @@ const FORMATS = {
   png: ['png', { compressionLevel: 9 }],
 };
 const SOURCES = [
-  'build/lib/partials', 'build/news-template.html', 'data/filters', 'content/projects',
-  'data/search.json', 'content/news', 'content/pages', 'content/landing',
+  'build/lib/partials', 'build/news-template.html', 'content/projects',
+  'content/news', 'content/pages', 'content/landing',
 ];
 const PAGES = ['index.html', 'projects', 'news', 'studio', 'people', 'privacy', 'contact'];
 const DOMAIN = '(?:https://nellisarchitecture\\.com)?/?';
@@ -1384,6 +1384,11 @@ const CATEGORIES = {
 const CATEGORY_KEYS = Object.keys(CATEGORIES);
 const TYPES = ['residential', 'commercial'];
 const REQUIRED = ['name', 'slug', 'category', 'type', 'hero', 'card_image'];
+const TEXTS = ['text_1', 'text_2', 'text_3'];
+const IMAGE_LISTS = ['slider_1', 'image_2', 'slider_2', 'last_images'];
+const UPLOADS = '/wp-content/uploads/';
+/* The image extensions of REF in images.js, and the video of heroVideo(). */
+const HERO = /\.(jpe?g|png|webp|mp4)$/i;
 
 const categoryHref = (cat) => `/projects/${cat}/`;
 
@@ -1398,6 +1403,7 @@ function check(p, source) {
   const fail = (why) => {
     throw new Error(`${source}: ${why}`);
   };
+  if (!p || typeof p !== 'object') fail('must be a JSON object');
   REQUIRED.filter((k) => typeof p[k] !== 'string' || !p[k].trim())
     .forEach((k) => fail(`${k} is required`));
   if (!Number.isFinite(p.order)) fail(`order must be a number: "${p.order}"`);
@@ -1406,8 +1412,40 @@ function check(p, source) {
   }
   if (!CATEGORY_KEYS.includes(p.category)) fail(`unknown category "${p.category}"`);
   if (!TYPES.includes(p.type)) fail(`unknown type "${p.type}"`);
+  /* Falsy is an empty list, as in the page generator: the CMS can write "" or null. */
+  ['also_in', 'facts', ...TEXTS, ...IMAGE_LISTS].filter((k) => p[k] && !Array.isArray(p[k]))
+    .forEach((k) => fail(`${k} must be a list`));
+  const items = (k) => p[k] || [];
+  const isText = (s) => typeof s === 'string';
+  const upload = (k, src) => {
+    if (!String(src).startsWith(UPLOADS)) fail(`${k} must start with ${UPLOADS}: "${src}"`);
+  };
   (p.also_in || []).filter((cat) => !CATEGORY_KEYS.includes(cat))
     .forEach((cat) => fail(`unknown also_in category "${cat}"`));
+  TEXTS.filter((k) => !items(k).every(isText))
+    .forEach((k) => fail(`${k} items must be text`));
+  if (!items('facts').every((f) => isText(f?.label) && isText(f?.value))) {
+    fail('facts items need label and value');
+  }
+  upload('hero', p.hero);
+  if (!HERO.test(p.hero)) fail(`hero must be an image or an mp4: "${p.hero}"`);
+  upload('card_image', p.card_image);
+  if (p.list_image) upload('list_image', p.list_image);
+  IMAGE_LISTS.forEach((k) => items(k).forEach((item) => {
+    if (!item?.src) fail(`${k} items need src`);
+    upload(`${k} src`, item.src);
+  }));
+  if (![true, false, undefined].includes(p.seo?.noindex)) {
+    fail(`seo.noindex must be true or false: "${p.seo.noindex}"`);
+  }
+}
+
+function parse(file, source) {
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch (err) {
+    throw new Error(`${source}: not valid JSON (${err.message})`);
+  }
 }
 
 /* content/projects/<filename>.json, sorted by order, then by name. Reads only through fs:
@@ -1418,7 +1456,7 @@ function loadProjects(root) {
   const names = new Set();
   return fs.readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => {
     const source = `content/projects/${f}`;
-    const p = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+    const p = parse(path.join(dir, f), source);
     check(p, source);
     const url = `/projects/${p.category}/${p.slug}/`;
     if (urls.has(url)) throw new Error(`${source}: duplicate URL ${url}`);
@@ -1576,8 +1614,9 @@ function customSchema(raw, file) {
 /* Head tokens from the page's `seo` object. The slug is fixed in the PAGES registry. */
 function seoTokens(content, page) {
   const seo = content.seo || {};
+  const source = page.source || `content/pages/${page.content}.json`;
   if (seo.canonical && !seo.canonical.startsWith(`${DOMAIN}/`)) {
-    throw new Error(`seo.canonical must start with ${DOMAIN}/: ${seo.canonical}`);
+    throw new Error(`${source}: seo.canonical must start with ${DOMAIN}/: ${seo.canonical}`);
   }
   const title = titleOf(content);
   const url = seo.canonical || pageUrl(page.slug);
@@ -1589,7 +1628,7 @@ function seoTokens(content, page) {
     CANONICAL: escAttr(url),
     OG_URL: escAttr(url),
     ROBOTS: seo.noindex ? NOINDEX : INDEX,
-    SCHEMA_EXTRA: customSchema(seo.schema, page.source || `content/pages/${page.content}.json`),
+    SCHEMA_EXTRA: customSchema(seo.schema, source),
   };
 }
 
