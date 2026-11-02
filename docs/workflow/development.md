@@ -9,10 +9,10 @@ Driver: `/ticket <card-url>` ([.claude/commands/ticket.md](../../.claude/command
 | Role | Does | Agent |
 |---|---|---|
 | Operator | Prioritises, answers open decisions, reviews and signs off, closes cards. | the person |
-| Orchestrator | Reads the card state, starts the hat for that state, moves the card. Pushes to `origin/master` after the operator's sign-off. | main session |
+| Orchestrator | Reads the card state, starts the hat for that state, moves the card. Pushes the card branch for its Preview. Merges it into `master` after the operator's sign-off. | main session |
 | Architect | Checks for duplicates, writes the design and the plan. No code. | [architect](../../.claude/agents/architect.md) |
 | Bar-raiser | Reviews the design (Architect BR) and the code (Dev BR). PASS or BLOCK. | [bar-raiser](../../.claude/agents/bar-raiser.md) |
-| Developer | Implements the signed-off plan with tests. Commits locally. | [dev](../../.claude/agents/dev.md) |
+| Developer | Implements the signed-off plan with tests. Commits on the card branch. | [dev](../../.claude/agents/dev.md) |
 | QA | Checks the change against the acceptance criteria and the content and SEO rules. | [qa](../../.claude/agents/qa.md) |
 
 ## States
@@ -29,16 +29,18 @@ Backlog → To do → Architect BR → In Progress → Test → Dev BR → Revie
 | Backlog | — | Groom ([grooming.md](grooming.md)). | Operator prioritises. | To do |
 | To do | architect | Duplicate check. Design (only if a decision is needed) and plan, written to the card. | Plan on the card. | Architect BR |
 | Architect BR | bar-raiser | Design review. Skip it for a `bug` or `debt` card with no open decision. | PASS (or skipped). Operator sign-off only for a serious open decision or an unknown effort or outcome (AGENTS.md → Decisions). BLOCK → To do. | In Progress |
-| In Progress | dev | Implement. Run checks. Local commit. | Green checkpoint commit. | Test |
+| In Progress | dev | Implement on the card branch `lnd-<nnn>`. Run checks. Commit. | Green checkpoint commit. | Test |
 | Test | orchestrator | Run checks. | Checks pass. Fail → In Progress. | Dev BR |
 | Dev BR | bar-raiser | Code and test review. | PASS. BLOCK → In Progress. | Review |
-| Review | qa | Acceptance criteria, content and SEO checks. [Review scenario](#review-scenario): write it, run it, attach the evidence. | PASS **and operator sign-off**. BLOCK → In Progress. | Shipping |
-| Shipping | orchestrator | [Push to `origin/master`](#repository). Verify the deploy. Run the pending scenario tests. | Deploy verified. | Done (operator) |
+| Review | qa | Push the card branch: its [Preview](#repository) is the review site. Acceptance criteria, content and SEO checks. [Review scenario](#review-scenario): write it, run it, attach the evidence. | PASS **and operator sign-off on the Preview**. BLOCK → In Progress. | Shipping |
+| Shipping | orchestrator | [Merge the card branch into `master`](#repository), delete the branch and its Preview. Verify the deploy. Run the pending scenario tests. | Deploy verified. | Done (operator) |
 | Done | — | Terminal. Follow-ups go to Backlog. | — | — |
 | Blocked | — | Report the blocker. Ask the operator. | — | previous state |
 | Closed | — | Not done, not needed. Terminal. | — | — |
 
-Human gates: Review sign-off, Done, Closed, and an Architect BR sign-off only when AGENTS.md → Decisions asks for one. Agents never pass these gates. The Review sign-off allows the agent to push.
+Human gates: Review sign-off, Done, Closed, and an Architect BR sign-off only when AGENTS.md → Decisions asks for one. Agents never pass these gates. The Review sign-off allows the agent to merge into `master`.
+
+**Sign-off request.** When the agent asks the operator to review or sign off, it gives the exact URL of each page to open, on the Preview first, for example `https://lnd-107-landing.nellisarchitecture.workers.dev/studio/`, and the production URL for comparison, for example `https://nellisarchitecture.com/studio/`. One link per changed page, with what to look at. A change with no page (for example infrastructure or docs) names the URL or the file that shows the change. Never write only "check the preview".
 
 ## Board conventions
 
@@ -55,14 +57,14 @@ Human gates: Review sign-off, Done, Closed, and an Architect BR sign-off only wh
 At Review, write a review scenario on the card. The operator uses it to review the change.
 
 1. Write the scenario as a list (Trello does not render Markdown tables, see [Board conventions](#board-conventions)). Each item is one test: what to do, where to check, and the expected result.
-   - Where: local preview, <https://landing.nellisarchitecture.workers.dev> (after the push), the CMS, or the live site for comparison.
+   - Where: local preview, the card Preview `https://lnd-<nnn>-landing.nellisarchitecture.workers.dev/<path>` (after the branch push), the CMS, or the production site <https://nellisarchitecture.com> for comparison.
    - Cover each acceptance criterion. Include the failing and edge cases, not only the happy path.
-2. Run each test that you can run before the push. Write the result for each test on the card.
+2. Run each test that you can run on the Preview. Write the result for each test on the card.
 3. Attach evidence:
    - A visual change: a screenshot. Show the new page next to the live page.
    - A change you cannot see: the command output, for example head tags, status codes or sitemap lines.
    - CMS behaviour: test on a temporary copy of the repo. Never change the real content.
-4. Mark each test that needs the deploy or a CMS login as **pending**. Run the deploy tests in Shipping. The operator runs the CMS login tests.
+4. Mark each test that needs production or a CMS login as **pending** (the Preview has no form email, file uploads or CMS login). Run them in Shipping. The operator runs the CMS login tests.
 
 Review also runs `npm run test:browser` and attaches the output to the card.
 
@@ -134,11 +136,14 @@ One time, for each person or machine. The API and the MCP server use only the AP
 ### Repository
 
 - GitHub: <https://github.com/nellis-architecture/nellisarchitecture-landing> (private). CLI: `gh`.
-- **One remote branch: `master`.** Work on the current branch or on any local branch: the name does not matter. Push only to `origin/master`. Never push another branch and never open a pull request. Workers Builds deploys only `master`. A card that reports unpushed work as shipped is wrong.
-- **Linear history.** Do not make merge commits. Before work: `git pull --rebase`. Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`master`).
-- **Push after sign-off.** When an operator signs off a card at Review, the agent pushes: `git fetch origin`, `git rebase origin/master`, run the checks, then `git push origin HEAD:master`. Move the card to Shipping with the pushed commit hash. Do not push without a sign-off. Any operator can sign off. A second review is not necessary: a bad push is rolled back with a new push.
-- Report a stray remote branch that you find. If the person asks you to bring it in, rebase its commits onto `master` (`git rebase` or `git cherry-pick`). Do not merge it. The operator deletes the remote branch.
-- Resolve a rebase conflict when the person asks, or when you rebase a signed-off card before its push. Keep the intent of both sides. Do not merge generated files by hand: run the build. Run the checks on each rebased commit, then report each resolution on its card. If the checks fail, do not push: report on the card.
+- **One branch per card: `lnd-<nnn>`** (the card id in lower case, for example `lnd-107`). Start it from `origin/master`: `git fetch origin && git switch -c lnd-<nnn> origin/master`. Commit on it. Do not open a pull request. Decap CMS makes its own `cms/…` branches: leave them alone.
+- **Preview.** Push the card branch at Review: `git push -u origin lnd-<nnn>`. [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/) runs `npm run build`, then `npx wrangler preview` ([Worker Previews](https://developers.cloudflare.com/workers/previews/)). The Preview URL is `https://lnd-<nnn>-landing.nellisarchitecture.workers.dev/` and always shows the newest push of the branch. Cloudflare sends `X-Robots-Tag: noindex` on it. The Preview has no secrets and no bindings: the forms answer 503 and the CMS cannot log in there. Production does not change.
+- **Linear history.** Do not make merge commits. Keep the branch on top of `origin/master`: `git fetch origin && git rebase origin/master`, then `git push --force-with-lease`.
+- **Merge after sign-off.** When the operator signs off the Preview: `git fetch origin && git rebase origin/master`, run the checks, then `git switch master && git merge --ff-only lnd-<nnn> && git push origin master`. Move the card to Shipping with the pushed commit hash. Do not merge without a sign-off. Any operator can sign off. A bad merge is rolled back with a new commit.
+- **Clean up after the merge:** `git push origin --delete lnd-<nnn>`, `git branch -d lnd-<nnn>`, and `npx wrangler preview delete --name lnd-<nnn>`. The Free plan keeps 100 Previews and deletes the oldest after that.
+- A docs-only or tests-only change still gets its card branch. Merge it with the next signed-off card, or on its own.
+- Report a stray remote branch (not `master`, not `lnd-<nnn>` of an open card, not `cms/…`). If the person asks you to bring it in, rebase its commits onto `master` (`git rebase` or `git cherry-pick`). Do not merge it.
+- Resolve a rebase conflict when the person asks, or when you rebase a signed-off card before its merge. Keep the intent of both sides. Do not merge generated files by hand: run the build. Run the checks on each rebased commit, then report each resolution on its card. If the checks fail, do not merge: report on the card.
 
 ### Commands
 
@@ -236,12 +241,12 @@ The Worker uses the Free plan. See [Workers limits](https://developers.cloudflar
 
 Rules:
 
-- One push is one build. Push code changes after the sign-off. A change with only docs or tests does not need its own push: it goes with the next push.
+- One push is one build: a card branch push builds its Preview, a `master` push builds production. Push the card branch at Review, not after each commit.
 - CMS editors: one publish is one build. Publish changes together.
 
 ### Deploy check (Shipping)
 
-- The [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) build of the pushed `master` commit is green (Dashboard → Workers → landing → Deployments).
-- Changed pages, `/`, `/news/<newest-slug>/` and `/sitemap.xml` return 200 on <https://landing.nellisarchitecture.workers.dev> (production after the cutover). Example: `curl -sI https://landing.nellisarchitecture.workers.dev/`.
+- The [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) build of the merged `master` commit is green (Dashboard → Workers → landing → Deployments).
+- Changed pages, `/`, `/news/<newest-slug>/` and `/sitemap.xml` return 200 on <https://nellisarchitecture.com>. Example: `curl -sI https://nellisarchitecture.com/`.
 - `/admin/` loads.
 - The pending tests of the [review scenario](#review-scenario) pass. Write the results on the card.

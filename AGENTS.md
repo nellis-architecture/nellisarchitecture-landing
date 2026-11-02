@@ -139,8 +139,9 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Do not over-engineer.
 - When we agree on a new convention or pattern, add the convention here as a rule (keep this list current).
 - After each task, create a checkpoint (git commit). Run the project's checks (see [Bindings](docs/workflow/development.md#bindings)). Move the card to the next pipeline state (usually **Dev BR** after Test). Then stop for the bar-raiser or human review. Do not leave an implemented change in **To do** or **In Progress**.
-- Work on the current branch or on any local branch, and keep the history linear: no merge commits. Push only to `origin/master`, never another branch. Rebase a stray branch onto `master` only when the person asks (see [Repository](docs/workflow/development.md#repository)).
-- Commit locally as checkpoints. Push to `origin/master` only after an operator signs off the card at Review: rebase onto `origin/master`, run the checks, push (see [Repository](docs/workflow/development.md#repository)). A push to `master` deploys to Cloudflare (workers.dev) through Workers Builds (see [Cloudflare limits](docs/workflow/development.md#cloudflare-limits)).
+- One branch per card: `lnd-<nnn>`, from `origin/master`. Keep the history linear: rebase, no merge commits. Rebase a stray branch onto `master` only when the person asks (see [Repository](docs/workflow/development.md#repository)).
+- Commit on the card branch as checkpoints. At Review, push the card branch: its Preview `https://lnd-<nnn>-landing.nellisarchitecture.workers.dev/` is where the operator signs off. After the sign-off, rebase onto `origin/master`, run the checks, fast-forward `master` and push it, then delete the card branch (remote and local) and its Preview. A push to `master` deploys to production (<https://nellisarchitecture.com>) through Workers Builds (see [Cloudflare limits](docs/workflow/development.md#cloudflare-limits)).
+- Every sign-off request gives the exact URL of each changed page on the Preview, and the production URL for comparison (see [States](docs/workflow/development.md#states)).
 
 ## Writing style
 
