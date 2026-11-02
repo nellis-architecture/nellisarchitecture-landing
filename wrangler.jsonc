@@ -10,6 +10,12 @@
   "vars": {
     "MAIL_FROM": "noreply@forms.nellisarchitecture.com"
   },
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_destination_addresses": ["hello@nellisarchitecture.com", "people@nellisarchitecture.com"]
+    }
+  ],
   "r2_buckets": [
     {
       "binding": "FILES",

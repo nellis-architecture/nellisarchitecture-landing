@@ -150,10 +150,15 @@ test('sendingDomain: the domain of MAIL_FROM', () => {
   assert.equal(sendingDomain(), SUB);
 });
 
-test('DESIRED_ADDRESSES equals the TO addresses in worker/email.js', () => {
+test('DESIRED_ADDRESSES equals the TO addresses and the send_email allow-list', () => {
   const text = fs.readFileSync(path.join(ROOT, 'worker/email.js'), 'utf8');
   const to = text.match(/const TO = \{([^}]*)\}/)[1].match(/[\w.-]+@[\w.-]+/g);
   assert.deepEqual([...to].sort(), [...DESIRED_ADDRESSES].sort());
+  const wrangler = JSON.parse(fs.readFileSync(path.join(ROOT, 'wrangler.jsonc'), 'utf8'));
+  const [binding] = wrangler.send_email;
+  assert.equal(binding.name, 'EMAIL');
+  const allowed = [...binding.allowed_destination_addresses].sort();
+  assert.deepEqual(allowed, [...DESIRED_ADDRESSES].sort());
 });
 
 test('settingsPlan: equal gives nothing, a difference gives a change', () => {
