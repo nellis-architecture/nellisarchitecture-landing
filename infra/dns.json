@@ -1,5 +1,4 @@
 [
-  {"type": "A", "name": "nellisarchitecture.com", "content": "192.124.249.69", "ttl": 1, "proxied": false},
   {"type": "A", "name": "admin.nellisarchitecture.com", "content": "92.205.147.248", "ttl": 1, "proxied": false},
   {"type": "A", "name": "mail.nellisarchitecture.com", "content": "92.205.147.248", "ttl": 1, "proxied": false},
   {"type": "A", "name": "sucuriip.nellisarchitecture.com", "content": "92.205.147.248", "ttl": 1, "proxied": false},
@@ -14,7 +13,7 @@
   {"type": "CNAME", "name": "webdisk.nellisarchitecture.com", "content": "sucuriip.nellisarchitecture.com", "ttl": 1, "proxied": false},
   {"type": "CNAME", "name": "whm.nellisarchitecture.com", "content": "sucuriip.nellisarchitecture.com", "ttl": 1, "proxied": false},
   {"type": "CNAME", "name": "www.admin.nellisarchitecture.com", "content": "sucuriip.nellisarchitecture.com", "ttl": 1, "proxied": false},
-  {"type": "CNAME", "name": "www.nellisarchitecture.com", "content": "nellisarchitecture.com", "ttl": 1, "proxied": false},
+  {"type": "CNAME", "name": "www.nellisarchitecture.com", "content": "nellisarchitecture.com", "ttl": 1, "proxied": true},
   {"type": "MX", "name": "nellisarchitecture.com", "content": "mx1-usg2.ppe-hosted.com", "priority": 0, "ttl": 1, "proxied": false},
   {"type": "MX", "name": "nellisarchitecture.com", "content": "mx2-usg2.ppe-hosted.com", "priority": 0, "ttl": 1, "proxied": false},
   {"type": "MX", "name": "nellisarchitecture.com", "content": "mx3-usg2.ppe-hosted.com", "priority": 0, "ttl": 1, "proxied": false},

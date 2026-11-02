@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   DESIRED_ADDRESSES, readRecords, sendingDomain, recordKey, isManaged, dnsPlan, settingsPlan,
-  addressPlan, routingPlan, mailChanged, run,
+  addressPlan, routingPlan, mailChanged, domainPlan, redirectChanged, WWW_REDIRECT, run,
 } = require('../infra/zone');
 
 const ROOT = path.join(__dirname, '..');
@@ -137,14 +137,32 @@ test('readRecords: accepts the real dns.json', () => {
   assert.ok(readRecords().length > 0);
 });
 
-test('dns.json: apex A is Sucuri, apex MX are Proofpoint, all records not proxied', () => {
+test('dns.json: no apex A (the Worker domain), apex MX Proofpoint, only www proxied', () => {
   const records = readRecords();
-  const apexA = records.filter((r) => r.type === 'A' && r.name === APEX).map((r) => r.content);
-  assert.deepEqual(apexA, ['192.124.249.69']);
+  const web = records.filter((r) => ['A', 'AAAA', 'CNAME'].includes(r.type) && r.name === APEX);
+  assert.deepEqual(web, []);
   const apexMx = records.filter((r) => r.type === 'MX' && r.name === APEX)
     .map((r) => r.content).sort();
   assert.deepEqual(apexMx, [1, 2, 3].map((n) => `mx${n}-usg2.ppe-hosted.com`));
-  assert.ok(records.every((r) => r.proxied === false));
+  assert.deepEqual(records.filter((r) => r.proxied).map((r) => r.name), [`www.${APEX}`]);
+});
+
+test('domainPlan: attach a hostname that is missing or on another Worker', () => {
+  assert.deepEqual(domainPlan([], [APEX], 'landing'), [APEX]);
+  assert.deepEqual(domainPlan([{ hostname: APEX, service: 'landing' }], [APEX], 'landing'), []);
+  assert.deepEqual(domainPlan([{ hostname: APEX, service: 'old' }], [APEX], 'landing'), [APEX]);
+});
+
+test('redirectChanged: only the one www rule counts as no change', () => {
+  const live = {
+    ...WWW_REDIRECT, id: 'r1', version: '2', enabled: true,
+  };
+  assert.equal(redirectChanged([live]), false);
+  assert.equal(redirectChanged(null), true);
+  assert.equal(redirectChanged([]), true);
+  assert.equal(redirectChanged([live, { ...live, ref: 'other' }]), true);
+  const to = { ...WWW_REDIRECT.action_parameters.from_value, status_code: 302 };
+  assert.equal(redirectChanged([{ ...live, action_parameters: { from_value: to } }]), true);
 });
 
 test('sendingDomain: the domain of MAIL_FROM', () => {
@@ -231,6 +249,8 @@ const quiet = (t) => {
   return () => log.mock.calls.map((c) => c.arguments[0]).join('\n');
 };
 
+const PHASE = '/zones/z/rulesets/phases/http_request_dynamic_redirect/entrypoint';
+
 const zoneRoutes = (status, records) => ({
   'GET /zones': [{ id: 'z', status, name_servers: ['a.ns.cloudflare.com'] }],
   'GET /zones/z/dns_records': records,
@@ -239,6 +259,8 @@ const zoneRoutes = (status, records) => ({
   'GET /accounts/acc/email/routing/addresses': [],
   'GET /zones/z/email/routing': { enabled: false, status: 'unconfigured' },
   'GET /zones/z/email/auth/dmarc-reports': { enabled: true },
+  'GET /accounts/acc/workers/domains': [{ hostname: APEX, service: 'landing' }],
+  [`GET ${PHASE}`]: { rules: [WWW_REDIRECT] },
 });
 
 test('run plan: a missing zone prints "would create" and writes nothing', async (t) => {
@@ -246,8 +268,23 @@ test('run plan: a missing zone prints "would create" and writes nothing', async 
   const { api, calls } = noWrite({ 'GET /zones': [] });
   await run({ api, acct: 'acc', write: false });
   assert.match(out(), /zone: would create/);
-  assert.match(out(), /dns: post A\|nellisarchitecture.com\|192.124.249.69/);
+  assert.match(out(), /dns: post MX\|nellisarchitecture.com\|0 mx1-usg2.ppe-hosted.com/);
   assert.ok(calls.every((c) => c.method === 'GET'));
+});
+
+test('run plan: no Worker domain and no redirect yet: attach the apex, set the rule', async (t) => {
+  const out = quiet(t);
+  const { api, calls } = noWrite({
+    ...zoneRoutes('active', withIds(readRecords())),
+    'GET /accounts/acc/workers/domains': [],
+    [`GET ${PHASE}`]: () => {
+      throw new Error(`GET ${PHASE}: HTTP 404 []`);
+    },
+  });
+  await run({ api, acct: 'acc', write: false });
+  assert.ok(calls.every((c) => c.method === 'GET'));
+  assert.match(out(), /worker domain: would attach nellisarchitecture.com to landing/);
+  assert.match(out(), /redirect: would set www.nellisarchitecture.com → https:\/\/nellisarch/);
 });
 
 test('run plan: a pending zone with differences writes nothing', async (t) => {

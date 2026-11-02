@@ -54,13 +54,16 @@ test('parse skips # comment lines', () => {
   assert.deepEqual([...parse('# c\n/*\n  A: 1\n').keys()], ['/*']);
 });
 
-test('_headers sets the security headers on every path', () => {
-  const all = parse(read('_headers')).get('/*');
+test('_headers sets the security headers on every path, noindex only on workers.dev', () => {
+  const rules = parse(read('_headers'));
+  const all = rules.get('/*');
   assert.ok(all, '_headers: missing /* rule');
   assert.equal(all.get('x-frame-options'), 'SAMEORIGIN');
   assert.equal(all.get('x-content-type-options'), 'nosniff');
   assert.equal(all.get('referrer-policy'), 'strict-origin-when-cross-origin');
-  assert.equal(all.get('x-robots-tag'), 'noindex', 'noindex stays until the DNS cutover (LND-052)');
+  assert.ok(!all.has('x-robots-tag'), 'the production site must be indexable');
+  const dev = rules.get('https://landing.nellisarchitecture.workers.dev/*');
+  assert.equal(dev && dev.get('x-robots-tag'), 'noindex');
 });
 
 test('_headers caches uploads and variants for one year, immutable', () => {

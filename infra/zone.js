@@ -7,12 +7,32 @@ const DESIRED_SETTINGS = { always_use_https: 'on', ssl: 'strict' };
 const DESIRED_ADDRESSES = ['hello@nellisarchitecture.com', 'people@nellisarchitecture.com'];
 const CONTENT_TYPES = ['A', 'AAAA', 'CNAME', 'MX', 'TXT'];
 const DATA_TYPES = ['SRV', 'CAA'];
+const WWW = `www.${ZONE}`;
+// The Worker answers the apex. www is a proxied CNAME to the apex with a 301 rule (LND-052).
+const DESIRED_DOMAINS = [ZONE];
+const REDIRECT_PHASE = 'http_request_dynamic_redirect';
+const WWW_REDIRECT = {
+  ref: 'www_to_apex',
+  description: 'www to the apex, 301 (LND-052)',
+  expression: `(http.host eq "${WWW}")`,
+  action: 'redirect',
+  action_parameters: {
+    from_value: {
+      status_code: 301,
+      target_url: { expression: `concat("https://${ZONE}", http.request.uri.path)` },
+      preserve_query_string: true,
+    },
+  },
+};
 
 // wrangler.jsonc has no comments, so JSON.parse reads it (as in infra/cloudflare.js).
 const sendingDomain = (root = ROOT) => {
   const { vars } = JSON.parse(fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8'));
   return vars.MAIL_FROM.split('@')[1].toLowerCase();
 };
+
+const workerName = (root = ROOT) => JSON
+  .parse(fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8')).name;
 
 const under = (name, sub) => {
   const n = name.toLowerCase();
@@ -106,6 +126,20 @@ const apexMail = (records) => records
 
 const mailChanged = (live, desired) => apexMail(live).join('\n') !== apexMail(desired).join('\n');
 
+// live: GET /accounts/{id}/workers/domains. Hostnames to attach to the Worker.
+const domainPlan = (live, desired, worker) => desired
+  .filter((h) => !live.some((d) => d.hostname === h && d.service === worker));
+
+// live: the rules of the redirect phase entrypoint (null: no entrypoint yet).
+const redirectChanged = (rules) => {
+  const pick = ({
+    ref, expression, action, action_parameters: params,
+  }) => JSON.stringify({
+    ref, expression, action, params,
+  });
+  return !rules || rules.length !== 1 || pick(rules[0]) !== pick(WWW_REDIRECT);
+};
+
 const isEmpty = (plan) => !plan.posts.length && !plan.patches.length && !plan.deletes.length;
 
 const printDns = (plan) => {
@@ -145,6 +179,27 @@ const run = async ({
   if (!isEmpty(plan)) {
     changes += 1;
     if (write) await api(`/zones/${zone.id}/dns_records/batch`, { method: 'POST', body: plan });
+  }
+
+  const worker = workerName(root);
+  const domainsPath = `/accounts/${acct}/workers/domains`;
+  await domainPlan(await api(domainsPath), DESIRED_DOMAINS, worker)
+    .reduce((chain, hostname) => chain.then(async () => {
+      const body = { hostname, service: worker, zone_id: zone.id };
+      if (write) await api(domainsPath, { method: 'PUT', body });
+      console.log(`worker domain: ${pre}attach ${hostname} to ${worker}`);
+      changes += 1;
+    }), Promise.resolve());
+
+  const phasePath = `/zones/${zone.id}/rulesets/phases/${REDIRECT_PHASE}/entrypoint`;
+  const entry = await api(phasePath).catch((e) => {
+    if (e.message.includes('HTTP 404')) return null;
+    throw e;
+  });
+  if (redirectChanged(entry && entry.rules)) {
+    if (write) await api(phasePath, { method: 'PUT', body: { rules: [WWW_REDIRECT] } });
+    console.log(`redirect: ${pre}set ${WWW} → https://${ZONE} (301)`);
+    changes += 1;
   }
 
   const live = await Promise.all(Object.keys(DESIRED_SETTINGS)
@@ -204,5 +259,8 @@ module.exports = {
   addressPlan,
   routingPlan,
   mailChanged,
+  domainPlan,
+  redirectChanged,
+  WWW_REDIRECT,
   run,
 };

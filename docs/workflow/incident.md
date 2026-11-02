@@ -22,7 +22,7 @@ Driver: `/incident <alert>` ([.claude/commands/incident.md](../../.claude/comman
 
 ## Signals
 
-- Site: `curl -sI https://landing.nellisarchitecture.workers.dev/` (production domain after the DNS cutover).
+- Site: `curl -sI https://nellisarchitecture.com/` (and `https://landing.nellisarchitecture.workers.dev/`, the same Worker).
 - Deploys and build logs: Cloudflare dashboard → Workers → landing → Deployments (versions) and Builds (build logs).
 - CMS: `/admin/` loads and the editor can log in with GitHub (`/api/auth`, `/api/callback` on the Worker).
 - Forms: Worker logs: Cloudflare dashboard → Workers → landing → Logs, or `npx wrangler tail landing` ([wrangler tail](https://developers.cloudflare.com/workers/wrangler/commands/#tail)).

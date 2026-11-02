@@ -1,8 +1,10 @@
-# X-Robots-Tag: noindex keeps workers.dev out of search. Remove it at the DNS cutover (LND-052).
 /*
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+
+# workers.dev stays on for checks and rollback, but out of search (LND-052).
+https://landing.nellisarchitecture.workers.dev/*
   X-Robots-Tag: noindex
 
 # One cache rule per root under wp-content/. Do not add a /wp-content/* rule: Cloudflare

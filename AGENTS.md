@@ -4,7 +4,7 @@ Be brief. No prose.
 
 ## Purpose
 
-We migrate the website [nellisarchitecture.com](https://nellisarchitecture.com) from WordPress to a static site. The site is hosted on [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/) (<https://landing.nellisarchitecture.workers.dev>). The domain stays on WordPress until the DNS switch. The news section is edited in Decap CMS. See [README.md](README.md).
+We migrate the website [nellisarchitecture.com](https://nellisarchitecture.com) from WordPress to a static site. The site is hosted on [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/): <https://nellisarchitecture.com> (since the DNS cutover, LND-052) and <https://landing.nellisarchitecture.workers.dev> (checks, not indexed). The news section is edited in Decap CMS. See [README.md](README.md).
 
 ## Principles
 

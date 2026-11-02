@@ -1,11 +1,10 @@
 # Decap CMS configuration — Nellis Architecture news
-# base_url is the workers.dev Worker until the DNS cutover (LND-052 sets the apex).
 
 backend:
   name: github
   repo: nellis-architecture/nellisarchitecture-landing
   branch: master
-  base_url: https://landing.nellisarchitecture.workers.dev
+  base_url: https://nellisarchitecture.com
   auth_endpoint: api/auth
   squash_merges: true
 

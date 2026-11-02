@@ -12,7 +12,7 @@ How this project is run — start here:
 - **Conventions and working agreements:** [AGENTS.md](AGENTS.md) — principles, code style, content and SEO rules, testing.
 - **How we work (workflows):** [development](docs/workflow/development.md) · [grooming](docs/workflow/grooming.md) · [incident response](docs/workflow/incident.md). Driven by `/ticket`, `/groom` and `/incident` in [Claude Code](https://code.claude.com/docs). Tool bindings (Trello, Cloudflare, commands) are in [development.md → Bindings](docs/workflow/development.md#bindings).
 - **Tasks, requirements, decisions and status:** the **Website** board on Trello — <https://trello.com/b/jaBEXApc/website>.
-- **Hosting:** [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/) — <https://landing.nellisarchitecture.workers.dev>. The domain nellisarchitecture.com stays on WordPress until the DNS cutover.
+- **Hosting:** [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/) — <https://nellisarchitecture.com> (www redirects to it). <https://landing.nellisarchitecture.workers.dev> stays for checks and is not indexed.
 
 ## Structure
 
@@ -102,6 +102,6 @@ To use the CMS on your computer, see [Local CMS](docs/workflow/development.md#co
 ## Notes
 
 - Form spam protection uses [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/); the old PHP captcha is gone.
-- All absolute URLs (canonical, Open Graph, schema.org) intentionally keep the
-  production domain — correct after DNS cutover.
+- All absolute URLs (canonical, Open Graph, schema.org) use the
+  production domain.
 - Google Analytics (G-5D57DNBBLX) is unchanged.
