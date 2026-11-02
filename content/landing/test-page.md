@@ -2,7 +2,7 @@
 h1: Test page
 slug: test-page-2
 description: Temporary test page for the landing pages collection.
-noindex: false
+noindex: true
 ---
 ![Test image](/wp-content/uploads/pages/landing-test-image.jpg)
 
