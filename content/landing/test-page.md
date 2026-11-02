@@ -1,6 +1,6 @@
 ---
 h1: Test page
-slug: test-page
+slug: test-page-2
 description: Temporary test page for the landing pages collection.
 noindex: false
 ---
