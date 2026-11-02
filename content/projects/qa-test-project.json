@@ -1,0 +1,12 @@
+{
+  "seo": {
+    "noindex": false
+  },
+  "name": "QA Test Project",
+  "slug": "qa-test-project",
+  "category": "landscape",
+  "type": "commercial",
+  "order": 5,
+  "hero": "/wp-content/uploads/projects/landing-test-image.jpg",
+  "card_image": "/wp-content/uploads/projects/landing-test-image.jpg"
+}
