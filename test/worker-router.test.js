@@ -34,7 +34,7 @@ const post = (fields = GOOD, headers = {}, url = 'https://x.dev/api/message') =>
 
 const fakeEnv = (send = async () => {}) => {
   const env = {
-    MAIL_FROM: 'noreply@nellisarchitecture.com',
+    MAIL_FROM: 'noreply@forms.nellisarchitecture.com',
     TURNSTILE_SECRET: 'real-secret',
     EMAIL: { send: mock.fn(send) },
     ASSETS: { fetch: mock.fn(async () => new Response('asset', { status: 404 })) },

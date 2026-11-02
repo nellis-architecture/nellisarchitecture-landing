@@ -8,7 +8,7 @@
     "enabled": true
   },
   "vars": {
-    "MAIL_FROM": "noreply@nellisarchitecture.com"
+    "MAIL_FROM": "noreply@forms.nellisarchitecture.com"
   },
   "r2_buckets": [
     {

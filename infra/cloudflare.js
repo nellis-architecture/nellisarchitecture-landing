@@ -1,6 +1,7 @@
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const zone = require('./zone');
 
 const ROOT = path.join(__dirname, '..');
 const BASE = 'https://api.cloudflare.com/client/v4';
@@ -97,6 +98,10 @@ const main = async () => {
   if (!token || !acct) {
     throw new Error(`Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID. See ${DOCS}.`);
   }
+  if (process.argv.includes('--plan')) {
+    await zone.run({ api, acct, write: false });
+    return;
+  }
   const bucket = bucketName();
   const { buckets } = await api(`/accounts/${acct}/r2/buckets`);
   if (bucketPlan(buckets, bucket) === 'create') {
@@ -185,6 +190,7 @@ const main = async () => {
     console.log(`variables: deleted ${key}${note}`);
   }), Promise.resolve());
   console.log('Cloudflare build settings are up to date.');
+  await zone.run({ api, acct, write: true });
 };
 
 module.exports = {

@@ -129,6 +129,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Page generator: static markup (with the WordPress tabs and spaces) stays in `build/lib/partials/*.html` with `{{TOKEN}}`s. JS fills the tokens with `fill()`. Escape CMS text with `escText` (text) or `escAttr` (attributes).
 - Content images (upload images on Home, the project, category, studio, people and news pages, and in the news markdown): `picture()` of `build/lib/images.js`, with a slot of its `SLOTS` table. The build sets the one priority image of each page; never write `loading="eager"` in a partial. Chrome images (logo, partner logos) keep the theme `lazyload` markup. The `picture` CSS is in `build/lib/partials/images-css.html` (`#nellis-images-css`); `head.html` and `build/news-template.html` get it through the `{{IMAGES_CSS}}` token.
 - Cloudflare build settings change only in `infra/cloudflare.js` or `wrangler.jsonc`. Never change them in the dashboard.
+- DNS records change only in `infra/dns.json` (then `npm run infra`). Never change them in the dashboard. `npm run infra -- --plan` shows the changes first.
 
 ### Generic rules
 

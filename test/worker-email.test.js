@@ -22,12 +22,12 @@ test('send uses MAIL_FROM, a fixed subject and replyTo the sender', async () => 
   const { send, body } = await load();
   const calls = [];
   const env = {
-    MAIL_FROM: 'noreply@nellisarchitecture.com',
+    MAIL_FROM: 'noreply@forms.nellisarchitecture.com',
     EMAIL: { send: async (m) => calls.push(m) },
   };
   await send(env, { ...fields, form: 'contact' });
   assert.deepEqual(calls, [{
-    from: 'noreply@nellisarchitecture.com',
+    from: 'noreply@forms.nellisarchitecture.com',
     to: 'hello@nellisarchitecture.com',
     replyTo: 'ann@example.com',
     subject: 'Form submitted on the website',

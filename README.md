@@ -47,6 +47,8 @@ admin/                # Decap CMS (news and page editing UI)
 wrangler.jsonc        # Cloudflare Worker config (static assets)
 .assetsignore         # files the Cloudflare Worker does not publish (they answer 404)
 infra/cloudflare.js   # Cloudflare build settings as code (npm run infra)
+infra/zone.js         # DNS zone, settings, Email Routing as code (npm run infra)
+infra/dns.json        # DNS records, source of truth
 eslint.config.mjs     # lint rules (npm run lint)
 test/                 # unit tests (npm test)
 ```
