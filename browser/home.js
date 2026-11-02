@@ -7,9 +7,7 @@ const {
 } = require('./lib/page');
 
 const ROOT = path.join(__dirname, '..');
-const PROJECTS = Object.keys(JSON.parse(
-  fs.readFileSync(path.join(ROOT, 'data', 'projects.json'), 'utf8'),
-)).length;
+const PROJECTS = fs.readdirSync(path.join(ROOT, 'content', 'projects')).length;
 
 const GRID = '.center .container a.project__link';
 const gridHrefs = (page) => page.evaluate((sel) => [...document.querySelectorAll(sel)]
@@ -80,6 +78,18 @@ VIEWPORTS.forEach(([label, viewport]) => {
       );
       assert.equal(saved, null);
     });
+  });
+});
+
+test('home: the master planning filter shows WEST LINKS', async () => {
+  const file = path.join(ROOT, 'content', 'projects', 'west-links.json');
+  const { category, slug } = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const v = await visit('/', DESKTOP);
+  await check(v, 'home-west-links', async () => {
+    await v.page.locator('.nav__project_item a:visible', { hasText: 'master planning' }).first()
+      .click();
+    await waitGrid(v.page, filterHrefs('master_planning_1.html'));
+    assert.ok((await gridHrefs(v.page)).includes(`/projects/${category}/${slug}/`));
   });
 });
 

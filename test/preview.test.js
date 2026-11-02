@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const {
-  previewPages, previewScript, forPreview, register, pathShim,
+  previewPages, previewScript, forPreview, register, pathShim, virtualFs,
 } = require('../build/lib/preview');
 const { readSite, renderPages } = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
@@ -219,6 +219,20 @@ test('patchCms: "---" is a block that keeps its blank line', () => {
   assert.equal(Object.keys(separator.fromBlock(['---'])).length, 0);
   assert.equal(separator.toBlock({}), '\n---');
   assert.equal(separator.toPreview({}), '<hr />');
+});
+
+test('virtualFs lists the files of a folder', () => {
+  const vfs = virtualFs({ 'a/b/x.json': '1', 'a/b/y.json': '2', 'a/bc/z.json': '3' });
+  assert.deepEqual(vfs.readdirSync('a/b'), ['x.json', 'y.json']);
+  assert.deepEqual(vfs.readdirSync('none'), []);
+});
+
+test('the script inlines every project file, and no data/ file', () => {
+  fs.readdirSync(path.join(ROOT, 'content', 'projects')).forEach((f) => {
+    assert.ok(SCRIPT.includes(`"content/projects/${f}"`), f);
+  });
+  assert.ok(!SCRIPT.includes('"data/search.json"'));
+  assert.ok(!SCRIPT.includes('"data/projects.json"'));
 });
 
 test('pathShim matches node:path.posix', () => {

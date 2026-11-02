@@ -17,6 +17,9 @@ const { markdownPage } = require('../build/lib/markdown');
 const { loadPosts } = require('../build-news');
 
 const ROOT = path.join(__dirname, '..');
+const renderProject = (entry, site, newsHref) => project.render(entry, {
+  site, newsHref, projects: loadProjects(ROOT),
+});
 const count = (s, sub) => s.split(sub).length - 1;
 const POSTS = loadPosts(path.join(ROOT, 'content', 'news'));
 
@@ -98,7 +101,7 @@ test('every page links the nav Projects item to /projects/ and the logo to /', (
   const [entry] = loadProjects(ROOT);
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
-  assertNav(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
+  assertNav(renderProject(entry, site, '/news/n/'), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
   assertNav(news, `news/${POSTS[0].slug}/`);
 });
@@ -118,7 +121,7 @@ test('every page links the nav Contact item to /contact/ with no click handler',
   const [entry] = loadProjects(ROOT);
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
-  assertContact(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
+  assertContact(renderProject(entry, site, '/news/n/'), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
   assertContact(news, `news/${POSTS[0].slug}/`);
 });
@@ -334,7 +337,7 @@ test('intro renders one <p> per paragraph and escapes text', () => {
   assert.equal(people.intro([]), '');
 });
 
-['index-projects', 'current-project'].forEach((name) => {
+['index-projects', 'current-project', 'grid-item', 'filter-item'].forEach((name) => {
   test(`${name} partial closes every div it opens`, () => {
     const html = fs.readFileSync(path.join(ROOT, `build/lib/partials/${name}.html`), 'utf8');
     const matches = (re) => (html.match(re) || []).length;
@@ -507,7 +510,7 @@ test('every page carries one well-formed "No result" span in the nav search', ()
   renderPages(ROOT, '/news/', undefined, POSTS).forEach((p) => assertNoResult(p.html, p.file));
   const [entry] = loadProjects(ROOT);
   const site = readSite(ROOT);
-  assertNoResult(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
+  assertNoResult(renderProject(entry, site, '/news/n/'), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
   assertNoResult(news, 'news-template.html');
 });
@@ -526,7 +529,9 @@ test('every page takes the mailto links from site.json and the year from the bui
   const pages = PAGES.map((p) => [p.slug, p.module.render(p.data || readContent(ROOT, p.content), {
     site: changed, newsHref: '/news/', page: p, root: ROOT, projects, posts: POSTS,
   })]);
-  pages.push([projects[0].url, project.render(projects[0], { site: changed, newsHref: '/news/' })]);
+  pages.push([projects[0].url, project.render(projects[0], {
+    site: changed, newsHref: '/news/', projects,
+  })]);
   const copyright = `© Nellis Architecture ${new Date().getUTCFullYear()}`;
   pages.forEach(([name, page]) => {
     /* The privacy text is CMS content: its own address is not part of the page chrome. */
@@ -555,7 +560,7 @@ test('every footer links Privacy policy to /privacy/ and Got skills to the skill
   const site = readSite(ROOT);
   const [entry] = loadProjects(ROOT);
   const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
-  pages.push([entry.url, project.render(entry, { site, newsHref: '/news/' })]);
+  pages.push([entry.url, renderProject(entry, site, '/news/')]);
   pages.forEach(([name, html]) => {
     assert.ok(!html.includes('href="/#">Privacy policy'), name);
     const skills = [...html.matchAll(/Got skills\?<\/span>[\s\S]*?mailto:([^"]+)"/g)];
@@ -568,7 +573,7 @@ test('no page and no news template has an empty phone link', () => {
   const site = readSite(ROOT);
   const [entry] = loadProjects(ROOT);
   const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
-  pages.push([entry.url, project.render(entry, { site, newsHref: '/news/' })]);
+  pages.push([entry.url, renderProject(entry, site, '/news/')]);
   const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
   pages.push(['news-template.html', news]);
   pages.forEach(([name, html]) => assert.ok(!html.includes('href="tel:"'), name));
@@ -587,7 +592,7 @@ test('a CMS schema adds one block after the generated one; project pages stay un
   assert.ok(html.includes(`</script>\n${block}\t<!-- / Yoast SEO plugin. -->`));
   assert.equal(html.replace(block, ''), plain);
   const [entry] = loadProjects(ROOT);
-  const out = project.render(entry, { site, newsHref: '/news/n/' });
+  const out = renderProject(entry, site, '/news/n/');
   assert.equal(out.match(/application\/ld\+json/g).length, 1);
   assert.ok(!out.includes('{{'));
   assert.ok(out.includes('</script>\n\t<!-- / Yoast SEO plugin. -->'));

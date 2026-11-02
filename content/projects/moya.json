@@ -1,0 +1,76 @@
+{
+  "name": "Moya",
+  "slug": "moya",
+  "category": "architecture",
+  "type": "residential",
+  "order": 50,
+  "area": "Emirates Hills",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Positioned within Emirates Hills, one of Dubai’s most exclusive enclaves, Moya was conceived in response to a client’s need for a landmark residence that appealed to discerning buyers seeking both sophistication and comfort. It was important to create a residence that supported both everyday living and social engagement. Our design philosophy centres on contemporary elegance, wellness and entertainment, ensuring Moya is as functional as it is beautiful, with the privacy of a home and the ambience of a luxury escape.",
+    "Fluid, sculptural forms, defined by continuous, curved profiles wrapped around the structure, showcase Moya’s architectural language from arrival. Softened by travertine cladding and engineered bamboo soffits with a water-like texture, the entrance draws guests through double-height bronze doors into a vast central atrium."
+  ],
+  "text_2": [
+    "Here, natural light floods in, enhancing the interplay of textures and defining the spatial experience, thoughtfully divided into two distinct wings; a clear separation of social and private spaces, both oriented towards expansive landscaped green views of Montgomerie Golf Club Dubai and the Dubai Marina skyline. Above ground, eight ensuite bedrooms and a penthouse suite offer individual privacy and luxury comforts, whilst below, in the basement, sits an extensive entertainment area prioritising wellness and leisure, with spa and salon treatment rooms, a gym, and a state-of-the-art 12-seater cinema and golf simulator",
+    "A secluded sunken garden brings daylight deep into the villa, creating a strong connection to nature, further elevated by moving outside to an infinity pool overlooking the golf course, with lush gardens and terraces designed for alfresco dining and relaxation.\r\nMoya brings together architectural innovation, refined materials and resort-style amenities in a considered balance, where design, function and experience aligned to support contemporary family living."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "2,160 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "4,460 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "8"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/03/Moya-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-3-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-5-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-3-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-5-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-6-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2026/03/Moya-4-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/03/Moya-2.jpg",
+  "list_image": "/wp-content/uploads/2026/03/Moya-2-scaled.jpg"
+}

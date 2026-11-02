@@ -1,0 +1,73 @@
+{
+  "name": "Vaya",
+  "slug": "vaya",
+  "category": "architecture",
+  "type": "residential",
+  "order": 60,
+  "area": "Palm Jumeirah",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "The interplay of engineering and precision is vital in the world of motorsport. For our client, a professional race car driver, these elements were crucial to transforming his Palm Jumeirah villa into a modern sanctuary. Radiating luxury and sophistication, this distinguished villa offers an exquisite blend of design, high-quality materials, and exceptional finishes. The renovation embodies sleek contemporary aesthetics, integrating high-quality materials and advanced technology to create a space that mirrors its owner's dynamic lifestyle.",
+    "The villa's exterior has been reimagined with modern cladding and expansive glass elements, evoking the aerodynamic profiles of race cars. Inside, the design emphasises fluidity and openness, featuring polished finishes and a minimalist aesthetic. \r\n\r\nThe entrance foyer leads to open-plan living areas that seamlessly connect to the streamlined kitchen and private master suite, offering both functionality and luxury."
+  ],
+  "text_2": [
+    "The standout feature is the garage, designed as a gallery to showcase the client's prized car collection, blending automotive artistry with architectural design. Vaya incorporates smart home systems for lighting, climate and security, ensuring efficiency and comfort.  \r\n\r\nOutdoor living is enhanced with an infinity pool, a roof terrace featuring a floating sky bridge, and a multifunctional area that includes an outdoor kitchen, bar, and a custom fire pit. These spaces provide relaxation and entertainment, perfectly complementing the villa's interior.",
+    "With a bold modern aesthetic, Vaya shares both privacy and striking beauty. Perfect for those who appreciate opulence and precision engineering and crave an enchanting living experience that is as advanced and sophisticated as the world of racing."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "Renovation and Extension"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "1,366 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "662 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "4"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/06/Untitled-design-9-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-9-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-5-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-7-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-6-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/06/Untitled-design-5-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/06/Untitled-design-9.jpg",
+  "list_image": "/wp-content/uploads/2025/06/Untitled-design-9-scaled.jpg"
+}

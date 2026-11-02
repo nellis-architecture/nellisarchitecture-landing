@@ -1,0 +1,115 @@
+{
+  "name": "Soul",
+  "slug": "soul",
+  "category": "architecture",
+  "also_in": [
+    "interior-design"
+  ],
+  "type": "residential",
+  "order": 140,
+  "area": "La Mer",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "With an emphasis on wellness and rejuvenation, Soul is a sanctuary that seamlessly integrates nature into its architecture and ethos, designed to provide a serene escape from city life.",
+    "Upon entering Soul, cosily nestled on La Mer South Island, through its double-height foyer, our clients are greeted by a lush garden that runs alongside the atrium, inviting light and greenery into the central spaces. The ground floor features an open-plan living area with a show kitchen at its heart, promoting a sense of togetherness and comfort."
+  ],
+  "text_2": [
+    "The lower ground floor is dedicated to well-being, housing a gym, spa, sauna, and ice bath. An outdoor sunken garden enhances relaxation with a plunge pool, complemented by a cantilevered pool above, emphasizing the interplay of water at various levels. The crowning feature is the roof terrace, showcasing a glass floor sky pool that allows light to cascade below.",
+    "Offering breathtaking views of the sea and city skyline, this tranquil space encourages families to unwind and recharge away from the hustle and bustle of urban life."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot size:",
+      "value": "755 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "663 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "5"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/07/ID-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-4.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-5.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-6-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-7.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-8.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/07/Soul-1.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/07/Living_15а-scaled.jpeg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Living_07-scaled.jpeg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/ID14.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Capture-1.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Basement-9.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Entertainment2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Penthouse-11.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Bedroom-2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Bedroom-3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/ID10.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/ID12.png"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/07/Living_04-scaled.jpeg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/ID15.png"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/07/ID-1.jpg",
+  "list_image": "/wp-content/uploads/2025/07/ID-1-scaled.jpg"
+}

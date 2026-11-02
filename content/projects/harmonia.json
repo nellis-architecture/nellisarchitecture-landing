@@ -1,0 +1,68 @@
+{
+  "name": "HARMONIA",
+  "slug": "harmonia",
+  "category": "architecture",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "commercial",
+  "order": 250,
+  "area": "PALM JUMEIRAH",
+  "region": "DUBAI, UAE",
+  "text_1": [
+    "Harmonia brings together three distinct Palm Jumeirah properties, designed to form a cohesive, resort-like luxury residential collection.\r\n\r\nCalling for a refined, modern architectural language to run throughout, our client wanted to emphasise timeless quality over excess, with careful consideration of the balance between privacy and openness.\r\n\r\nGuided by disciplined restraint, our approach began with a deep understanding of the Palm Jumeirah market and the level of refinement expected. In-depth site and feasibility studies then informed decisions on privacy, orientation, and environmental response, and defined the overarching design concept, language, and material palette.",
+    "From there, the focus was on how the homes would be experienced when lived in. Layouts were carefully planned to support both everyday life and a relaxed, resort-style rhythm, with emphasis on circulation, double-height volumes, and indoor-outdoor synergy. By embedding privacy whilst balancing openness in the architecture through massing and layering, we were able to create homes that feel exclusive, protected and discreet, overcoming a common challenge on Palm Jumeirah due to the close proximity of villas."
+  ],
+  "text_3": [
+    "Every element in our process was intentionally designed to enhance visual depth and climate performance. Harmonia’s aesthetic design draws on texture, light, and landscape, allowing the villas to respond to their surroundings rather than compete with them.  Horizontal forms and layered façades echo the Palm’s natural horizons. Land, sea, and sky-like stratification is expressed through strong slab lines, recessed glazing, and deep overhangs, with materiality in stone tones, weathered timber, and subtle bronze detailing.",
+    "Shading strategies and integrated planter systems lend themselves to a climate-responsive composition that reduces solar gain and enhances thermal comfort. Expansive glazing connects interior and exterior spaces, recessed openings and vertical fins provide passive solar control, and integrated planters blur the boundary between built form and nature.\r\n\r\nHarmonia is defined by an architecture that feels grounded and tactile, designed as a calm, cohesive collection of homes where architecture, environment and lifestyle come together with clarity, balance and quiet confidence."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "Renovation of 3 existing villas"
+    },
+    {
+      "label": "Plot size:",
+      "value": "685 SQM (per villa)"
+    },
+    {
+      "label": "Built area:",
+      "value": "535 SQM (per villa)"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "5 (per villa)"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/06/O-Villas_2-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/06/O-Villas_1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/O-Villas_3-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2026/06/O-Villas_4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/O-Villas_9-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/O-Villas_7-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2026/06/O-Villas_5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/O-Villas_8-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/06/O-Villas_2.jpg",
+  "list_image": "/wp-content/uploads/2026/06/O-Villas_2-scaled.jpg"
+}

@@ -4,15 +4,13 @@
  * Skips an image when its hash and its variant files did not change.
  * Deletes the files in wp-content/variants/ that the manifest does not name,
  * but not after an encode failure and not when wp-content/variants is a symbolic link.
- * Then writes the <picture> markup of the hand-kept files (the Home grid partial and
- * data/filters/*.html) and the data/search.json minImg (rewriteHandKept).
  */
 const fs = require('node:fs');
 const path = require('node:path');
 const sharp = require('sharp');
 const {
   MANIFEST, VARIANTS, hash8, usedImages, readManifest, encodeImage, variantFiles, staleVariants,
-  walk, rewriteHandKept,
+  walk,
 } = require('./lib/images');
 
 function writeManifest(root, manifest) {
@@ -71,7 +69,6 @@ async function main(root = path.join(__dirname, '..'), {
     }
   }), Promise.resolve());
   writeManifest(root, manifest);
-  rewriteHandKept(root, manifest);
 
   const deleted = deleteStale(root, manifest, failed, warn);
   const keep = variantFiles(manifest);

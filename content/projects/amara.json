@@ -1,0 +1,73 @@
+{
+  "name": "Amara",
+  "slug": "amara",
+  "category": "architecture",
+  "type": "residential",
+  "order": 260,
+  "area": "Nareel Island",
+  "region": "Abu Dhabi, UAE",
+  "text_1": [
+    "Villa Amara offers a stunning family retreat, nestled amongst private beaches, pontoons, spacious driveways and a swimming lagoon on the serene Nareel Island in Abu Dhabi.\r\nDesigned with exquisite detail, this family home features a striking white limestone façade and an L-shaped layout that enhances both aesthetics and functionality.",
+    "Overhanging canopies shade the extensive slimline glazing, which opens fully to blend indoor and outdoor spaces seamlessly. This design choice encourages natural light while maintaining a connection to the lush tropical garden outside."
+  ],
+  "text_2": [
+    "Inside, the villa has been designed for maximum comfort and elegance, starting with a spacious majlis at the entrance and a private family lounge that offers a cosy retreat with views of the garden. The first floor features two master suites, both facing the open sea, providing stunning vistas and a tranquil atmosphere throughout the home. This level is one of the villa’s standout features, cantilevering over the main overflow pool and providing shade from the Arabian sun while creating a captivating visual element.",
+    "The roof level further amplifies sea views, offering a breathtaking perspective of the vibrant city and its surroundings.\r\n\r\nVilla Amara embodies the perfect balance of luxury and nature, making it an ideal sanctuary for a family living in a tranquil yet active neighbourhood on the coast in Al Bateen."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "New-build Residential Villa"
+    },
+    {
+      "label": "Plot size:",
+      "value": "1,400 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "1,455 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/03/Amara4.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/03/Amara2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Amara3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Amara6.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Amara1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Amara4-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Amara-5.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Amara7.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/03/Amara-5.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/03/Amara3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Amara7.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/03/Amara4.jpg"
+}

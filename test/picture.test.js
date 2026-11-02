@@ -7,7 +7,7 @@ const images = require('../build/lib/images');
 const { escAttr } = require('../build/lib/html');
 
 const {
-  picture, prioritize, originalOf, rewriteImages, rewriteHandKept, SLOTS,
+  picture, prioritize, originalOf, SLOTS,
 } = images;
 const JPG = 'wp-content/uploads/2025/07/Big.jpg';
 const SMALL = 'wp-content/uploads/2025/07/Small.jpg';
@@ -145,59 +145,7 @@ test('prioritize marks only the first lazy image and needs one', () => {
   assert.throws(() => prioritize('<img src="/a.jpg">'), /no lazy image/);
 });
 
-const OLD = `<div><img
-              class="project__item-img lazyload"
-              data-src="/${JPG}"
-              alt="Zo &amp; &quot;ya&quot;" src="data:image/svg+xml;base64,PHN2Zz4="
-              style="--x: 1px;" />
-<img src="" alt="" /><img src="/wp-content/themes/nellis/a.png" alt="">
-<img class="project__item-img" src="/wp-content/uploads/none.jpg" alt="N" /></div>`;
-
-test('rewriteImages turns the upload images into picture() and is idempotent', () => {
-  const once = rewriteImages(OLD, MANIFEST, 'card');
-  assert.equal(once, `<div>${picture({
-    src: `/${JPG}`, alt: 'Zo & "ya"', cls: 'project__item-img', slot: 'card',
-  }, MANIFEST)}\n<img src="" alt="" /><img src="/wp-content/themes/nellis/a.png" alt="">\n`
-    + '<picture><img class="project__item-img" src="/wp-content/uploads/none.jpg" alt="N" '
-    + 'decoding="async" loading="lazy" data-overlay-added="true"></picture></div>');
-  assert.equal(rewriteImages(once, MANIFEST, 'card'), once);
-});
-
-test('rewriteImages follows a changed upload hash to the new variants', () => {
-  const old = rewriteImages(OLD, MANIFEST, 'card');
-  const changed = { ...MANIFEST, [JPG]: entry(3840, 2160, false, 'dddddddd') };
-  const out = rewriteImages(old, changed, 'card');
-  assert.ok(out.includes('Big-dddddddd-1600.jpg'));
-  assert.ok(!out.includes('aaaaaaaa'));
-});
-
-test('rewriteHandKept: partial, filters and minImg; a second run changes nothing', () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'handkept-'));
-  try {
-    const partial = path.join(dir, 'build', 'lib', 'partials', 'index-projects.html');
-    const filter = path.join(dir, 'data', 'filters', 'a_1.html');
-    const search = path.join(dir, 'data', 'search.json');
-    fs.mkdirSync(path.dirname(partial), { recursive: true });
-    fs.mkdirSync(path.dirname(filter), { recursive: true });
-    fs.writeFileSync(partial, OLD);
-    fs.writeFileSync(filter, `<img class="project__item-img" src="/${SMALL}" alt="S" />`);
-    const list = [{ title: 'A', minImg: `/${JPG}` }, { title: 'B' }];
-    fs.writeFileSync(search, JSON.stringify(list, null, 2));
-    rewriteHandKept(dir, MANIFEST);
-    const first = [partial, filter, search].map((f) => fs.readFileSync(f, 'utf8'));
-    assert.equal(first[0], rewriteImages(OLD, MANIFEST, 'card'));
-    assert.ok(first[1].startsWith('<picture'));
-    assert.deepEqual(JSON.parse(first[2]), [
-      { title: 'A', minImg: `${V}Big-aaaaaaaa-640.jpg` }, { title: 'B' },
-    ]);
-    rewriteHandKept(dir, MANIFEST);
-    assert.deepEqual([partial, filter, search].map((f) => fs.readFileSync(f, 'utf8')), first);
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true });
-  }
-});
-
-test('usedImages counts a variant URL as its upload, so a rewrite keeps the variants', () => {
+test('usedImages counts a variant URL as its upload', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'used-'));
   try {
     fs.mkdirSync(path.join(dir, 'build'));

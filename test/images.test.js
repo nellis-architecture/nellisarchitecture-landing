@@ -460,14 +460,30 @@ test('posterOf finds <name>-poster.jpg next to an upload video, else null', asyn
   }
 });
 
+test('usedImages finds the images of content/projects', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'used-'));
+  try {
+    fs.mkdirSync(path.join(dir, 'content', 'projects'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'content', 'projects', 'a.json'), JSON.stringify({
+      hero: '/wp-content/uploads/2026/h.jpg',
+      slider_1: [{ src: '/wp-content/uploads/2026/s.png' }],
+    }));
+    assert.deepEqual(images.usedImages(dir), [
+      'wp-content/uploads/2026/h.jpg', 'wp-content/uploads/2026/s.png',
+    ]);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('usedImages adds the poster of a video named in the project data and the news', async () => {
   const dir = await posterRoot();
   try {
     fs.mkdirSync(path.join(dir, 'content', 'news'), { recursive: true });
-    fs.mkdirSync(path.join(dir, 'data'));
+    fs.mkdirSync(path.join(dir, 'content', 'projects'));
     fs.writeFileSync(
-      path.join(dir, 'data', 'projects.json'),
-      '{"first_img_video":"\\/wp-content\\/uploads\\/2025\\/v.mp4"}',
+      path.join(dir, 'content', 'projects', 'a.json'),
+      '{"hero":"/wp-content/uploads/2025/v.mp4"}',
     );
     fs.writeFileSync(
       path.join(dir, 'content', 'news', 'a.md'),
@@ -480,7 +496,7 @@ test('usedImages adds the poster of a video named in the project data and the ne
       path.join(dir, 'content', 'news', 'a.md'),
       'hero: "https://nellisarchitecture.com/wp-content/uploads/2025/v.mp4"',
     );
-    fs.rmSync(path.join(dir, 'data', 'projects.json'));
+    fs.rmSync(path.join(dir, 'content', 'projects', 'a.json'));
     assert.deepEqual(images.usedImages(dir), ['wp-content/uploads/2025/v-poster.jpg']);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });

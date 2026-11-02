@@ -1,0 +1,81 @@
+{
+  "name": "Evia",
+  "slug": "evia",
+  "category": "architecture",
+  "type": "residential",
+  "order": 300,
+  "area": "Saadiyat Island",
+  "region": "Abu Dhabi, UAE",
+  "text_1": [
+    "A serene sanctuary situated on a pristine stretch of Saadiyat Island, Saadiyat Reserve is renowned for its white sandy beaches and protected wildlife. This newly developed community is also conveniently close to Saadiyat Island’s Cultural District, including the Louvre, offering residents an abundance of cultural experiences.",
+    "Evia holds special significance for our client, a builder by profession who is heavily invested in designing his family home for himself, his wife, and their three young children. With a clear vision and personal dedication to the design, collaborating with him has been a rewarding experience."
+  ],
+  "text_2": [
+    "Evia’s exterior features elegant travertine cladding and a medium-sized garden, welcoming visitors through a double-height entrance. Inside, the standout feature is the Grand Room, a stunning double-height living area characterised by 9 meters of full-height glazing, which offers breathtaking views of the surrounding island.",
+    "What sets this home apart is its rear living spaces, which overlook a community park, providing an ideal recreational area to play and explore. Also located near the beach, Evia is ideally suited for this active young family, offering not only comfort, style, and functionality but also a home in which they can build memories that last a lifetime."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "New-Build Residential Villa"
+    },
+    {
+      "label": "Plot size:",
+      "value": "1,020 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "888 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "5"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/02/Evia-front.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/02/Evia-front.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Evia-Front-Left.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Evia-Front-Right.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Evia-Rear1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Evia-Rear2.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/02/6b-2.png"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-4.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-5.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-6.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/02/7-4.png"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/02/Evia-front.jpg"
+}

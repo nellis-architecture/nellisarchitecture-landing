@@ -5,8 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
 const {
-  slugify, categoryHref, projectList, loadProjects, hashTarget, description,
-  earlyScript,
+  categoryHref, loadProjects, hashTarget, description, earlyScript,
 } = require('../build/lib/projects');
 const project = require('../build/lib/pages/project');
 const { head } = require('../build/lib/chrome');
@@ -21,26 +20,26 @@ const byName = (name) => LIST.find((e) => e.name === name);
 const projectUrl = (name) => byName(name).url;
 const count = (s, sub) => s.split(sub).length - 1;
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'pages', 'site.json'), 'utf8'));
-const renderEntry = (entry) => project.render(entry, { site, newsHref: '/news/n/' });
+const renderEntry = (e) => project.render(e, { site, newsHref: '/news/n/', projects: LIST });
 
 const proj = (over = {}) => ({
-  title: 'X',
-  project_rigth1: 'Palm Jumeirah',
-  project_rigth2: 'Dubai, UAE',
-  project_text_1: ['First &amp; text', 'Second'],
-  project_text_2: ['Two'],
-  project_text_3: [''],
-  project_img2: ['/wp-content/uploads/i2.jpg'],
-  project_type_set: ['Type:', 'Villa'],
-  res2: ['architecture'],
-  first_img_video: '/wp-content/uploads/hero.jpg',
-  project_last_img: [],
-  project_slider1: ['/wp-content/uploads/s1.jpg'],
-  project_slider2: ['/wp-content/uploads/s2.jpg'],
+  area: 'Palm Jumeirah',
+  region: 'Dubai, UAE',
+  text_1: ['First &amp; text', 'Second'],
+  text_2: ['Two'],
+  image_2: [{ src: '/wp-content/uploads/i2.jpg' }],
+  facts: [{ label: 'Type:', value: 'Villa' }],
+  category: 'architecture',
+  type: 'residential',
+  hero: '/wp-content/uploads/hero.jpg',
+  slider_1: [{ src: '/wp-content/uploads/s1.jpg' }],
+  slider_2: [{ src: '/wp-content/uploads/s2.jpg' }],
   ...over,
 });
-const entry = (name, over) => projectList({ [name]: [proj(over)] })[0];
-/* A test project rendered in the place of Zoya: a project page needs its URL in the Home grid. */
+const entry = (name, over) => ({
+  name, p: proj(over), slug: 'x', cat: 'architecture', url: '/projects/architecture/x/',
+});
+/* A test project rendered in the place of Zoya: its grid item is the open one. */
 const fake = (name, over) => ({ ...entry(name, over), url: projectUrl('Zoya') });
 /* The open project panel only, without the grid and the kept second panel. */
 const current = (html) => html.slice(
@@ -48,46 +47,8 @@ const current = (html) => html.slice(
   html.indexOf('<div class="currentProject2">'),
 );
 
-test('slugify lowercases and joins words with dashes', () => {
-  assert.equal(slugify('W44'), 'w44');
-  assert.equal(slugify('WEST LINKS'), 'west-links');
-  assert.equal(slugify('Evergreens'), 'evergreens');
-  assert.equal(slugify('Evergreens Hotel'), 'evergreens-hotel');
-  assert.equal(slugify(' A & B! '), 'a-b');
-});
-
-test('projectList throws on a duplicate slug', () => {
-  const twins = { 'Evergreens Hotel': [proj()], 'evergreens hotel': [proj()] };
-  assert.throws(() => projectList(twins), /duplicate slug "evergreens-hotel"/);
-  assert.throws(() => projectList({ '!!': [proj()] }), /duplicate slug ""/);
-});
-
-test('projectList throws on an unknown category', () => {
-  const gardens = { A: [proj({ res2: ['gardens'] })] };
-  assert.throws(() => projectList(gardens), /unknown category "gardens"/);
-  assert.throws(() => projectList({ A: [proj({ res2: [] })] }), /unknown category/);
-});
-
-test('projectList maps the category aliases and the operator overrides', () => {
-  assert.equal(entry('A', { res2: ['Master Development'] }).cat, 'master-planning');
-  assert.equal(entry('A', { res2: ['interior design', 'architecture'] }).cat, 'interior-design');
-  assert.equal(entry('Skye Residences', { res2: ['architecture'] }).cat, 'master-planning');
-  assert.equal(
-    entry('Evergreens Hotel', { res2: ['architecture'] }).url,
-    '/projects/master-planning/evergreens-hotel/',
-  );
-});
-
-test('the real data has 32 projects in the agreed categories', () => {
-  assert.equal(LIST.length, 32);
-  const cats = (cat) => LIST.filter((e) => e.cat === cat).map((e) => e.name).sort();
-  assert.deepEqual(
-    cats('master-planning'),
-    ['Evergreens', 'Evergreens Hotel', 'Orel', 'Skye Residences', 'WEST LINKS'],
-  );
-  assert.deepEqual(cats('interior-design'), ['Lumeria', 'Solari']);
-  assert.equal(cats('architecture').length, 25);
-  assert.equal(projectUrl('W44'), '/projects/architecture/w44/');
+test('every real project URL comes from its category and slug', () => {
+  LIST.forEach((e) => assert.equal(e.url, `/projects/${e.p.category}/${e.p.slug}/`));
 });
 
 test('categoryHref points at the category page', () => {
@@ -109,7 +70,7 @@ test('description strips tags, decodes entities, collapses space and cuts at a w
 
 test('project page has its own title, description, canonical and one og:image', () => {
   const html = renderEntry(fake('A "Q" <b>', {
-    project_text_1: ['Say "hi" &amp; <br>bye'],
+    text_1: ['Say "hi" &amp; <br>bye'],
   }));
   const name = 'A "Q" &lt;b&gt;';
   const desc = 'Say &quot;hi&quot; &amp; bye';
@@ -134,9 +95,9 @@ test('project page has its own title, description, canonical and one og:image', 
 });
 
 test('title falls back to the region, then to the name only', () => {
-  const noArea = proj({ project_rigth1: '' });
+  const noArea = proj({ area: '' });
   assert.equal(project.title('W44', noArea), 'W44 | Dubai, UAE | Nellis Architecture');
-  const noPlace = proj({ project_rigth1: '', project_rigth2: '' });
+  const noPlace = proj({ area: '', region: '' });
   assert.equal(project.title('N', noPlace), 'N | Nellis Architecture');
 });
 
@@ -148,13 +109,13 @@ test('every project og:image exists on disk', () => {
 });
 
 test('a video hero renders a video and og:image uses the first slide', () => {
-  const html = renderEntry(fake('V', { first_img_video: '/wp-content/uploads/v.mp4' }));
+  const html = renderEntry(fake('V', { hero: '/wp-content/uploads/v.mp4' }));
   assert.ok(html.includes('<video autoplay muted loop playsinline>'
     + '<source src="/wp-content/uploads/v.mp4"'));
   assert.ok(html.includes(
     `<meta property="og:image" content="${DOMAIN}/wp-content/uploads/s1.jpg">`,
   ));
-  assert.equal(project.ogImage(proj({ first_img_video: '/v.mp4', project_slider1: [] })), '');
+  assert.equal(project.ogImage(proj({ hero: '/v.mp4', slider_1: [] })), '');
 });
 
 test('empty and missing texts render no block and never "undefined"', () => {
@@ -164,7 +125,7 @@ test('empty and missing texts render no block and never "undefined"', () => {
   assert.equal(project.texts([''], 'projText3'), '');
   assert.ok(!project.texts(['a\r\n\r\nb'], 'x').includes('\r'));
   assert.equal(project.texts(undefined, 'projText3'), '');
-  const html = current(renderEntry(fake('E', { project_text_2: [' ', ''], project_slider2: [] })));
+  const html = current(renderEntry(fake('E', { text_2: [' ', ''], slider_2: [] })));
   assert.ok(!html.includes('projText2'));
   assert.ok(!html.includes('projText3'));
   assert.equal((html.match(/<div class="swiper[" ]/g) || []).length, 1);
@@ -173,20 +134,21 @@ test('empty and missing texts render no block and never "undefined"', () => {
 
 test('slider2 gets curpadslide only when text 3 is empty', () => {
   assert.ok(renderEntry(fake('A')).includes('<div class="swiper curpadslide">'));
-  assert.ok(!renderEntry(fake('A', { project_text_3: ['T3'] })).includes('curpadslide'));
+  assert.ok(!renderEntry(fake('A', { text_3: ['T3'] })).includes('curpadslide'));
 });
 
-test('typeSet renders label/value pairs and drops an odd last entry', () => {
-  const set = Array.from({ length: 9 }, (v, i) => `v${i}`);
-  assert.equal(count(project.typeSet(set), '<div class="item">'), 4);
-  assert.ok(!project.typeSet(set).includes('v8'));
+test('typeSet renders the label/value pairs', () => {
+  const set = [{ label: 'a', value: 'b' }, { label: 'c', value: 'd' }];
+  assert.equal(count(project.typeSet(set), '<div class="item">'), 2);
+  assert.ok(project.typeSet(set).includes('<div class="item-name">c</div>'
+    + '<div class="item-char">d</div>'));
   assert.equal(project.typeSet([]), '');
   assert.equal(project.typeSet(undefined), '');
 });
 
 test('the page keeps the overlay order of blocks', () => {
   const html = current(renderEntry(fake('O', {
-    project_text_3: ['T3'], project_last_img: ['/wp-content/uploads/last.jpg'],
+    text_3: ['T3'], last_images: [{ src: '/wp-content/uploads/last.jpg' }],
   })));
   const order = [
     'hero.jpg', 's1.jpg', 'projText1', 'i2.jpg', 'projText2', 's2.jpg', 'projText3', 'last.jpg',
@@ -249,7 +211,7 @@ test('the other pages keep the default og:image', () => {
 
 test('sitemap lists the project pages with priority 0.7', () => {
   const xml = sitemap([], [], LIST);
-  assert.equal(count(xml, `<loc>${DOMAIN}/projects/`), 32);
+  assert.equal(count(xml, `<loc>${DOMAIN}/projects/`), LIST.length);
   assert.ok(xml.includes(
     `<url><loc>${DOMAIN}/projects/architecture/zoya/</loc><priority>0.7</priority></url>`,
   ));
@@ -394,10 +356,10 @@ const LINK = new RegExp('<div class="project__item">\\s*'
 const links = (html) => [...html.matchAll(LINK)];
 
 test('every Home grid item links to its project page', () => {
-  const html = fs.readFileSync(path.join(ROOT, 'build/lib/partials/index-projects.html'), 'utf8');
+  const { html } = renderPages(ROOT, '/news/x/').find((p) => p.file === 'index.html');
   const found = links(html);
-  assert.equal(count(html, '<div class="project__item">'), 32);
-  assert.equal(found.length, 32);
+  assert.equal(count(html, '<div class="project__item">'), LIST.length);
+  assert.equal(found.length, LIST.length);
   found.forEach(([, href, label, name]) => {
     assert.equal(href, projectUrl(name), name);
     assert.equal(label, name);
@@ -431,7 +393,7 @@ test('every project page shows its project open next to the thumbnail column', (
     const found = [...html.matchAll(PROJECT_LINK)];
     assert.deepEqual(found.map((m) => m[1]).sort(), urls, e.name);
     assert.deepEqual(found.filter((m) => m[2]).map((m) => m[1]), [e.url], e.name);
-    assert.equal(count(html, '<div class="project__item zeroOpac">'), 31, e.name);
+    assert.equal(count(html, '<div class="project__item zeroOpac">'), LIST.length - 1, e.name);
     assert.equal(count(html, '<div class="project__item">'), 1, e.name);
     assert.equal(count(html, 'class="projectPL PLoppened"'), 1, e.name);
     const own = html.indexOf(`href="${e.url}" aria-current="page"`);
@@ -450,22 +412,6 @@ test('the close controls of the open project are links to Home', () => {
   });
   // The bottom close is an <a> on a green bar; the theme `a` colour is green too.
   assert.match(HOME, /\.currentProject__close a\.currentProject__closeBtn \{\s*color: inherit;/);
-});
-
-test('gridItem marks only the item that links the page', () => {
-  const item = '<div class="project__item">\n<a class="project__link no-prefetch" href="/a/" '
-    + 'aria-label="A"></a><div class="projectPL">';
-  assert.equal(
-    project.gridItem(item, '/a/'),
-    item.replace('href="/a/"', 'href="/a/" aria-current="page"')
-      .replace('"projectPL"', '"projectPL PLoppened"'),
-  );
-  const other = item.replace('"project__item"', '"project__item zeroOpac"');
-  assert.equal(project.gridItem(item, '/b/'), other);
-});
-
-test('a project page throws when the Home grid does not link it', () => {
-  assert.throws(() => renderEntry(entry('Nowhere')), /exactly once/);
 });
 
 test('Home opens no overlay: plain grid links and no project script', () => {

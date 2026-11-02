@@ -1,0 +1,71 @@
+{
+  "name": "Onyx",
+  "slug": "onyx",
+  "category": "architecture",
+  "type": "residential",
+  "order": 40,
+  "area": "Freetown",
+  "region": "Sierra Leone",
+  "text_1": [
+    "Seeking modern luxury, our client envisioned a hillside villa overlooking breathtaking views of Freetown for their family. Our design objective was to create an open-plan living retreat that prioritised beautifully designed outdoor living spaces for family enjoyment and guest entertainment yet seamlessly integrated private and service areas for discreet operation.",
+    "Adding to the villa's refined aesthetic, Onyx's façade design draws inspiration from flowing, organic curves reminiscent of a yacht's silhouette, embellished with GRP panels, travertine, white aluminium and timber louvres for privacy. The entrance is marked by a triple-height back-lit Onyx Sky Door, setting a tone of grandeur."
+  ],
+  "text_2": [
+    "Inside, the villa features expansive living areas that flow effortlessly, creating a sense of openness and light. The master suite serves as a serene retreat with panoramic views, whilst the remaining ensuite bedrooms offer luxurious comfort and privacy.\r\n\r\nWith outdoor living a desired focal point, a spacious infinity pool featuring star-like lighting, floating daybeds, and a large jacuzzi creates a serene setting that enhances relaxation and entertainment, providing a seamless connection to the natural surroundings.",
+    "The Onyx project elevates the client's lifestyle by blending aesthetics, comfort, and functionality, creating a safe, secluded home that exudes luxury and sophistication."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "2,460 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "6,325 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "7"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/01/Onyx-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-6-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-9-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-10-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-4-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2026/01/Onyx-3-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/01/Onyx-1.jpg",
+  "list_image": "/wp-content/uploads/2026/01/Onyx-1-scaled.jpg"
+}

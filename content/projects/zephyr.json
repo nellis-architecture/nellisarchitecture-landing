@@ -1,0 +1,53 @@
+{
+  "name": "Zephyr",
+  "slug": "zephyr",
+  "category": "architecture",
+  "type": "commercial",
+  "order": 220,
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Answering an open call brief from a social community seeking to revitalise their clubhouse, Nellis Architecture created the Zephyr design concept, turning a well-used, multi-function space into an inviting, warm retreat for its sailing members with an aura of refinement. \r\n \r\nZephyr elevates the club into a state-of-the-art facility, blending modern elegance with exceptional indoor and outdoor spaces. The transformation introduces a vibrant restaurant and bar featuring a stunning glass orangery with bi-fold doors that seamlessly connect the indoors with the outdoors.",
+    "The facade is adorned with Kodek Bamboo vertical slats, while a spacious glass atrium foyer would serve as a new connection between adjacent buildings. This double-height atrium, made from structural glass, featured a ceiling of suspended canvas strips that resemble flowing water when stirred by the wind, adding a serene touch to the space.\r\n\r\nOutdoor living would be enhanced with a beautiful outdoor kitchen and bar, perfect for alfresco dining. A sunken outdoor restaurant could offer a fresh dining experience, bringing guests closer to the tranquil waters."
+  ],
+  "text_2": [
+    "A new rooftop level with a distinctive flared white roof profile draws inspiration from the elegant curves of sailing yachts' flared bows seen bobbing on the waters below. The first floor includes chic private event spaces and sleek new offices, complemented by a striking roof supported by columns resembling elegant sailing masts.",
+    "This renovation concept would not only preserve the club's historical integrity but also elevate its functionality, offering an understated yet elegant retreat for its diverse range of members and guests."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "Renovation and Extension"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "N/A"
+    },
+    {
+      "label": "Built Area:",
+      "value": "2,030 SQM"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/06/Sailing-Club.png",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/06/Sailing-Club-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Sailing-Club-3.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/Sailing-Club-5.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/Sailing-Club-4.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Sailing-Club-6.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/06/Sailing-Club.png"
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Sonia",
+  "slug": "sonia",
+  "category": "architecture",
+  "type": "residential",
+  "order": 80,
+  "area": "Palm Jumeirah",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "A majestic Adansonia tree stood as the pivotal inspiration for our client, a seasoned developer on the Palm Jumeirah, to transform a Mediterranean villa into a contemporary masterpiece that would appeal to European buyers.\r\n\r\nFramed by an 8m high glass guillotine system that opens vertically, the Baobab creates a striking focal point, drawing guests in from the characteristic natural palette exterior with travertine stone cladding and teak soffits that evoke the essence of driftwood. Featuring angular designs throughout, including towering 11-meter-high walls connected by expansive glazing, Sonia boasts a modern aesthetic with materials like stone cladding, aluminium profiles, and custom-made angled window frames.",
+    "Upon arrival, a 5m high Vitrocsa Pivot Door partnered with a unique sunscreen mesh seamlessly blends with the interior's hardwood teak cladding, welcoming you into the double-height atrium, bathed in natural light from the glass-bottomed roof pool, creating a shimmering effect throughout the foyer.\r\n\r\nThe formal and family rooms create an ample, versatile space, with versatile furniture designating functional areas for social and lounge uses. The second floor boasts a 'T-shaped' infinity pool with a glass floor, enhancing the atrium's luminosity."
+  ],
+  "text_2": [
+    "Outdoor living is elevated with a 20-meter infinity pool featuring sunken seating and a swim-up bar. Elevated gardens on the first-floor balconies provide lush, shaded retreats, while the second floor offers an entertainment lounge and gym with views of the Atlantis Hotel &amp; Resort.",
+    "This transformation seamlessly blends elegance, comfort, and functionality, not only enhancing Sonia's aesthetic appeal but also elevating the European-style lifestyle of those who will make this their home away from home."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "Renovation"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "1,366 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "1,050 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/06/f_68_02-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/06/f_68_04-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/f_68_01-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/f_68_02-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/f_68_03-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/Adansonia_Sketch-2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Adansonia_Sketch-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Adansonia_Sketch-3.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/06/f_68_07-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/06/f_68_02.jpg",
+  "list_image": "/wp-content/uploads/2025/06/f_68_02-scaled.jpg"
+}

@@ -1,0 +1,88 @@
+{
+  "name": "Miro",
+  "slug": "miro",
+  "category": "architecture",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "residential",
+  "order": 230,
+  "area": "UMM AL SHEIF",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Serving as an urban oasis near the renowned Jumeirah Beach Road, Miro is a stunning modern villa with breathtaking views of the iconic Burj Al Arab designed to attract luxury buyers. \r\n\r\nMiro's L-shaped structure promotes an open-plan living space. Pivoting anodised screens on the front provide a unique identity for the façade, contrasting beautifully with the villa's white exterior while allowing for adaptable shading and privacy from the street. The more private first floor houses the bedrooms, with the primary suite strategically placed at the end of the longer wing.",
+    "Upon entering, residents are welcomed by a grand atrium and staircase that creates a sense of volume and space, elegantly blurring the line between formal and family areas and fostering a harmonious flow throughout the home. All rooms are oriented toward the lush garden and an overflow pool, with large panoramic glass sliding doors that allow natural light and the beauty of nature to permeate the interior."
+  ],
+  "text_2": [
+    "The architectural design incorporates cantilevered balconies and canopies for effective shading, and the garden is strategically positioned to face south. The pinnacle of the villa is the roof terrace, featuring a family lounge and gym that overlooks a spacious terrace with magnificent views of the Jumeirah coastline and Burj Al Arab.",
+    "Offering the best of both worlds, Miro is designed to provide privacy and relaxation as a retreat from the hustle of city life, yet its open, adaptable outdoor and rooftop social spaces encourage owners to invite guests to share in its beauty."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot size:",
+      "value": "1,395 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "1,570 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6 bedrooms"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/04/Miro-1-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-2-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-1-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-3-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-4-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-5-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-6-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-7-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-3-1-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-9-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Miro-10-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/04/Sketch-2-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/04/Miro-2-1.jpg",
+  "list_image": "/wp-content/uploads/2025/04/Miro-2-1-scaled.jpg"
+}

@@ -7,9 +7,7 @@ const {
 } = require('./lib/page');
 
 const ROOT = path.join(__dirname, '..');
-const PROJECTS = Object.keys(JSON.parse(
-  fs.readFileSync(path.join(ROOT, 'data', 'projects.json'), 'utf8'),
-)).length;
+const PROJECTS = fs.readdirSync(path.join(ROOT, 'content', 'projects')).length;
 const ZOYA = '/projects/architecture/zoya/';
 
 const projectName = (page) => page.evaluate(() => {

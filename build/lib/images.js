@@ -6,7 +6,6 @@ const { createRequire } = require('node:module');
 const { execFileSync } = require('node:child_process');
 const { escAttr, titleAttr } = require('./html');
 const { imageSize } = require('./image-size');
-const { decodeEntities } = require('./projects');
 
 const MANIFEST = 'build/images.json';
 const UPLOADS = 'wp-content/uploads/';
@@ -20,7 +19,7 @@ const FORMATS = {
   png: ['png', { compressionLevel: 9 }],
 };
 const SOURCES = [
-  'build/lib/partials', 'build/news-template.html', 'data/filters', 'data/projects.json',
+  'build/lib/partials', 'build/news-template.html', 'data/filters', 'content/projects',
   'data/search.json', 'content/news', 'content/pages', 'content/landing',
 ];
 const PAGES = ['index.html', 'projects', 'news', 'studio', 'people', 'privacy', 'contact'];
@@ -42,8 +41,6 @@ const VARIANT = /-[0-9a-f]{8}-\d+\.(?:avif|jpg|png)$/;
 const VARIANT_NAME = /^wp-content\/variants\/(.+)-([0-9a-f]{8})-\d+\.\w+$/;
 const VARIANT_URL = new RegExp(`^${DOMAIN}(wp-content/variants/[^?#]+)`);
 const ROOT = path.join(__dirname, '..', '..');
-const HAND_KEPT = ['build/lib/partials/index-projects.html', 'data/filters'];
-const SEARCH = 'data/search.json';
 
 /* sizes per slot: the rendered image width at each theme breakpoint (759, 980, 1179, 1439,
    1919 px) of wp-content/themes/nellis/assets/scss/main.css, measured in headless Chromium
@@ -361,43 +358,6 @@ function prioritize(html) {
   return html.replace(LAZY, PRIORITY);
 }
 
-const TAG = /<picture\b[^>]*>[\s\S]*?<\/picture>|<img\b[^>]*>/g;
-
-/* Hand-kept markup: each upload image (an old <img> or a <picture> of this script) becomes
-   picture(). Idempotent: a second run gives the same text. Other images stay as they are. */
-function rewriteImages(text, manifest, slot) {
-  return text.replace(TAG, (tag) => {
-    const img = tag.match(/<img\b[^>]*>/);
-    if (!img) return tag;
-    const attr = (name) => decodeEntities(
-      (img[0].match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1] || '',
-    );
-    const src = attr('data-src') || attr('src');
-    const p = originalOf(src, manifest);
-    if (!p) return tag;
-    const cls = attr('class').split(/\s+/).filter((c) => c && c !== 'lazyload').join(' ');
-    return picture({
-      src: uploadUrl(p), alt: attr('alt'), slot, cls, title: attr('title'),
-    }, manifest);
-  });
-}
-
-/* npm run images: the img/picture markup of the hand-kept files, and data/search.json minImg. */
-function rewriteHandKept(root, manifest) {
-  const files = HAND_KEPT.flatMap((p) => walk(path.join(root, p)))
-    .filter((f) => f.endsWith('.html'));
-  const write = (file, text) => {
-    if (fs.readFileSync(file, 'utf8') !== text) fs.writeFileSync(file, text);
-  };
-  files.forEach((f) => write(f, rewriteImages(fs.readFileSync(f, 'utf8'), manifest, 'card')));
-  const search = path.join(root, SEARCH);
-  if (!fs.existsSync(search)) return files.length;
-  const list = JSON.parse(fs.readFileSync(search, 'utf8'))
-    .map((s) => (s.minImg ? { ...s, minImg: smallSrc(s.minImg, manifest) } : s));
-  write(search, JSON.stringify(list, null, 2));
-  return files.length + 1;
-}
-
 module.exports = {
   MANIFEST,
   SLOTS,
@@ -410,8 +370,6 @@ module.exports = {
   heroVideo,
   preloadLink,
   prioritize,
-  rewriteImages,
-  rewriteHandKept,
   VARIANTS,
   ladder,
   variantName,

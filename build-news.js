@@ -14,7 +14,8 @@
  *      their "News" link points at /news/
  *   5. Updates data/news.json (used by the in-page news switcher)
  *   6. Regenerates sitemap.xml
- *   7. Builds projects/<category>/<slug>/index.html from data/projects.json
+ *   7. Builds projects/<category>/<slug>/index.html, data/filters/*.html and data/search.json
+ *      from content/projects/*.json
  *   8. Deletes news/<dir>/ and projects/ folders that no post or project owns
  *   9. Writes _redirects from build/redirects.txt, content/redirects.json and changed news
  *      and landing slugs
@@ -34,6 +35,7 @@ const {
 const redirects = require('./build/lib/redirects');
 const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
 const project = require('./build/lib/pages/project');
+const { filterFiles, searchJson } = require('./build/lib/pages/grid');
 const { rss } = require('./build/lib/feed');
 const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
@@ -322,10 +324,20 @@ function writeProjects(root, list, newsHref, manifest, site) {
   list.forEach((e) => {
     const outDir = path.join(root, e.url);
     fs.mkdirSync(outDir, { recursive: true });
-    const html = project.render(e, { site, newsHref, manifest });
+    const html = project.render(e, {
+      site, newsHref, manifest, projects: list,
+    });
     fs.writeFileSync(path.join(outDir, 'index.html'), html);
   });
   pruneProjects(root, list);
+}
+
+/* data/filters/ and data/search.json, for js/static-backend.js. */
+function writeProjectData(root, list, manifest) {
+  Object.entries(filterFiles(list, manifest)).forEach(([name, text]) => {
+    fs.writeFileSync(path.join(root, 'data', 'filters', `${name}.html`), text);
+  });
+  fs.writeFileSync(path.join(root, 'data', 'search.json'), searchJson(list, manifest));
 }
 
 /* Run after every page write: the checks read the final tree. */
@@ -379,6 +391,7 @@ function build(manifest = readManifest(ROOT)) {
   const pages = writePages(ROOT, newsHref, projects, posts, manifest, landing);
   pruneLanding(ROOT, landing);
   writeProjects(ROOT, projects, newsHref, manifest, site);
+  writeProjectData(ROOT, projects, manifest);
   writePreview(ROOT, manifest, newsHref);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson, null, 2));
@@ -411,5 +424,6 @@ module.exports = {
   pruneNews,
   refreshNewsLists,
   pruneProjects,
+  writeProjectData,
   writeRedirects,
 };

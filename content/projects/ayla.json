@@ -1,0 +1,67 @@
+{
+  "name": "Ayla",
+  "slug": "ayla",
+  "category": "architecture",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "residential",
+  "order": 150,
+  "area": "Emirates Hills",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Situated in the esteemed Emirates Hills community, our client, a large multigenerational family, sought to transform their cherished villa into a modern sanctuary that honours its historical essence while embracing contemporary living.This modern villa design now masterfully combines sophistication with natural warmth, reflecting our commitment to creating a home that balances tradition with innovation, catering to the diverse needs of a family spanning several generations.",
+    "The striking design features clean lines and expansive glass façades, complemented by elegant timber wood elements that add a rich, organic texture to the exterior. Ayla's exterior has been rejuvenated with a blend of natural travertine stone, composite bamboo elements that complement the villa's original charm, and a newly integrated façade system painted white to evoke a sense of lightness. The entrance is marked by custom-cast in-situ concrete fins, offering a signature look that integrates with the surroundings."
+  ],
+  "text_2": [
+    "The interior is a testament to timeless elegance, with clean lines and natural materials that bridge the past and present. The design prioritises accessibility and flow, featuring universal design principles to accommodate ageing family members. Large sliding doors open communal spaces, enhancing social interaction while maintaining intimate private areas. Outdoor living is reimagined with a contemporary pool, aluminium pergolas, and lush gardens that extend the living space into nature. These elements create an instant indoor-outdoor connection, fostering a calming environment of escape or entertainment.",
+    "Sustainability is at the core of this renovation, with discreetly integrated solar panels and rainwater harvesting systems. Eco-friendly materials ensure the villa remains environmentally responsible, enhancing comfort without compromising its aesthetic appeal.\r\n\r\nEnsuring the villa serves as a cherished home for generations to come, Ayla embodies a perfect balance of contemporary style and natural harmony that can withstand the test of time, a serene retreat in the heart of Dubai."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "Renovation"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "3,047 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "3,421 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/07/New-Export-REDUCED-SIZE.mp4",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/06/5-2.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/4.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/3.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/1-2.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/6.png"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/Ayla-Website-Images8-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/06/Ayla-Website-Images4.png"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/06/6.png"
+}

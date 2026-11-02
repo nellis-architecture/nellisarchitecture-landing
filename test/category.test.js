@@ -4,9 +4,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const category = require('../build/lib/pages/category');
 const { PAGES, renderPages } = require('../build/lib/pages');
-const { loadProjects, CATEGORY_KEYS, inCategory } = require('../build/lib/projects');
+const {
+  loadProjects, CATEGORY_KEYS, inCategory, listImage,
+} = require('../build/lib/projects');
 const { sitemap } = require('../build-news');
-const { originalOf, readManifest } = require('../build/lib/images');
 const { organization } = require('../build/lib/seo');
 
 const ROOT = path.join(__dirname, '..');
@@ -23,21 +24,19 @@ const fixture = (seo = {}) => ({
   h1: 'H1 <a> & "q"', intro: 'Intro <b> & "q" $&', seo: { description: 'D', ...seo },
 });
 
-test('each category lists its primary and secondary projects', () => {
-  assert.deepEqual(
-    CATEGORY_KEYS.map((cat) => [cat, names(cat).length]),
-    [['architecture', 25], ['interior-design', 3], ['landscape', 9], ['master-planning', 5]],
-  );
+test('each category lists its primary and also-in projects', () => {
+  CATEGORY_KEYS.forEach((cat) => {
+    const want = LIST.filter((e) => e.p.category === cat || (e.p.also_in || []).includes(cat));
+    assert.deepEqual(names(cat), want.map((e) => e.name), cat);
+  });
   assert.ok(names('landscape').includes('Zoya'));
-  assert.deepEqual(names('interior-design'), ['Lumeria', 'Soul', 'Solari']);
-  assert.ok(names('architecture').includes('Soul'));
   ['Skye Residences', 'Evergreens Hotel', 'WEST LINKS'].forEach((name) => {
     assert.ok(!names('architecture').includes(name), name);
     assert.ok(names('master-planning').includes(name), name);
   });
 });
 
-test('the list keeps the data/projects.json order', () => {
+test('the list keeps the project order', () => {
   const all = LIST.map((e) => e.name);
   CATEGORY_KEYS.forEach((cat) => {
     const at = names(cat).map((n) => all.indexOf(n));
@@ -47,23 +46,23 @@ test('the list keeps the data/projects.json order', () => {
 
 test('an empty category throws', () => {
   assert.throws(() => category.members([], 'landscape'), /projects\/landscape\/: no project/);
-  const noLandscape = LIST.map((e) => ({ ...e, p: { ...e.p, res2: [e.p.res2[0]] } }));
+  const noLandscape = LIST.map((e) => ({ ...e, cat: 'architecture', p: { ...e.p, also_in: [] } }));
   assert.throws(() => render(fixture(), 'landscape', noLandscape), /no project/);
 });
 
 test('location skips an empty area line and escapes text', () => {
   assert.equal(
-    category.location({ project_rigth1: 'Palm & <J>', project_rigth2: 'Dubai' }),
+    category.location({ area: 'Palm & <J>', region: 'Dubai' }),
     `Palm &amp; &lt;J&gt; <br>\n${' '.repeat(28)}Dubai`,
   );
-  assert.equal(category.location({ project_rigth1: '', project_rigth2: 'D, U' }), 'D, U');
-  assert.equal(category.location({ project_rigth1: ' ', project_rigth2: 'X' }), 'X');
+  assert.equal(category.location({ area: '', region: 'D, U' }), 'D, U');
+  assert.equal(category.location({ area: ' ', region: 'X' }), 'X');
   assert.equal(category.location({}), '');
 });
 
 test('each item links to the project page in its primary category', () => {
   const html = render(fixture());
-  assert.equal(count(html, '<div class="project__item">'), 9);
+  assert.equal(count(html, '<div class="project__item">'), names('landscape').length);
   assert.ok(html.includes('<a class="project__link" href="/projects/architecture/zoya/" '
     + 'aria-label="Zoya"></a>'));
   assert.ok(html.includes('href="/projects/master-planning/orel/"'));
@@ -146,24 +145,21 @@ test('category partials close every div they open', () => {
   });
 });
 
-test('an overridden project stays in its override category only', () => {
-  const res2 = ['architecture', 'landscape'];
-  const entry = { name: 'Skye Residences', cat: 'master-planning', p: { res2 } };
-  assert.equal(inCategory(entry, 'master-planning'), true);
-  assert.equal(inCategory(entry, 'landscape'), false);
-  assert.equal(inCategory(entry, 'architecture'), false);
-  const other = { name: 'Zoya', cat: 'architecture', p: { res2: ['architecture', 'landscape'] } };
-  assert.equal(inCategory(other, 'landscape'), true);
+test('inCategory: the primary category and also_in only', () => {
+  const entry = { name: 'Zoya', cat: 'architecture', p: { also_in: ['landscape'] } };
+  assert.equal(inCategory(entry, 'architecture'), true);
+  assert.equal(inCategory(entry, 'landscape'), true);
+  assert.equal(inCategory(entry, 'master-planning'), false);
+  assert.equal(inCategory({ cat: 'landscape', p: {} }, 'architecture'), false);
 });
 
 const hubFile = path.join(ROOT, 'content', 'pages', 'projects.json');
 const hubContent = JSON.parse(fs.readFileSync(hubFile, 'utf8'));
 
-test('the hub lists all projects in data/projects.json order and links the 4 categories', () => {
+test('the hub lists all projects in project order and links the 4 categories', () => {
   assert.deepEqual(names('all'), LIST.map((e) => e.name));
-  assert.equal(LIST.length, 32);
   const html = render(hubContent, 'all');
-  assert.equal(count(html, '<div class="project__item">'), 32);
+  assert.equal(count(html, '<div class="project__item">'), LIST.length);
   const hrefs = [...html.matchAll(/class="project__link" href="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(hrefs, LIST.map((e) => e.url));
   const nav = html.split('aria-label="Categories">')[1].split('</nav>')[0];
@@ -200,8 +196,5 @@ test('the hub head has its own SEO tags and an absolute og:image', () => {
   assert.ok(html.includes(`<link rel="canonical" href="${url}" />`));
   assert.ok(html.includes(`<meta property="og:url" content="${url}" />`));
   assert.equal(count(html, 'property="og:image"'), 1);
-  const thumb = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'search.json'), 'utf8'))
-    .find((s) => s.title === LIST[0].name).minImg;
-  const upload = originalOf(thumb, readManifest(ROOT));
-  assert.ok(html.includes(`<meta property="og:image" content="${DOMAIN}/${upload}">`));
+  assert.ok(html.includes(`<meta property="og:image" content="${DOMAIN}${listImage(LIST[0])}">`));
 });

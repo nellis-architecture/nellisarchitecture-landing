@@ -1,0 +1,71 @@
+{
+  "name": "Lumeria",
+  "slug": "lumeria",
+  "category": "interior-design",
+  "type": "residential",
+  "order": 90,
+  "area": "Palm Jumeirah",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Lumeria is a seven-bedroom villa set on the waterfront, its scale immediately apparent on approach. Behind that scale lies a more intimate ambition: to offer an escape from the relentless pace of city life, a house shaped as much by quiet as by grandeur.",
+    "The entrance sets the tone. A double-height hall rises through the centre of the plan, crossed by a chandelier that falls through the space like strands of illuminated glass. Rather than spectacle for its own sake, the light is used to draw the eye between levels, giving coherence to what could otherwise be an overwhelming volume."
+  ],
+  "text_2": [
+    "Moving deeper into the house, the architecture softens. Living spaces are arranged around framed views of the water, with quiet corners set aside for reading and reflection, while the kitchen and a long dining room are made for the everyday rituals of family life.",
+    "Throughout, the craft is exacting. Timber panels are aligned with near-obsessive precision, storage disappears into the walls, and stone surfaces, delicate screens, soft fabrics and bespoke furniture are composed as parts of one continuous interior. Even the lighting is absorbed into the architecture, grazing surfaces to reveal their texture rather than drawing attention to itself."
+  ],
+  "text_3": [
+    "For all its scale, Lumeria remains remarkably calm – monumental yet warm, highly refined yet comfortable, dramatic in its architecture but gentle in the way it is lived. That balance may be its greatest achievement: not simply a refuge from the city, but an entirely different rhythm of life, shaped by water, natural light, material warmth and the quiet confidence of exceptional craftsmanship."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New Build"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/09/Lumeria-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-3-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-1-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-3-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-6-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-9-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/09/Lumeria-10-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/09/Lumeria-3.jpg",
+  "list_image": "/wp-content/uploads/2026/09/Lumeria-3-scaled.jpg"
+}

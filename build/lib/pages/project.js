@@ -7,8 +7,9 @@ const {
 const { DOMAIN, INDEX } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
 const {
-  picture, zoomSrc, readManifest, SLOTS, heroVideo, preloadLink,
+  picture, zoomSrc, readManifest, heroVideo, preloadLink,
 } = require('../images');
+const { grid } = require('./grid');
 
 /* eslint-disable @stylistic/max-len -- raw theme SVG, as in the overlay */
 const SWIPER_NAV_BUTTON = (cls) => `                    <svg class="${cls}" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -33,21 +34,22 @@ function img(src, alt, priority, manifest) {
 }
 
 /* The hero image is the page priority image; a video hero gives none. */
-function hero(src, name, manifest) {
+function hero(p, name, manifest) {
+  const src = p.hero;
   if (isVideo(src)) {
     return `${' '.repeat(8)}<div class="currentProject-heroImg">`
       + `${heroVideo(src, manifest).html}</div>`;
   }
   return `${' '.repeat(8)}<div class="currentProject-heroImg varVideo">`
-    + `${img(src, name, true, manifest)}</div>`;
+    + `${img(src, p.hero_alt || name, true, manifest)}</div>`;
 }
 
 /* The <a> is the Fancybox trigger: data-src gives it the largest variant. */
 function swiper(list, name, gallery, manifest, extra = '') {
-  if (!nonEmpty(list).length) return '';
-  const slides = nonEmpty(list).map((src) => `<a class="swiper-slide" href="${escAttr(src)}" `
+  if (!list || !list.length) return '';
+  const slides = list.map(({ src, alt }) => `<a class="swiper-slide" href="${escAttr(src)}" `
     + `data-fancybox="${gallery}" data-src="${escAttr(zoomSrc(src, manifest))}">`
-    + `${picture({ src, alt: name, slot: 'slide' }, manifest)}</a>`);
+    + `${picture({ src, alt: alt || name, slot: 'slide' }, manifest)}</a>`);
   return [
     `        <div class="swiper${extra}">`,
     `            <div class="swiper-wrapper">${slides.join('')}</div>`,
@@ -63,47 +65,40 @@ function swiper(list, name, gallery, manifest, extra = '') {
 }
 
 function images(list, name, wrap, manifest) {
-  return nonEmpty(list)
-    .map((src) => img(src, name, false, manifest))
+  return (list || [])
+    .map(({ src, alt }) => img(src, alt || name, false, manifest))
     .map((h) => wrap(`<div class="currentProject-heroImg">${h}</div>`))
     .join('');
 }
 
-/* label/value pairs; an odd last entry is dropped, as in the overlay. */
-function typeSet(list) {
-  const set = list || [];
-  const items = [];
-  for (let i = 0; i < Math.floor(set.length / 2); i += 1) {
-    items.push(`<div class="item"><div class="item-name">${set[i * 2]}</div>`
-      + `<div class="item-char">${set[i * 2 + 1]}</div></div>`);
-  }
-  return items.join('');
-}
+const typeSet = (facts) => (facts || []).map((f) => '<div class="item">'
+  + `<div class="item-name">${f.label}</div>`
+  + `<div class="item-char">${f.value}</div></div>`).join('');
 
 function body(name, p, manifest) {
-  const img2 = images(p.project_img2, name, (h) => (
+  const img2 = images(p.image_2, name, (h) => (
     `<div class="currentProject_container">${h}</div>`), manifest);
-  const last = images(p.project_last_img, name, (h) => h, manifest);
-  const text3 = nonEmpty(p.project_text_3).length;
+  const last = images(p.last_images, name, (h) => h, manifest);
+  const text3 = nonEmpty(p.text_3).length;
   return [
-    swiper(p.project_slider1, name, 'gallery11', manifest),
-    texts(p.project_text_1, 'projText1'),
+    swiper(p.slider_1, name, 'gallery11', manifest),
+    texts(p.text_1, 'projText1'),
     img2 && `        <div class="curProjimg2">${img2}</div>`,
-    texts(p.project_text_2, 'projText2'),
-    swiper(p.project_slider2, name, 'gallery22', manifest, text3 ? '' : ' curpadslide'),
-    texts(p.project_text_3, 'projText3'),
+    texts(p.text_2, 'projText2'),
+    swiper(p.slider_2, name, 'gallery22', manifest, text3 ? '' : ' curpadslide'),
+    texts(p.text_3, 'projText3'),
     last && `        <div class="currentProject_container projLastImg">${last}</div>`,
   ].filter(Boolean).join('\n');
 }
 
 /* og:image: the hero, or the first slide when the hero is a video. */
 function ogImage(p) {
-  const src = isVideo(p.first_img_video) ? (p.project_slider1 || [])[0] : p.first_img_video;
+  const src = isVideo(p.hero) ? ((p.slider_1 || [])[0] || {}).src : p.hero;
   return src ? `  <meta property="og:image" content="${escAttr(DOMAIN + src)}">` : '';
 }
 
 function title(name, p) {
-  const area = (p.project_rigth1 || p.project_rigth2 || '').trim();
+  const area = (p.area || p.region || '').trim();
   return area ? `${name} | ${area} | Nellis Architecture` : `${name} | Nellis Architecture`;
 }
 
@@ -154,29 +149,15 @@ function currentProject(entry, manifest, site, followHtml) {
       NAME: escText(name),
     }),
     NAME: escText(name),
-    AREA: escText(p.project_rigth1),
-    REGION: escText(p.project_rigth2),
-    HERO: hero(p.first_img_video, name, manifest),
+    AREA: escText(p.area),
+    REGION: escText(p.region),
+    HERO: hero(p, name, manifest),
     CONTENT: body(name, p, manifest),
-    TYPE_SET: typeSet(p.project_type_set),
+    TYPE_SET: typeSet(p.facts),
     FOLLOW: followHtml,
     ...emailTokens(site),
     YEAR: year(),
   });
-}
-
-/* Shortcut: the Home grid is static theme markup, so mark the open project by string edits.
-   Ceiling: the markup of a grid item must stay as in index-projects.html.
-   Upgrade: render the grid from data/projects.json. */
-const GRID_ITEM = /<div class="project__item">[\s\S]*?<div class="projectPL">/g;
-
-function gridItem(html, url) {
-  const link = `<a class="project__link no-prefetch" href="${url}"`;
-  if (!html.includes(link)) {
-    return html.replace('class="project__item"', 'class="project__item zeroOpac"');
-  }
-  return html.replace(link, `${link} aria-current="page"`)
-    .replace('class="projectPL"', 'class="projectPL PLoppened"');
 }
 
 /* Desktop: the thumbnail column starts at the open project (Zoya: at the column title). */
@@ -191,36 +172,31 @@ const SCROLL_TO_CURRENT = [
   '  </script>',
 ].join('\n');
 
-/* The grid in the narrow column: the thumb sizes (the hand-kept partial has the card sizes).
-   SHORTCUT: data/filters/*.html keep the card sizes, so a filter click in this column loads a
+/* SHORTCUT: data/filters/*.html keep the card sizes, so a filter click in this column loads a
    larger variant than needed. Upgrade: sizes="auto" when all browsers support it. */
-function projects(entry, manifest, site, followHtml) {
-  const grid = loadPartial('index-projects')
-    .replaceAll(`sizes="${escAttr(SLOTS.card)}"`, `sizes="${escAttr(SLOTS.thumb)}"`);
-  const html = fill(grid, {
+function panel(entry, projects, manifest, site, followHtml) {
+  const html = fill(loadPartial('index-projects'), {
     CENTER_CLASS: ' centerMini',
+    PROJECT_COUNT: projects.length,
+    GRID: grid(projects, { slot: 'thumb', current: entry.url, manifest }),
     FOLLOW: followHtml,
     ...emailTokens(site),
     YEAR: year(),
     CURRENT_PROJECT: currentProject(entry, manifest, site, followHtml),
-  }).replace(GRID_ITEM, (m) => gridItem(m, entry.url));
-  if (html.split(`href="${entry.url}" aria-current="page"`).length !== 2) {
-    throw new Error(`${entry.name}: the Home grid must link ${entry.url} exactly once`);
-  }
+  });
   return `${html}${SCROLL_TO_CURRENT}\n  <script src="/js/project-switch.js"></script>`;
 }
 
-/* entry: one item of projectList(). */
-function render(entry, { site, manifest = readManifest() }) {
+/* entry: one item of loadProjects(). projects: the full list, for the grid. */
+function render(entry, { site, projects, manifest = readManifest() }) {
   const { name, p } = entry;
   const followHtml = follow(site.follow);
   const pageTitle = title(name, p);
-  const desc = description((p.project_text_1 || [])[0]);
+  const desc = description((p.text_1 || [])[0]);
   const url = DOMAIN + entry.url;
   const headHtml = head({
     BEFORE: '',
-    PRELOAD: isVideo(p.first_img_video)
-      ? preloadLink(heroVideo(p.first_img_video, manifest).href) : '',
+    PRELOAD: isVideo(p.hero) ? preloadLink(heroVideo(p.hero, manifest).href) : '',
     OG_IMAGE: ogImage(p),
     TITLE: escText(pageTitle),
     ROBOTS: INDEX,
@@ -242,12 +218,13 @@ function render(entry, { site, manifest = readManifest() }) {
       NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
       ...emailTokens(site),
-      PROJECTS: projects(entry, manifest, site, followHtml),
+      PROJECT_COUNT: projects.length,
+      PROJECTS: panel(entry, projects, manifest, site, followHtml),
     }),
     footer(site),
   ].join('\n');
 }
 
 module.exports = {
-  render, title, ogImage, typeSet, texts, gridItem,
+  render, title, ogImage, typeSet, texts,
 };

@@ -1,0 +1,79 @@
+{
+  "name": "Cassia",
+  "slug": "cassia",
+  "category": "architecture",
+  "type": "residential",
+  "order": 280,
+  "area": "Emirates Hills",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Our client, long-time residents of the UAE with their roots firmly established, sought to transform their existing villa ahead of the arrival of their second child and create a spacious haven that accommodates both intimate family moments and grand entertaining. The vision was to enhance the Neo-Classical style with contemporary elegance, creating a home that reflects their sophisticated lifestyle.\r\nThe villa's exterior is adorned with off-white travertine, exuding timeless warmth and blending with lush green surroundings.",
+    "A striking double-height entrance featuring a large pivot door welcomes guests into a world of refined design. Inside, Cassia boasts 4-meter-high arched pivot windows, framing breathtaking views of the Montgomerie Golf Club. \r\n\r\n\r\nThe ground floor's open-plan layout features concealed pocket sliding doors, offering flexibility between privacy and openness."
+  ],
+  "text_2": [
+    "The design challenge of integrating a new basement was met with a sculptural spiral staircase that seamlessly connects the formal lounge to the entertainment and spa areas below. The addition of a second floor, supported by a steel structure, ensures minimal impact on the existing architecture while providing expansive living space.\r\n\r\nFunctional and entertainment elements, such as a cinema, spa, basement entertainment lounge, and car lift, cater to the client's desire for elevated luxury. This extends beyond, with a rooftop terrace, accessible from the entertainment room and gaming lounge, offering panoramic views of the golf course and Dubai Marina skyline, perfect for hosting gatherings.",
+    "Outside, a sanctuary of serenity soothes with the sounds of water from the waterfall infinity pool cascading into a sunken garden.\r\n\r\nCrafted from a selection of hardwearing materials that prioritise durability and low maintenance, Cassia blends modern-day functions and aesthetics to create a home that is both a private retreat for a young, growing family and a social hub to share moments with friends."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "Renovation"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "2,117 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "2,590 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "5"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/02/Cassia-1-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-2-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-5-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-10-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-1-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-6-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-9-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-5-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-9-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Cassia-4-1-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/06/6-REAR-2_style_transfer02.png"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/02/Cassia-10.jpg",
+  "list_image": "/wp-content/uploads/2025/02/Cassia-10-scaled.jpg"
+}

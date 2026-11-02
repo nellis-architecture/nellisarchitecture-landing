@@ -1,0 +1,59 @@
+{
+  "name": "Atelier",
+  "slug": "atelier",
+  "category": "architecture",
+  "type": "commercial",
+  "order": 120,
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Leaning into the shift in modern retail towards guest experience and closed brand connection, our client, an emerging high-fashion entrepreneur, sought to create an atelier that felt transparent, understated, and centred entirely on celebrating their haute couture collection. For Atelier, our architectural response was guided by restraint, with a clear objective to express luxury without excess through materiality and refinement through precision in design and detailing.",
+    "More than a conventional retail space, Atelier acts as a metaphorical frame encasing the collection, allowing each piece to remain in focus without competing with its surroundings. Within, the experience is designed to feel seamless and immersive, drawing attention to craft, detail and artistry."
+  ],
+  "text_2": [
+    "Reinforcing the importance of content over context, the physical space serves as a considered backdrop. Defined by openness and clarity, expansive glass façades create visual continuity throughout, allowing natural light to illuminate the collection. Interior material choices were carefully considered to align with the brand’s identity. Travertine introduces a tactile warmth, while polished bronze adds a layer of refinement and soft reflectivity. Seemingly small, subtle touches, together, they create a palette that feels luxurious yet grounded, enhancing the garments without distraction.",
+    "Through a considered approach to a seamless retail experience within an environment truly reflective of its artist, Atlier’s atmosphere elevates the perception of the brand and allows the couture to remain the true focal point as initially intended."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Built Area:",
+      "value": "700 SQM"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/04/Atelier-2-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-6-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-3-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-8-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-6-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/04/Atelier-4-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/04/Atelier-8.jpg",
+  "list_image": "/wp-content/uploads/2026/04/Atelier-8-scaled.jpg"
+}

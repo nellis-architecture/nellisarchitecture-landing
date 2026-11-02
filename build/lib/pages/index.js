@@ -4,7 +4,8 @@ const {
 } = require('../chrome');
 const { seoTokens, yoastPage } = require('../seo');
 const { earlyScript } = require('../projects');
-const { prioritize } = require('../images');
+const { prioritize, readManifest } = require('../images');
+const { grid } = require('./grid');
 
 /* Fixed head values, raw HTML. SEO values come from content.seo (seoTokens). */
 /* eslint-disable @stylistic/max-len -- raw WordPress head values, kept byte for byte */
@@ -29,7 +30,7 @@ const CLOSED_PROJECT = {
 };
 
 function render(content, {
-  site, page, projects,
+  site, page, projects, manifest = readManifest(),
 }) {
   const followHtml = follow(site.follow);
   return [
@@ -44,9 +45,12 @@ function render(content, {
       NAV: navSite(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
       ...emailTokens(site),
+      PROJECT_COUNT: projects.length,
       /* The first grid image is the page priority image. */
       PROJECTS: prioritize(fill(loadPartial('index-projects'), {
         CENTER_CLASS: '',
+        PROJECT_COUNT: projects.length,
+        GRID: grid(projects, { manifest }),
         FOLLOW: followHtml,
         ...emailTokens(site),
         YEAR: year(),

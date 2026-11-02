@@ -3,10 +3,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {
-  walk, readManifest, rewriteImages, smallSrc, toUploadPath, SLOTS, posterOf,
+  walk, readManifest, toUploadPath, SLOTS, posterOf,
 } = require('../build/lib/images');
 const { isVideo } = require('../build/lib/html');
 const { loadProjects } = require('../build/lib/projects');
+const { filterFiles, searchJson } = require('../build/lib/pages/grid');
 const { loadPosts } = require('../build-news');
 
 const ROOT = path.join(__dirname, '..');
@@ -14,8 +15,7 @@ const rel = (f) => path.relative(ROOT, f).split(path.sep).join('/');
 const PAGES = ['index.html', 'studio/index.html', 'people/index.html',
   ...walk(path.join(ROOT, 'projects')).map(rel).filter((f) => f.endsWith('index.html'))];
 const NEWS = walk(path.join(ROOT, 'news')).map(rel).filter((f) => f.endsWith('index.html'));
-const HAND_KEPT = ['build/lib/partials/index-projects.html',
-  ...walk(path.join(ROOT, 'data', 'filters')).map(rel)];
+const FILTERS = walk(path.join(ROOT, 'data', 'filters')).map(rel);
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'pages', 'site.json'), 'utf8'));
 const CHROME = new Set(['/wp-content/uploads/2025/02/logo.png',
   ...site.affiliations.map((a) => a.src)]);
@@ -24,7 +24,7 @@ const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const attr = (tag, name) => (tag.match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1];
 
 test('every content image has srcset, sizes, width and height, or is the sized fallback', () => {
-  [...PAGES, ...NEWS, ...HAND_KEPT].forEach((file) => {
+  [...PAGES, ...NEWS, ...FILTERS].forEach((file) => {
     (read(file).match(/<img\b[^>]*>/g) || []).forEach((tag) => {
       if (/\blazyload\b/.test(attr(tag, 'class') || '')) {
         const src = attr(tag, 'data-src').replace(/^(\.\.\/)+/, '/');
@@ -45,7 +45,7 @@ test('every content image has srcset, sizes, width and height, or is the sized f
   });
 });
 
-test('each page has one priority image or poster preload; the hand-kept files none', () => {
+test('each page has one priority image or poster preload; the filter files none', () => {
   PAGES.forEach((file) => {
     const html = read(file);
     const video = html.includes('<div class="currentProject-heroImg"><video');
@@ -53,7 +53,7 @@ test('each page has one priority image or poster preload; the hand-kept files no
     assert.equal(html.split('rel="preload"').length - 1, video ? 1 : 0, file);
     assert.equal(html.split('loading="eager"').length - 1, video ? 0 : 1, file);
   });
-  HAND_KEPT.forEach((file) => assert.ok(!read(file).includes('fetchpriority'), file));
+  FILTERS.forEach((file) => assert.ok(!read(file).includes('fetchpriority'), file));
 });
 
 test('the project page priority image is the hero, not a grid thumb', () => {
@@ -63,15 +63,15 @@ test('the project page priority image is the hero, not a grid thumb', () => {
   });
 });
 
-test('the hand-kept image markup is current: npm run images changes nothing', () => {
+test('data/filters and data/search.json are current: npm run build changes nothing', () => {
   const manifest = readManifest(ROOT);
-  HAND_KEPT.forEach((file) => {
-    const text = read(file);
-    assert.equal(rewriteImages(text, manifest, 'card'), text, `${file}: run npm run images`);
+  const list = loadProjects(ROOT);
+  const files = filterFiles(list, manifest);
+  assert.deepEqual(FILTERS.map((f) => path.basename(f, '.html')).sort(), Object.keys(files).sort());
+  Object.entries(files).forEach(([name, text]) => {
+    assert.equal(read(`data/filters/${name}.html`), text, name);
   });
-  JSON.parse(read('data/search.json')).forEach((s) => {
-    assert.equal(smallSrc(s.minImg, manifest), s.minImg, s.title);
-  });
+  assert.equal(read('data/search.json'), searchJson(list, manifest));
 });
 
 test('project page grids use the thumb sizes, not the card sizes', () => {
@@ -94,7 +94,7 @@ test('each picture has its final box before the image loads', () => {
   const rule = css.match(/\bpicture \{([^}]*)\}/)[1];
   assert.match(rule, /display: inline-block;/);
   assert.match(rule, /\bwidth: 100%;/);
-  [...PAGES, ...NEWS, ...HAND_KEPT, 'data/news.json'].forEach((file) => {
+  [...PAGES, ...NEWS, ...FILTERS, 'data/news.json'].forEach((file) => {
     const text = read(file).replace(/\\"/g, '"').replace(/\\\//g, '/');
     (text.match(/<picture\b[^>]*>[\s\S]*?<img\b[^>]*>/g) || []).forEach((tag) => {
       const img = tag.match(/<img\b[^>]*>/)[0];
@@ -136,7 +136,7 @@ test('an image hero page and an image hero post have no preload', () => {
 test('every video hero has a poster file and a manifest entry: run ffmpeg, npm run images', () => {
   const manifest = readManifest(ROOT);
   const heroes = [
-    ...loadProjects(ROOT).map((e) => e.p.first_img_video),
+    ...loadProjects(ROOT).map((e) => e.p.hero),
     ...loadPosts(path.join(ROOT, 'content', 'news')).map((p) => p.hero),
   ].filter((src) => src && isVideo(src));
   assert.ok(heroes.length >= 2);

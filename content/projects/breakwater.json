@@ -1,0 +1,76 @@
+{
+  "name": "Breakwater",
+  "slug": "breakwater",
+  "category": "architecture",
+  "type": "residential",
+  "order": 270,
+  "area": "Palm Jumeirah",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "For Breakwater, our design challenge was to renovate a unique developer-owned property, transforming it into a luxury residence that meets the standards and needs of today's market.\r\n\r\nThis villa showcases a stunning travertine-clad façade with light timber accents, highlighted by an impressive double-height recessed entrance cove with a striking 5-meter-high sky door.",
+    "Upon entering the foyer, residents are greeted by breathtaking panoramic views of the sea as they then explore the spacious living and dining areas that flow seamlessly onto a generous rear terrace. Here, an infinity pool stretches nearly the entire length of the property, acting as a backdrop for a cosy sunken seating area complete with a fire pit and an outdoor cinema, perfect for gatherings and entertaining."
+  ],
+  "text_2": [
+    "Inside, Breakwater features a large family TV lounge and an executive study with a private entrance, providing enhanced comfort and convenience. Most of the bedrooms feature private balconies, offering serene retreats for relaxation. On the roof, a versatile multipurpose space provides endless possibilities, making it ideal for a wide range of activities and gatherings.",
+    "Breakwater excels in efficient planning and captivating aesthetics, establishing the villa as one of Palm Jumeirah's most remarkable properties."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "Renovation"
+    },
+    {
+      "label": "Plot size:",
+      "value": "1,245 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "1,050 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/03/Breakwater-1.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-4.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-5.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-6.png"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-4.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-Sketches-2.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-Sketches-3.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-Sketches-1.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/03/Breakwater-Sketches-4.png"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/03/Breakwater-2.jpg"
+}

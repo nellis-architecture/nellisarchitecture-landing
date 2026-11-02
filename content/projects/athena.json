@@ -1,0 +1,91 @@
+{
+  "name": "Athena",
+  "slug": "athena",
+  "category": "architecture",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "residential",
+  "order": 30,
+  "area": "Porto Cheli",
+  "region": "Greece",
+  "text_1": [
+    "Nestled on a hillside near the charming resort town of Porto Cheli, this contemporary luxury villa offers a perfect blend of lush greenery and stunning sea views over the sparkling turquoise Mediterranean.",
+    "Designed as a summer retreat that embodies the essence of the Greek lifestyle in a cosmopolitan region renowned for being a beloved family holiday destination, Athena features a thoughtfully organised layout across two levels."
+  ],
+  "text_2": [
+    "The ground floor houses the entry and master suite, while the lower ground floor accommodates guests, ensuring privacy and comfort. Common areas are strategically positioned to overlook the infinity pool, creating an inviting space for lounging and entertaining against a backdrop of panoramic views. A minimal white roof canopy extends the full length of the villa, providing essential shade from the Mediterranean sun.",
+    "Thick stone walls, sourced from local quarries, ground the structure, allowing it to blend into the seemingly untouched hillside, enhancing the villa's natural aesthetic while offering a luxurious escape in this idyllic setting."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot size:",
+      "value": "4,078 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "1,585 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "5"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/01/Athena-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/01/Athena-2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Athena-3-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Athena-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Athena-4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Athena-5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/01/Athena-6-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/07/athena_8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/athena_2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/athena_1-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/07/athena_9-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/athena_7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/athena_6-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/07/Athena-9-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Athena-12.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/01/Athena-1.jpg",
+  "list_image": "/wp-content/uploads/2026/01/Athena-1-scaled.jpg"
+}

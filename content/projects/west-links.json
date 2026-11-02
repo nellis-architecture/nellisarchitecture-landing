@@ -1,0 +1,78 @@
+{
+  "name": "WEST LINKS",
+  "slug": "west-links",
+  "category": "master-planning",
+  "type": "residential",
+  "order": 310,
+  "area": "DUMFRIES AND GALLOWAY",
+  "region": "SCOTLAND",
+  "text_1": [
+    "Transforming an unused parcel of land into a vibrant residential community, West Links was designed to cater to diverse family needs, offering a mix of semi-detached and stand-alone homes, including affordable housing, townhouses, and a signature home. Sitting adjacent to a renowned Scottish Golf Club, each property has been strategically positioned to maximise the spectacular golf course vistas and views of the historic town in the distance.",
+    "Inspired by a traditional Scottish longhouse, the modern design graciously incorporates local heritage and traditions. Each property, named after a Scottish tree, adds unique character and pays homage to indigenous trees, creating a contemporary neighbourhood with a distinctive Scottish identity."
+  ],
+  "text_2": [
+    "Reminiscent of Victorian styles, the entrances seamlessly integrate with the existing neighbourhood aesthetic. At the same time, the façades feature a sophisticated blend of Scottish Larch Cladding and Rheinzink, complemented by full glass gable ends that maximise natural light and panoramic vistas.\r\n\r\nThe development's layout ensures that every unit enjoys unobstructed views, enhancing the living experience with a sense of openness and connection to the natural surroundings. Whilst the interior features are tailored to individual preferences, the expansive exteriors invite residents to create their own outdoor havens.",
+    "Working in collaboration with local developers, West Links elevates the lifestyle of those who reside within, blending aesthetic appeal with practical functionality to create a community that offers modern comforts while still respecting Scottish roots."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "Residential Community Masterplan"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "8,470 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "4,000 SQM"
+    }
+  ],
+  "hero": "/wp-content/uploads/2024/06/West-Links2.png",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links7.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links3.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links4.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links5.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links6.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links8.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links2.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links9.png"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2024/06/West-Links9.png"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/CD-Sketch-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/CD-Sketch-2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/CD-Sketch-3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/CD-Sketch-4.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2024/06/West-Links9.png"
+}

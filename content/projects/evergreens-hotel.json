@@ -1,0 +1,57 @@
+{
+  "name": "Evergreens Hotel",
+  "slug": "evergreens-hotel",
+  "category": "master-planning",
+  "type": "commercial",
+  "order": 290,
+  "area": "Hyderabad",
+  "region": "India",
+  "text_1": [
+    "As Phase 2 of the Evergreens masterplan, Evergreens Hotel was envisioned as a seamless extension of both the landscape and the surrounding villa community it serves. Set against the lush backdrop of Hyderabad’s eucalyptus forests, the exotic Evergreens Hotel is a terraced eco-retreat that honours the natural contours of its site.",
+    "Guests enter at street level and descend gradually through the property, following a tiered architectural rhythm that mirrors the natural topography and unveils panoramic views of the forests. Designed as a west-facing U-shaped structure, the Hotel cradles a sunken central courtyard anchored by a cascading pool that flows into a T-shaped lap pool."
+  ],
+  "text_2": [
+    "Built using locally sourced materials and fully Vastu-compliant, the 30-suite hotel champions wellness and sustainability in both its indoor-outdoor design and philosophy. Green gardens weave through the terraces, courtyards, and rooftop bar, creating a tranquil, immersive guest experience.",
+    "A dedicated clubhouse bridges the balance between private villa living and hotel hospitality, reinforcing Evergreen Hotel’s identity as a sanctuary for health, community, and conscious living. Amenities include a multipurpose conference room, two restaurants, a gym and spa, indoor and outdoor tennis courts, squash and padel courts, a cinema, a games room, and a rooftop cocktail bar."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "Hospitality"
+    },
+    {
+      "label": "BUILT AREA:",
+      "value": "4,000 SQM"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/02/Kakatiya_Visual-3-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/02/Kakatiya_Visual-2-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Kakatiya_Visual-1-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/7-7.png"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/02/Kakatiya_Sketch-1.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/02/Kakatiya_Sketch-3.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Kakatiya_Sketch-2.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/Kakatiya_Sketch-4-e1750765175447.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/02/Kakatiya_Visual-3-1.jpg",
+  "list_image": "/wp-content/uploads/2025/02/Kakatiya_Visual-3-1-scaled.jpg"
+}

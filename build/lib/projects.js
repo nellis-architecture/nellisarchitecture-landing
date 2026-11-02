@@ -1,21 +1,7 @@
 /* eslint no-unused-vars: ["error", { "caughtErrors": "none" }] -- see hashTarget */
 const fs = require('node:fs');
 const path = require('node:path');
-
-/* res2[0] in data/projects.json -> URL category. */
-const CATEGORY_ALIAS = {
-  architecture: 'architecture',
-  'interior design': 'interior-design',
-  landscape: 'landscape',
-  'master planning': 'master-planning',
-  'Master Development': 'master-planning',
-};
-
-/* Operator decision 2026-10-12 (card KLT5tVeZ): these projects belong to master planning. */
-const CATEGORY_OVERRIDE = {
-  'Skye Residences': 'master-planning',
-  'Evergreens Hotel': 'master-planning',
-};
+const { SLUG } = require('./markdown');
 
 const CATEGORIES = {
   architecture: { label: 'Architecture' },
@@ -25,43 +11,53 @@ const CATEGORIES = {
 };
 
 const CATEGORY_KEYS = Object.keys(CATEGORIES);
-
-const slugify = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const TYPES = ['residential', 'commercial'];
+const REQUIRED = ['name', 'slug', 'category', 'type', 'hero', 'card_image'];
 
 const categoryHref = (cat) => `/projects/${cat}/`;
 
-function category(name, p) {
-  const raw = (p.res2 || [])[0];
-  const cat = CATEGORY_OVERRIDE[name] || CATEGORY_ALIAS[raw];
-  if (!cat) throw new Error(`data/projects.json: ${name}: unknown category "${raw}"`);
-  return cat;
+const inCategory = (entry, cat) => entry.cat === cat || (entry.p.also_in || []).includes(cat);
+
+/* The image of a filter item, a category card and data/search.json. */
+const listImage = (entry) => entry.p.list_image || entry.p.card_image;
+
+const cardAlt = (entry) => entry.p.card_alt || entry.name;
+
+function check(p, source) {
+  const fail = (why) => {
+    throw new Error(`${source}: ${why}`);
+  };
+  REQUIRED.filter((k) => typeof p[k] !== 'string' || !p[k].trim())
+    .forEach((k) => fail(`${k} is required`));
+  if (!Number.isFinite(p.order)) fail(`order must be a number: "${p.order}"`);
+  if (!SLUG.test(p.slug)) {
+    fail(`slug must be lowercase letters, digits and dashes: "${p.slug}"`);
+  }
+  if (!CATEGORY_KEYS.includes(p.category)) fail(`unknown category "${p.category}"`);
+  if (!TYPES.includes(p.type)) fail(`unknown type "${p.type}"`);
+  (p.also_in || []).filter((cat) => !CATEGORY_KEYS.includes(cat))
+    .forEach((cat) => fail(`unknown also_in category "${cat}"`));
 }
 
-/* Primary category (after overrides), or a secondary one in res2[1..]. */
-function inCategory(entry, cat) {
-  if (entry.cat === cat) return true;
-  if (CATEGORY_OVERRIDE[entry.name]) return false;
-  return (entry.p.res2 || []).slice(1).some((raw) => CATEGORY_ALIAS[raw] === cat);
-}
-
-/* data: the projects.json object, name -> [project]. */
-function projectList(data) {
-  const seen = new Set();
-  return Object.entries(data).map(([name, [p]]) => {
-    const slug = slugify(name);
-    if (!slug || seen.has(slug)) {
-      throw new Error(`data/projects.json: ${name}: duplicate slug "${slug}"`);
-    }
-    seen.add(slug);
-    const cat = category(name, p);
-    return {
-      name, p, slug, cat, url: `/projects/${cat}/${slug}/`,
-    };
-  });
-}
-
+/* content/projects/<filename>.json, sorted by order, then by name. Reads only through fs:
+   the CMS preview runs it on the virtual fs. */
 function loadProjects(root) {
-  return projectList(JSON.parse(fs.readFileSync(path.join(root, 'data', 'projects.json'), 'utf8')));
+  const dir = path.join(root, 'content', 'projects');
+  const urls = new Set();
+  const names = new Set();
+  return fs.readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => {
+    const source = `content/projects/${f}`;
+    const p = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+    check(p, source);
+    const url = `/projects/${p.category}/${p.slug}/`;
+    if (urls.has(url)) throw new Error(`${source}: duplicate URL ${url}`);
+    if (names.has(p.name)) throw new Error(`${source}: duplicate name "${p.name}"`);
+    urls.add(url);
+    names.add(p.name);
+    return {
+      name: p.name, p, slug: p.slug, cat: p.category, url, filename: f.slice(0, -5),
+    };
+  }).sort((x, y) => x.p.order - y.p.order || x.name.localeCompare(y.name));
 }
 
 /* Runs in the browser too (earlyScript): keep it self-contained ES2015.
@@ -135,13 +131,12 @@ function description(html, max = 155) {
 module.exports = {
   CATEGORIES,
   CATEGORY_KEYS,
-  slugify,
   categoryHref,
   inCategory,
-  projectList,
+  listImage,
+  cardAlt,
   loadProjects,
   hashTarget,
   earlyScript,
-  decodeEntities,
   description,
 };

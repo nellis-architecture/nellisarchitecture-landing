@@ -1,0 +1,68 @@
+{
+  "name": "Zoya",
+  "slug": "zoya",
+  "category": "architecture",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "residential",
+  "order": 10,
+  "area": "Palm Jumeirah",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "A unique family retreat designed for special private gatherings, relaxation, and rejuvenation was what our client envisioned for their Palm Jumeirah home.\r\n\r\nCombining two residences into a single expansive home makes it a distinctive offering for the area. The desired design incorporates a variety of dedicated family social spaces with a strong emphasis on wellness.",
+    "Zoya embodies a deep sense of place and tradition, establishing a lasting connection to the Arabian Peninsula and creating a welcoming sanctuary for family bonding and cherished memories. Inspired by the gentle ripples of seawater on the beach, the design incorporates stepped angular terraces that allow for uninterrupted views of the sky. Each terrace is a perfect spot for sunbathing during the day and stargazing at night."
+  ],
+  "text_2": [
+    "The villa includes a spacious fitness room, steam bath, and a tranquil tea room that overlooks a terrace with a private yoga deck, enhanced by flowing water and an infinity pool, which visually merges with the surrounding sea.",
+    "A standout element of Zoya is the contemporary Arabian courtyard and garden integrated into the floor plan. Visible from every ground-floor room, this centuries-old design concept, which naturally cools the building, features an enclosed glass space with sunken seating and a fire table, all centred around a majestic olive tree, fostering a communal atmosphere around the fire."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "Renovation, amalgamation of 2 existing villas"
+    },
+    {
+      "label": "Plot size:",
+      "value": "1,904 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "2,000 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "7"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/07/Zoya2-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/07/Zoya1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Zoya2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Zoya5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Zoya6-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/07/Zoya6-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/07/Zoya4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Zoya3-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/07/Zoya1.jpg",
+  "list_image": "/wp-content/uploads/2025/07/Zoya1-scaled.jpg"
+}

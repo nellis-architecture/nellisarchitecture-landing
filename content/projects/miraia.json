@@ -1,0 +1,89 @@
+{
+  "name": "Miraia",
+  "slug": "miraia",
+  "category": "architecture",
+  "type": "residential",
+  "order": 130,
+  "area": "Palm Jebel Ali",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Our client's brief for Miraia was direct in its ambition. A spectacular, contemporary residence, one built to outlast the island's own evolution. As Palm Jebel Ali grew from a construction site into a fully realized community, the villa needed to remain just as relevant. The name itself carries that intention. Miraia draws from the Latin mirari, to wonder at, paired with a soft, feminine \"aia\" that echoes waves, air, a passing breeze.",
+    "The design's central narrative reaches further back than the brief itself, into the region's own history. Miraia reinterprets the Falaj, the ancient UAE water channel system that once carried life through arid land. Here, it becomes a living architectural device. Water threads through the villa as a continuous line, connecting indoor and outdoor spaces the way the Falaj once connected communities to survival."
+  ],
+  "text_2": [
+    "The brief called for two lives under one roof: a grand formal wing built to host large-scale events and guests, and a smaller, clearly separated family wing for daily life. We resolved this by organizing Miraia into two distinct wings, unified along a central axis that opens into a large sunken courtyard.",
+    "Partially recessing the building into the lower ground lets it draw daylight and sightlines down into the basement. Spa, gym, and entertainment spaces that would otherwise sit underground and unlit are pulled into the light. Eight bedrooms and a full lower level become naturally bright, inhabited rooms, not back-of-house space."
+  ],
+  "text_3": [
+    "Above ground, the architectural language began in clean, linear forms, aligned with Nakheel's masterplan guidelines. Level by level, these forms softened into the undulating profiles of waves and current. The shift became the villa's own quiet argument for calm.",
+    "Deep terraces, shaded courtyards, and high-performance glazing were built in from the start, not added later.\r\nMiraia is built to be lived in for decades, not admired for a season, a residence that grows more relevant, not less, as the island around it does the same."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "2,300 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "3090 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/07/Miraia-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-6-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-2-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-6-2-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-6-2-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-6-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-9-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2026/07/Miraia-2-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/07/Untitled-design-6-1.jpg",
+  "list_image": "/wp-content/uploads/2026/07/Untitled-design-6-1-scaled.jpg"
+}

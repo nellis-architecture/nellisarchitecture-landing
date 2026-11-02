@@ -1,5 +1,3 @@
-const fs = require('node:fs');
-const path = require('node:path');
 const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
@@ -10,11 +8,9 @@ const {
   DOMAIN, organization, pageUrl, seoTokens,
 } = require('../seo');
 const {
-  CATEGORIES, CATEGORY_KEYS, categoryHref, inCategory,
+  CATEGORIES, CATEGORY_KEYS, categoryHref, inCategory, listImage, cardAlt,
 } = require('../projects');
-const {
-  picture, originalOf, uploadUrl, readManifest,
-} = require('../images');
+const { picture, readManifest } = require('../images');
 
 /* The /projects/ hub uses this module with category 'all'. */
 const HUB = 'all';
@@ -22,17 +18,7 @@ const HUB_HREF = '/projects/';
 const IND = ' '.repeat(20);
 const SEP = '<span aria-hidden="true">›</span>';
 
-/* Home grid thumbnails: the upload of data/search.json minImg (a variant), by project title. */
-function thumbs(root, manifest) {
-  const list = JSON.parse(fs.readFileSync(path.join(root, 'data', 'search.json'), 'utf8'));
-  const original = (src) => {
-    const p = src && originalOf(src, manifest);
-    return p ? uploadUrl(p) : src;
-  };
-  return Object.fromEntries(list.map((s) => [s.title, original(s.minImg)]));
-}
-
-/* Projects of the category (hub: all projects), in data/projects.json order. */
+/* Projects of the category (hub: all projects), in project order. */
 function members(projects, cat) {
   const list = cat === HUB ? projects : projects.filter((e) => inCategory(e, cat));
   if (!list.length) throw new Error(`projects/${cat}/: no project in this category`);
@@ -41,27 +27,24 @@ function members(projects, cat) {
 
 /* An empty line (Atelier, W44, Zephyr have no area) gets no <br>. */
 function location(p) {
-  return [p.project_rigth1, p.project_rigth2]
+  return [p.area, p.region]
     .filter((t) => t && t.trim())
     .map(escText)
     .join(` <br>\n${' '.repeat(28)}`);
 }
 
 /* The first card is the page priority image. */
-function items(list, thumb, manifest) {
+function items(list, manifest) {
   const tpl = loadPartial('category-item');
-  return list.map((e, i) => {
-    if (!thumb[e.name]) throw new Error(`data/search.json: ${e.name}: no minImg`);
-    return fill(tpl, {
-      HREF: escAttr(e.url),
-      NAME_ATTR: escAttr(e.name),
-      IMG: picture({
-        src: thumb[e.name], alt: e.name, slot: 'card', cls: 'project__item-img', priority: !i,
-      }, manifest),
-      NAME: escText(e.name),
-      LOCATION: location(e.p),
-    });
-  }).join('\n');
+  return list.map((e, i) => fill(tpl, {
+    HREF: escAttr(e.url),
+    NAME_ATTR: escAttr(e.name),
+    IMG: picture({
+      src: listImage(e), alt: cardAlt(e), slot: 'card', cls: 'project__item-img', priority: !i,
+    }, manifest),
+    NAME: escText(e.name),
+    LOCATION: location(e.p),
+  })).join('\n');
 }
 
 const labelOf = (cat) => (cat === HUB ? 'Projects' : CATEGORIES[cat].label);
@@ -121,11 +104,10 @@ function render(content, {
 }) {
   const label = labelOf(page.category);
   const list = members(projects, page.category);
-  const thumb = thumbs(root, manifest);
   const seo = content.seo || {};
   const headHtml = head({
     BEFORE: '',
-    OG_IMAGE: `  <meta property="og:image" content="${escAttr(DOMAIN + thumb[list[0].name])}">`,
+    OG_IMAGE: `  <meta property="og:image" content="${escAttr(DOMAIN + listImage(list[0]))}">`,
     OG_TYPE: 'website',
     MODIFIED_TIME: '',
     SCHEMA: schema(
@@ -151,7 +133,7 @@ function render(content, {
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       CATEGORY_LINKS: categoryLinks(page.category),
-      ITEMS: items(list, thumb, manifest),
+      ITEMS: items(list, manifest),
     }),
     footer(site),
   ].join('\n');

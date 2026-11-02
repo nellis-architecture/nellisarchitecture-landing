@@ -1,0 +1,70 @@
+{
+  "name": "AUREA",
+  "slug": "aurea",
+  "category": "architecture",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "residential",
+  "order": 20,
+  "area": "PALM JUMEIRAH",
+  "region": "DUBAI, UAE",
+  "text_1": [
+    "Villa Aurea is a luxury beachfront residence located on Palm Jumeirah, Dubai. Originally conceived for a European client, the villa was designed as an exceptional private home while also appealing to the international luxury property market.\r\nThe name Aurea, derived from the Latin word for golden, reflects the villa's defining architectural feature: a striking bronze screen façade that wraps the home in warmth, texture, and filtered light. Throughout the day, the bronze screens create a constantly changing play of shadow and sunlight, giving the residence a distinctive identity and an ever-evolving character.",
+    "Designed as a contemporary six-bedroom beach house, Villa Aurea embraces the principles of seamless indoor-outdoor living. The open-plan ground floor flows effortlessly towards a long infinity-edge swimming pool, which stretches towards the beach and uninterrupted sea views beyond. Large expanses of glazing dissolve the boundary between interior and exterior spaces, allowing natural light and coastal views to become an integral part of everyday living.\r\nAt the heart of the home is a dramatic double-height living space with a nine meter high ceiling. It is a gathering space, creating a sense of openness while framing views across the pool, landscape, and waterfront setting."
+  ],
+  "text_2": [
+    "Occupying the entire second floor, the master penthouse suite enjoys complete privacy and panoramic views towards the Palm Jumeirah skyline and Dubai's spectacular sunsets. Inspired by the luxury resorts of Bali, the suite features an outdoor bathroom immersed within lush tropical planting, creating a tranquil sanctuary connected to nature.\r\n\r\nA glass-bottom plunge pool acts as both a leisure feature and an architectural element, allowing sunlight to filter through the water and project shimmering reflections onto the terrace below. This movement of light animates the façade and reinforces the villa's connection to water throughout the day.",
+    "The villa includes seven generously proportioned bedroom suites. Additional lifestyle amenities include a private gym, cinema room, and a secure garage.\r\n\r\nNatural materials play a central role in the architectural language of Villa Aurea. The façade is clad in warm natural travertine, selected for its timeless elegance and its ability to complement both the bronze screens and the soft sandy tones of Palm Jumeirah's beachfront setting."
+  ],
+  "text_3": [
+    "Visitors enter through a double-height entrance hall framed by a monumental bronze pivot door that echoes the materiality of the exterior screens. A cascading water feature positioned in front of a glazed wall creates a calming soundtrack and a dynamic play of reflected light.",
+    "Villa Aurea is a home designed to celebrate light, water, materiality, and the beauty of coastal living, an elegant contemporary sanctuary that embodies the essence of luxury beachfront architecture on Palm Jumeirah."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "Renovation of signature villa"
+    },
+    {
+      "label": "Plot size:",
+      "value": "1,275 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "1,120 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "7"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/06/6-scaled.jpg",
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2026/06/1-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2026/06/8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/3-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/4-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/5-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/06/9-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/06/6.jpg",
+  "list_image": "/wp-content/uploads/2026/06/6-scaled.jpg"
+}

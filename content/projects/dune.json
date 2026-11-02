@@ -1,0 +1,79 @@
+{
+  "name": "Dune",
+  "slug": "dune",
+  "category": "architecture",
+  "type": "residential",
+  "order": 210,
+  "area": "Al Manara",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Over time, the functionality of a family home adapts to those who live within it. For Dune, our client, a visionary family man, sought a contemporary villa that would serve as a nurturing home for his family, ready before his eldest daughter embarks on her university journey. \r\n\r\nThe design embodies a harmonious blend of modern aesthetics and functional family living, crafted to meet the unique needs of a growing family. The villa's L-shaped open-plan layout strategically places family spaces along the longest wing, ensuring a seamless visual connection to the formal wing.",
+    "A striking yet cohesive façade, the exterior showcases natural travertine cladding on the ground floor, complemented by a white insulated render system on the upper floors. Timber-slatted cladding on the first floor and a roof canopy add warmth and a distinct identity to the entrance."
+  ],
+  "text_2": [
+    "Inside, a spacious double-height entrance opens to a central courtyard garden reminiscent of traditional Arabic courtyards, providing natural cooling. The home features six bedrooms, each designed for comfort and privacy. The upstairs penthouse, with an adjacent gym and family lounge, opens to a large roof terrace with a central jacuzzi, perfect for sunset views.",
+    "The villa's forward positioning on the plot creates a large 'cocoon' garden at the rear, ideal for family gatherings and relaxation. Outdoor living is enhanced by an overflow pool and a private office annexe nestled amongst the greenery, offering a serene workspace for those who need a quieter space to focus. \r\n\r\nDune elevates the family's lifestyle by seamlessly integrating aesthetics, comfort, and functionality, creating a sanctuary that welcomes home those who have flown the nest and remains cherished for years to come."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "1,395 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "1,400 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/06/Dune1-1.png",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/06/Dune2.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Dune7.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Dune4.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Dune5.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Dune6.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Dune3.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Dune1-1.png"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/Dune3.png"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/06/ChatGPT-Image-Jun-16-2025-05_45_21-PM-PS.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/ChatGPT-Image-Jun-16-2025-05_57_13-PM-PS.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/01-Diagram-for-shape-scaled.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/02-Spatial-bubbles.png"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/06/Dune1-1.png"
+}

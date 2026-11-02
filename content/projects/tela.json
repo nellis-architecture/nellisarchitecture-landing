@@ -1,0 +1,77 @@
+{
+  "name": "Tela",
+  "slug": "tela",
+  "category": "architecture",
+  "type": "residential",
+  "order": 190,
+  "area": "Palm Jumeirah",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Conceived as a luxurious and refined beachside sanctuary, Villa Tela was designed for a discerning couple with a cosmopolitan background shaped by years in Dubai. Envisioned as an escape for privacy, relaxation, and effortless entertaining, the villa fuses European sensibility with the serenity of coastal living.",
+    "The architectural narrative begins at the façade, where white limestone cladding in an antique finish is paired with woven metal mesh screens by GKD. These elements provide privacy and solar control while giving the villa a distinctive and layered identity. Composite timber soffits and charcoal grey profiles introduce warmth and contrast, while a 5.1-metre full-height glass pivot door forms a dramatic entrance, flooding the foyer with natural light."
+  ],
+  "text_2": [
+    "Inside, the villa unfolds as a generous open-plan arrangement anchored by a sculptural cantilevered staircase. Expansive living and dining areas flow seamlessly towards the outdoors through slimline sliding glass doors with integrated flush tracks, dissolving boundaries and framing panoramic sea views. Integrated home automation enhances comfort throughout, allowing you to control lighting, climate, and security with ease. The European-style kitchen, complemented by a fully equipped chef-grade back-of-house kitchen, caters to both intimate family meals and grand gatherings."
+  ],
+  "text_3": [
+    "Balancing elegance with functionality, Villa Tela is a composed coastal retreat where thoughtful design, privacy, and openness coexist in quiet harmony."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "Renovation"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "724 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "680 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "5"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/12/Untitled-design-1.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-333.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-211.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2024/12/Untitled-design-3.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-5.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-11.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-8.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-9.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-10.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2024/12/Untitled-design-2.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/12/Untitled-design-111.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/12/Untitled-design-1.jpg"
+}

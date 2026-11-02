@@ -1,0 +1,67 @@
+{
+  "name": "Mantara",
+  "slug": "mantara",
+  "category": "architecture",
+  "type": "residential",
+  "order": 200,
+  "area": "Jumeirah Bay Island",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "Mantara begins with a question: what would a home look like if nature, not architecture, set the rules? Our client desired a home that felt organic, fluid, and genuinely connected to the world beyond its walls. The challenge was to create a six-bedroom villa that took its formal language not from architecture, but from the sea. Mantara is the result: a home whose every curve honours the manta ray, and whose every space is designed to be lived in deeply.",
+    "The form is complex. A continuous white high-performance concrete façade flows from exterior to interior without interruption. Its surface is unbroken by sharp transitions or conventional planes. Slimline glazing, generous and precisely considered, draws natural light throughout the home. Motorised solar shade louvres, patterned on the skeleton of the manta ray, offer protection from the Dubai sun while serving as a subtle, ever-present nod to the villa's inspiration."
+  ],
+  "text_2": [
+    "A double-height entrance, anchored by a forest of slender bronze columns, introduces the home's central philosophy: that nature belongs at the centre, not the periphery. Inside, open-plan spaces blend into one another with almost no walls between them, exactly as our client envisioned. A sculptural staircase commands the interior with quiet drama. A central forest ensures the living experience remains as grounded as it is refined. Working in close collaboration with Orient Crown Engineers, every structural decision was made in service of the form, never at its expense.",
+    "Outdoors, a resort-scale bio-design pool extends the landscape with naturalistic ease. The beach dissolves into the property's edge, softening the boundary between the built and the natural. Above, a rooftop pool with a glass floor bathes the levels below in refracted light. The penthouse master suite and adjacent gym look out over open sea, offering a sense of elevation that is both physical and deeply felt.\r\nMantara is a testament to what becomes possible when architecture surrenders to nature's own design, and when the craft to realise that vision is equal to the ambition behind it."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New-Build Residential Villa"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "1603 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "1926 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2026/07/Untitled-design-7.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-6.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-7-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-4.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-5.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-5.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-6.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-9.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2026/07/Untitled-design-8.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2026/07/Untitled-design-7.jpg"
+}

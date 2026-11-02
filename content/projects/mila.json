@@ -1,0 +1,80 @@
+{
+  "name": "MILA",
+  "slug": "mila",
+  "category": "architecture",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "residential",
+  "order": 110,
+  "area": "UMM SUQEIM",
+  "region": "DUBAI, UAE",
+  "text_1": [
+    "Desiring a harmonious connection and coexistence with nature, our client envisioned a distinguished family home that embodied the principles of biophilia and prioritised wellness. Across its four levels, Mila effortlessly combines the functionality of a spacious, open-plan family home with the versatility to host large gatherings and emphasise modern indoor-outdoor living.",
+    "From the outside, Mila's entrance is marked by a triple-height glass feature and a 7.1-meter teak sky door, anchoring sleek, yacht-like curves that inspired its façade; flared white edges, designed to maximise natural light while offering sun protection. Large timber louvres and extended overhangs ensure a cool interior environment during intense summer months."
+  ],
+  "text_2": [
+    "Inside, an aesthetic and atmosphere that is open and inviting, living areas have been oriented to capture views of Burj Al Arab. Design highlights include a spacious penthouse master suite and multiple balconies with planters, enhancing the connection to nature.",
+    "Outdoor, set around a stunning cantilevered glass-bottom pool, spaces are designed for relaxation and entertainment, with lush gardens and terraces that remain functional in the desert climate.\r\n\r\nThis project elevates the client's lifestyle by blending aesthetics, comfort, and functionality, creating a sanctuary that harmoniously integrates with the natural surroundings."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New-Build Residential Villa"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "1,580 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "2,500 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "6"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/07/Mila--scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-1-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Mila--scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-4-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-6-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-5-1-scaled.jpg"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-8-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-9-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-6-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/07/Mila-4-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Mila-Sketch-3-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/06/Mila-Sketch-1.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/07/Mila-.jpg",
+  "list_image": "/wp-content/uploads/2025/07/Mila--scaled.jpg"
+}

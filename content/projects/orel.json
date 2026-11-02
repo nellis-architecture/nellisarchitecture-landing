@@ -1,0 +1,75 @@
+{
+  "name": "Orel",
+  "slug": "orel",
+  "category": "master-planning",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "commercial",
+  "order": 320,
+  "area": "Oryol Oblast",
+  "region": "Russia",
+  "text_1": [
+    "The Orel project is a perfect case study for rehabilitating, repurposing and redeveloping unused land, transforming a vacant parcel into a thriving agricultural farm that operates efficiently on a commercial scale while also providing tranquil spaces of serene beauty as a tourist destination. The objective from the outset was to establish an eco-farm that operates on a commercial scale while also providing facilities and accommodations for tourists.",
+    "In essence, Orel will cultivate sunflowers for oil extraction and, to enhance the land's viability, diversify with a variety of vegetable crops and an Orangery. Given the farm's stunning natural landscape, the owner decided to further develop the property offering by adding a guesthouse, ten standalone chalets, a greenhouse, a horse stable, a café, and tennis courts."
+  ],
+  "text_2": [
+    "Revitalising the plot, these additions will offer visitors a range of engaging activities and experiences during their stay. The crowning feature of the project will be the construction of the owner's private villa, nestled within a serene forest and overlooking a picturesque man-made lake.",
+    "Each structure will be functional, aesthetically appealing to guests and, importantly, to the client, embodying the essence of farm life."
+  ],
+  "facts": [
+    {
+      "label": "Project Type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot Size:",
+      "value": "190,000 SQM"
+    },
+    {
+      "label": "Built Area:",
+      "value": "21,655 SQM"
+    }
+  ],
+  "hero": "/wp-content/uploads/2024/01/Orel2.png",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2024/01/Orel1.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel5.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel2.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel6.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel4.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel3.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel7.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel8.png"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2024/01/Orel5.png"
+    },
+    {
+      "src": "/wp-content/uploads/2024/01/Orel7.png"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/06/Orel-Sketch-Masterplan.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2024/01/Orel5.png"
+}

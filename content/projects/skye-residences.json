@@ -1,0 +1,71 @@
+{
+  "name": "Skye Residences",
+  "slug": "skye-residences",
+  "category": "master-planning",
+  "type": "commercial",
+  "order": 70,
+  "area": "Downtown",
+  "region": "Dubai, UAE",
+  "text_1": [
+    "SKYE Residences embodies our commitment to crafting elegant homes that cater to the diverse needs of modern city dwellers. Our client had a vision to create a sophisticated urban living experience in the heart of Dubai.\r\n\r\nSKYE Residences' design prioritises natural light and city views, incorporating floor-to-ceiling windows and open balconies to connect residents with the vibrant surroundings. The sleek exterior features a blend of glass and steel, complemented by lush greenery to create a serene urban oasis.",
+    "Inside, residents are welcomed by a stylish lobby with contemporary art installations and a concierge service. The open-plan apartments are designed for comfort and functionality, with high-end finishes and smart home technology. Each unit offers spacious living areas, modern kitchens, and luxurious bathrooms, with the penthouses providing expansive terraces and breathtaking views of Burj Khalifa and Dubai Fountain."
+  ],
+  "text_2": [
+    "Outdoor amenities include a landscaped garden, a rooftop infinity pool, and a state-of-the-art fitness centre. The communal spaces are designed for social interaction, with lounges, a co-working area, and a children's play zone.",
+    "SKYE Residences not only elevates the standard of urban living but also enhances the lifestyle of its residents, making it an ideal choice for those seeking a dynamic and luxurious home in Downtown Dubai."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "New Build"
+    },
+    {
+      "label": "Plot size:",
+      "value": "3,000 SQM"
+    },
+    {
+      "label": "Built area:",
+      "value": "7,200 SQM"
+    },
+    {
+      "label": "Bedrooms:",
+      "value": "20 x 1 Bedroom Apartments</br>15 x 2 Bedroom Apartments</br>5 x 3 Bedroom Apartments"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/02/architecture-9-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-5-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-9-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-7-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-8-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-4-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-3-1-scaled.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-3-1-scaled.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/architecture-4-1-scaled.jpg"
+    }
+  ],
+  "last_images": [
+    {
+      "src": "/wp-content/uploads/2025/02/Skye-Sketch-1-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/02/architecture-7.jpg",
+  "list_image": "/wp-content/uploads/2025/02/architecture-7-scaled.jpg"
+}

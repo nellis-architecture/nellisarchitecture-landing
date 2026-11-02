@@ -1,0 +1,61 @@
+{
+  "name": "Evergreens",
+  "slug": "evergreens",
+  "category": "master-planning",
+  "also_in": [
+    "landscape"
+  ],
+  "type": "residential",
+  "order": 240,
+  "area": "Hyderabad",
+  "region": "India",
+  "text_1": [
+    "Hyderabad, situated in central India, boasts a moderate climate and has emerged as one of the fastest-growing tech cities globally. With its proximity to an international airport and excellent road connections, it offers both convenience and a vibrant lifestyle.",
+    "Our client's vision was to develop 106 luxury villas as countryside retreats for city dwellers. The project site is particularly beautiful, bordered by a large eucalyptus forest and mango plantations, providing a serene backdrop for the residences. The master plan draws inspiration from the shape of eucalyptus leaves, with villas staggered along a series of elevated roads to guarantee that every home enjoys stunning forest views."
+  ],
+  "text_2": [
+    "Each villa is designed in accordance with Vastu Shastra principles, ensuring harmony and balance in its architecture and layout. On the rooftop, a glass infinity pool creates a serene oasis for relaxation and swimming during cool summer evenings.\r\n\r\n\r\n\r\nBeyond the private villas, the wider community is enriched with exquisite restaurants, sports and event spaces, and family guest accommodations, fostering connection while providing all the amenities for a luxurious lifestyle.",
+    "Residents will also enjoy access to an exclusive clubhouse reminiscent of a boutique luxury hotel. This project beautifully blends nature, luxury, and tradition, offering an ideal retreat for those looking to escape the bustle of urban life."
+  ],
+  "facts": [
+    {
+      "label": "Project type:",
+      "value": "A master-planned gated community of luxury villas"
+    },
+    {
+      "label": "Plot size:",
+      "value": "36 hectares"
+    },
+    {
+      "label": "Villa types:",
+      "value": "3 villa types, each of different size: S, M &amp; L"
+    }
+  ],
+  "hero": "/wp-content/uploads/2025/04/Evergreen-Visual-1-scaled.jpg",
+  "slider_1": [
+    {
+      "src": "/wp-content/uploads/2025/04/visual-3-1.jpg"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/visual-2-1.jpg"
+    }
+  ],
+  "image_2": [
+    {
+      "src": "/wp-content/uploads/2025/04/Evergreens_Sketch-4.png"
+    }
+  ],
+  "slider_2": [
+    {
+      "src": "/wp-content/uploads/2025/04/Sketch-2.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Sketch-3.png"
+    },
+    {
+      "src": "/wp-content/uploads/2025/04/Sketch-1-scaled.jpg"
+    }
+  ],
+  "card_image": "/wp-content/uploads/2025/04/Evergreen-Visual-1.jpg",
+  "list_image": "/wp-content/uploads/2025/04/Evergreen-Visual-1-scaled.jpg"
+}
