@@ -232,3 +232,8 @@ test('the CMS collection names h1 as its identifier and has no delete', () => {
     'media_folder: "/wp-content/uploads/pages"', 'public_folder: "/wp-content/uploads/pages"',
     'Retire with noindex.'].forEach((line) => assert.ok(block.includes(line), line));
 });
+
+test('a CMS publish squashes, so master gets no merge commit', () => {
+  const config = fs.readFileSync(path.join(ROOT, 'admin', 'config.yml'), 'utf8');
+  assert.ok(config.slice(0, config.indexOf('publish_mode')).includes('squash_merges: true'));
+});

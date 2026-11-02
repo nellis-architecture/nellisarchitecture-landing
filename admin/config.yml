@@ -7,6 +7,7 @@ backend:
   branch: master
   base_url: https://landing.nellisarchitecture.workers.dev
   auth_endpoint: api/auth
+  squash_merges: true
 
 publish_mode: editorial_workflow
 
