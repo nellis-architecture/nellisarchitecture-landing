@@ -126,8 +126,8 @@ test('every page links the nav Contact item to /contact/ with no click handler',
 
 test('no page nests an <li> inside an <a>', () => {
   const [entry] = loadProjects(ROOT);
-  const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
-  pages.push([entry.url, renderProject(entry, readSite(ROOT), '/news/')]);
+  const pages = renderPages(ROOT, undefined, POSTS).map((p) => [p.file, p.html]);
+  pages.push([entry.url, renderProject(entry, readSite(ROOT))]);
   const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
   pages.push([`news/${POSTS[0].slug}/`, news]);
   pages.forEach(([name, html]) => assert.doesNotMatch(html, /<a\b[^>]*>\s*<li\b/, name));
