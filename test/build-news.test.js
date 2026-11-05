@@ -262,7 +262,8 @@ test('renderPost gives each post its own og:image, size and published time', () 
   assert.deepEqual(meta(a, 'og:image:height'), ['791']);
   assert.deepEqual(meta(a, 'og:image:type'), ['image/jpeg']);
   assert.deepEqual(meta(a, 'article:published_time'), ['2025-12-22T00:00:00.000Z']);
-  assert.deepEqual(meta(a, 'article:modified_time'), ['2025-12-22T00:00:00.000Z']);
+  /* The post data has no real modified time: no invented one (LND-080). */
+  assert.deepEqual(meta(a + b, 'article:modified_time'), []);
   assert.deepEqual(meta(b, 'og:image:width'), ['620']);
   assert.deepEqual(meta(b, 'og:image:height'), ['404']);
   assert.deepEqual(meta(b, 'og:image:type'), ['image/png']);

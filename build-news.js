@@ -209,7 +209,6 @@ function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
     .replaceAll('{{OG_TITLE}}', esc(p.og_title || seoTitle(p)))
     .replaceAll('{{OG_DESC}}', esc(p.description || ''))
     .replaceAll('{{PUB_TIME}}', p.dateObj.toISOString())
-    .replaceAll('{{MOD_TIME}}', p.dateObj.toISOString())
     .replaceAll('{{OG_IMAGE}}', escAttr(img.url))
     .replaceAll('{{OG_IMAGE_WIDTH}}', img.width)
     .replaceAll('{{OG_IMAGE_HEIGHT}}', img.height)
