@@ -46,7 +46,7 @@ const page = (slug, extra) => ({ [`content/landing/${slug}.md`]: entry(slug), ..
 function renderLanding(fields, body = BODY) {
   const dir = tempSite({ 'content/landing/villas.md': md(fields, body) });
   const landing = loadLanding(dir);
-  const pages = renderPages(ROOT, '/news/', undefined, null, readManifest(ROOT), landing);
+  const pages = renderPages(ROOT, undefined, null, readManifest(ROOT), landing);
   return { pages, landing, html: pages.find((p) => p.slug === landing[0].slug).html };
 }
 
@@ -147,7 +147,7 @@ test('a slug that hits a root entry, a reserved name or a fixed rule fails', () 
 
 test('a collision stops writePages before a write', () => {
   const dir = tempSite(page('studio', { 'studio/index.html': 'old' }));
-  assert.throws(() => writePages(dir, '/news/', [], [], {}), /slug "studio"/);
+  assert.throws(() => writePages(dir, [], [], {}), /slug "studio"/);
   assert.equal(fs.readFileSync(path.join(dir, 'studio/index.html'), 'utf8'), 'old');
 });
 

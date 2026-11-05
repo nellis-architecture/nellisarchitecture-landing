@@ -16,9 +16,8 @@ const { parseFrontMatter } = require('../build/lib/markdown');
 delete process.env.TURNSTILE_SITEKEY;
 
 const ROOT = path.join(__dirname, '..');
-const NEWS = '/news/';
 const MANIFEST = readManifest(ROOT);
-const SCRIPT = previewScript(ROOT, MANIFEST, NEWS);
+const SCRIPT = previewScript(ROOT, MANIFEST);
 const PAGES = previewPages(ROOT);
 /* The entry data the CMS passes: JSON pages as they are, .md pages as front matter + body. */
 const content = (name) => {
@@ -83,7 +82,7 @@ const unsized = (html) => html.replace(
 );
 
 test('the preview render equals the build output for each page', () => {
-  const built = renderPages(ROOT, NEWS, loadProjects(ROOT), null, MANIFEST);
+  const built = renderPages(ROOT, loadProjects(ROOT), null, MANIFEST);
   PAGES.forEach((p) => {
     const page = built.find((b) => b.slug === p.slug);
     const html = unsized(page.html);
@@ -106,7 +105,7 @@ test('edited content gives the same output in the preview and in the build', () 
   const site = readSite(ROOT);
   const projects = loadProjects(ROOT);
   const ctx = (slug) => ({
-    site, newsHref: NEWS, page: { slug }, root: ROOT, projects, posts: null, manifest: MANIFEST,
+    site, page: { slug }, root: ROOT, projects, posts: null, manifest: MANIFEST,
   });
   const s = content('studio');
   s.intro.title = 'New <b> & "q"';

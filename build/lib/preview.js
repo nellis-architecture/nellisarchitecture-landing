@@ -133,13 +133,12 @@ function loader(modules, builtins, shim) {
 }
 
 /* The renderPages context, with root '.' (the keys of the virtual fs). site: readSite() result. */
-function renderPage(load, pages, newsHref, site, name, data) {
+function renderPage(load, pages, site, name, data) {
   const page = pages.find((p) => p.content === name);
   if (!page) throw new Error(`no preview for ${name}`);
   const content = page.md ? load('build/lib/markdown.js').markdownPage(data, data.body) : data;
   return load(page.file).render(content, {
     site,
-    newsHref,
     page: { slug: page.slug, category: page.category, content: page.content },
     root: '.',
     projects: load('build/lib/projects.js').loadProjects('.'),
@@ -245,7 +244,7 @@ function register(cms, h, pages, render, prepare, manifest) {
 /* ---------- admin/preview.js ---------- */
 
 /* The text of admin/preview.js: the build render modules over a virtual fs. */
-function previewScript(root, manifest, newsHref) {
+function previewScript(root, manifest) {
   const pages = previewPages(root);
   const modules = moduleSources(root, pages.map((p) => p.file));
   const wrapped = Object.entries(modules).map(([k, src]) => `${JSON.stringify(k)}: `
@@ -256,7 +255,6 @@ var MODULES = {
 ${wrapped}
 };
 var PAGES = ${JSON.stringify(pages)};
-var NEWS_HREF = ${JSON.stringify(newsHref)};
 var SITE = ${JSON.stringify(readSite(root))};
 ${pathShim}
 ${virtualFs}
@@ -278,7 +276,7 @@ var load = loader(MODULES, {
 }, path);
 var manifest = JSON.parse(FILES[${JSON.stringify(MANIFEST)}]);
 function render(name, content) {
-  return renderPage(load, PAGES, NEWS_HREF, SITE, name, content);
+  return renderPage(load, PAGES, SITE, name, content);
 }
 window.NellisPreview = { render: render, forPreview: forPreview };
 if (window.CMS) {
@@ -289,8 +287,8 @@ if (window.CMS) {
 `;
 }
 
-function writePreview(root, manifest, newsHref) {
-  fs.writeFileSync(path.join(root, 'admin', 'preview.js'), previewScript(root, manifest, newsHref));
+function writePreview(root, manifest) {
+  fs.writeFileSync(path.join(root, 'admin', 'preview.js'), previewScript(root, manifest));
 }
 
 module.exports = {

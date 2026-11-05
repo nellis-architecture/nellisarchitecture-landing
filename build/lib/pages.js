@@ -131,7 +131,6 @@ function readSite(root) {
    Upgrade: load the posts here once loadPosts moves to build/lib/. */
 function renderPages(
   root,
-  newsHref,
   projects = loadProjects(root),
   posts = null,
   manifest = readManifest(root),
@@ -143,7 +142,7 @@ function renderPages(
     return {
       file: pageFile(p.slug),
       html: p.module.render(content, {
-        site, newsHref, page: p, root, projects, posts, manifest,
+        site, page: p, root, projects, posts, manifest,
       }),
       slug: p.slug,
       priority: p.priority,
@@ -152,9 +151,9 @@ function renderPages(
   });
 }
 
-function writePages(root, newsHref, projects, posts, manifest, landing = loadLanding(root)) {
+function writePages(root, projects, posts, manifest, landing = loadLanding(root)) {
   checkLanding(root, landing);
-  const pages = renderPages(root, newsHref, projects, posts, manifest, landing);
+  const pages = renderPages(root, projects, posts, manifest, landing);
   pages.forEach((p) => {
     fs.mkdirSync(path.dirname(path.join(root, p.file)), { recursive: true });
     fs.writeFileSync(path.join(root, p.file), p.html);

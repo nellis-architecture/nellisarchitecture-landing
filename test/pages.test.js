@@ -17,8 +17,8 @@ const { markdownPage } = require('../build/lib/markdown');
 const { loadPosts } = require('../build-news');
 
 const ROOT = path.join(__dirname, '..');
-const renderProject = (entry, site, newsHref) => project.render(entry, {
-  site, newsHref, projects: loadProjects(ROOT),
+const renderProject = (entry, site) => project.render(entry, {
+  site, projects: loadProjects(ROOT),
 });
 const count = (s, sub) => s.split(sub).length - 1;
 const POSTS = loadPosts(path.join(ROOT, 'content', 'news'));
@@ -33,7 +33,7 @@ const REGISTRY = [
   'projects/landscape/index.html', 'projects/master-planning/index.html',
 ];
 /* The registry pages only: the list must not change when content/landing/ gets a file. */
-const registryPages = () => renderPages(ROOT, '/news/', undefined, null, undefined, []);
+const registryPages = () => renderPages(ROOT, undefined, null, undefined, []);
 
 test('renderPages writes each page to its folder and fills every token', () => {
   const pages = registryPages();
@@ -52,7 +52,7 @@ test('a noindex file in content/landing/ stays out of the registry test render',
   t.mock.method(fs, 'readFileSync', (p, o) => (
     p === file ? '---\nslug: x\nh1: X\nnoindex: true\n---\nText\n' : readFileSync(p, o)
   ));
-  const noindex = renderPages(ROOT, '/news/').filter((p) => p.noindex).map((p) => p.file);
+  const noindex = renderPages(ROOT).filter((p) => p.noindex).map((p) => p.file);
   assert.deepEqual(noindex, ['x/index.html']);
   const pages = registryPages();
   assert.deepEqual(pages.map((p) => p.file), REGISTRY);
@@ -60,7 +60,7 @@ test('a noindex file in content/landing/ stays out of the registry test render',
 });
 
 test('the 4 Studio service pages: breadcrumb, own SEO, a link to their projects', () => {
-  const pages = renderPages(ROOT, '/news/');
+  const pages = renderPages(ROOT);
   const studioHtml = pages.find((p) => p.file === 'studio/index.html').html;
   [['architecture-design', 'architecture'], ['interior-design', 'interior-design'],
     ['landscape-architecture', 'landscape'], ['master-planning', 'master-planning']]
@@ -95,13 +95,13 @@ function assertNav(html, name) {
 }
 
 test('every page links the nav Projects item to /projects/ and the logo to /', () => {
-  const pages = renderPages(ROOT, '/news/', undefined, POSTS);
+  const pages = renderPages(ROOT, undefined, POSTS);
   assert.ok(pages.some((p) => p.file === 'news/index.html'));
   pages.forEach((p) => assertNav(p.html, p.file));
   const [entry] = loadProjects(ROOT);
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
-  assertNav(renderProject(entry, site, '/news/n/'), entry.url);
+  assertNav(renderProject(entry, site), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
   assertNav(news, `news/${POSTS[0].slug}/`);
 });
@@ -117,17 +117,17 @@ function assertContact(html, name) {
 }
 
 test('every page links the nav Contact item to /contact/ with no click handler', () => {
-  renderPages(ROOT, '/news/', undefined, POSTS).forEach((p) => assertContact(p.html, p.file));
+  renderPages(ROOT, undefined, POSTS).forEach((p) => assertContact(p.html, p.file));
   const [entry] = loadProjects(ROOT);
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
-  assertContact(renderProject(entry, site, '/news/n/'), entry.url);
+  assertContact(renderProject(entry, site), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
   assertContact(news, `news/${POSTS[0].slug}/`);
 });
 
 test('renderPages output has no relative asset or page links', () => {
-  renderPages(ROOT, '/news/x/', undefined, POSTS).forEach((p) => {
+  renderPages(ROOT, undefined, POSTS).forEach((p) => {
     assert.doesNotMatch(p.html, /(src|href)=["']wp-content\//, p.file);
     assert.doesNotMatch(p.html, /url\(["']?wp-content\//, p.file);
     assert.doesNotMatch(p.html, /href=["'][^"'/:#]*\.html/, p.file);
@@ -184,7 +184,7 @@ test('studio render puts each value in its places', () => {
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
   const html = studio.render(studioFixture(), {
-    site, newsHref: 'news/n/index.html', page: { slug: 'x' },
+    site, page: { slug: 'x' },
   });
   assert.ok(!html.includes('{{'));
   assert.ok(html.includes('<h1 class="visually-hidden">Hidden H1</h1>'));
@@ -266,7 +266,7 @@ test('people render puts each value in its places', () => {
   const bio = 'Line one & $& "q"\n\nLine <two>';
   const list = [person(1), { ...person(2), name: 'Ann $&', bio }, person(3)];
   const html = people.render(peopleFixture(list), {
-    site, newsHref: 'news/n/index.html', page: { slug: 'x' },
+    site, page: { slug: 'x' },
   });
   assert.ok(!html.includes('{{'));
   assert.ok(html.includes('<h1 class="visually-hidden">Hidden &amp; H1</h1>'));
@@ -298,7 +298,7 @@ test('people renders items with the theme separator and nothing for an empty lis
 test('people render works with no people', () => {
   const site = readSite(ROOT);
   const html = people.render(peopleFixture([]), {
-    site, newsHref: 'news/n/index.html', page: { slug: 'x' },
+    site, page: { slug: 'x' },
   });
   assert.ok(!html.includes('{{'));
   assert.equal(count(html, '<div class="accord__item">'), 0);
@@ -306,7 +306,7 @@ test('people render works with no people', () => {
 });
 
 test('studio render adds a filled image title and nothing for an empty title', () => {
-  const opts = { site: readSite(ROOT), newsHref: 'n', page: { slug: 'x' } };
+  const opts = { site: readSite(ROOT), page: { slug: 'x' } };
   const content = studioFixture();
   content.founder.photo.title = 'Founder "t"';
   content.intro.photo.title = 'Photo t';
@@ -323,7 +323,7 @@ test('studio render adds a filled image title and nothing for an empty title', (
 test('people render adds a filled person photo title', () => {
   const list = [{ ...person(1), photo: { ...img('p1'), title: 'P1 t' } }];
   const html = people.render(peopleFixture(list), {
-    site: readSite(ROOT), newsHref: 'n', page: { slug: 'x' },
+    site: readSite(ROOT), page: { slug: 'x' },
   });
   assert.ok(html.includes('alt="p1 &quot;alt&quot;" title="P1 t" '));
 });
@@ -464,7 +464,7 @@ test('checkFileDays: the privacy text must state the file_days value as a whole 
 });
 
 test('the privacy body is markdown: sections with ids, a Contents list that links to each', () => {
-  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  const { html } = renderPages(ROOT).find((p) => p.file === 'privacy/index.html');
   const ids = [...html.matchAll(/<h2 id="([^"]+)">/g)].map((m) => m[1]);
   const links = [...html.matchAll(/<a href="#([^"]+)">/g)].map((m) => m[1]);
   assert.ok(ids.length > 10, String(ids.length));
@@ -476,7 +476,7 @@ test('the privacy body is markdown: sections with ids, a Contents list that link
 
 test('the privacy page names Cloudflare, Google Analytics and the file retention days', () => {
   const site = readSite(ROOT);
-  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  const { html } = renderPages(ROOT).find((p) => p.file === 'privacy/index.html');
   ['run on Cloudflare infrastructure', 'Google Analytics', `after ${site.forms.file_days} days`]
     .forEach((s) => assert.ok(html.includes(s), s));
   assert.doesNotMatch(html, /Netlify|outside your country of residence/);
@@ -487,7 +487,7 @@ test('the privacy page names Cloudflare, Google Analytics and the file retention
 });
 
 test('the privacy page: meta, og and JSON-LD description are the one English value', () => {
-  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  const { html } = renderPages(ROOT).find((p) => p.file === 'privacy/index.html');
   const { description } = readContent(ROOT, 'privacy').seo;
   assert.match(description, /^Read the Nellis Architecture privacy policy/);
   assert.ok(html.includes(`<meta name="description" content="${description}" />`));
@@ -498,7 +498,7 @@ test('the privacy page: meta, og and JSON-LD description are the one English val
 });
 
 test('the privacy page heading and breadcrumb say Privacy Policy', () => {
-  const { html } = renderPages(ROOT, '/news/').find((p) => p.file === 'privacy/index.html');
+  const { html } = renderPages(ROOT).find((p) => p.file === 'privacy/index.html');
   assert.ok(html.includes('<h1 class="visually-hidden">Privacy Policy</h1>'));
   const ld = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
   const crumbs = JSON.parse(ld)['@graph'].find((n) => n['@type'] === 'BreadcrumbList');
@@ -507,10 +507,10 @@ test('the privacy page heading and breadcrumb say Privacy Policy', () => {
 });
 
 test('every page carries one well-formed "No result" span in the nav search', () => {
-  renderPages(ROOT, '/news/', undefined, POSTS).forEach((p) => assertNoResult(p.html, p.file));
+  renderPages(ROOT, undefined, POSTS).forEach((p) => assertNoResult(p.html, p.file));
   const [entry] = loadProjects(ROOT);
   const site = readSite(ROOT);
-  assertNoResult(renderProject(entry, site, '/news/n/'), entry.url);
+  assertNoResult(renderProject(entry, site), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
   assertNoResult(news, 'news-template.html');
 });
@@ -527,10 +527,10 @@ test('every page takes the mailto links from site.json and the year from the bui
   };
   const projects = loadProjects(ROOT);
   const pages = PAGES.map((p) => [p.slug, p.module.render(p.data || readContent(ROOT, p.content), {
-    site: changed, newsHref: '/news/', page: p, root: ROOT, projects, posts: POSTS,
+    site: changed, page: p, root: ROOT, projects, posts: POSTS,
   })]);
   pages.push([projects[0].url, project.render(projects[0], {
-    site: changed, newsHref: '/news/', projects,
+    site: changed, projects,
   })]);
   const copyright = `© Nellis Architecture ${new Date().getUTCFullYear()}`;
   pages.forEach(([name, page]) => {
@@ -559,8 +559,8 @@ test('no partial and no news template has a fixed footer email or copyright year
 test('every footer links Privacy policy to /privacy/ and Got skills to the skills email', () => {
   const site = readSite(ROOT);
   const [entry] = loadProjects(ROOT);
-  const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
-  pages.push([entry.url, renderProject(entry, site, '/news/')]);
+  const pages = renderPages(ROOT, undefined, POSTS).map((p) => [p.file, p.html]);
+  pages.push([entry.url, renderProject(entry, site)]);
   pages.forEach(([name, html]) => {
     assert.ok(!html.includes('href="/#">Privacy policy'), name);
     const skills = [...html.matchAll(/Got skills\?<\/span>[\s\S]*?mailto:([^"]+)"/g)];
@@ -572,8 +572,8 @@ test('every footer links Privacy policy to /privacy/ and Got skills to the skill
 test('no page and no news template has an empty phone link', () => {
   const site = readSite(ROOT);
   const [entry] = loadProjects(ROOT);
-  const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
-  pages.push([entry.url, renderProject(entry, site, '/news/')]);
+  const pages = renderPages(ROOT, undefined, POSTS).map((p) => [p.file, p.html]);
+  pages.push([entry.url, renderProject(entry, site)]);
   const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
   pages.push(['news-template.html', news]);
   pages.forEach(([name, html]) => assert.ok(!html.includes('href="tel:"'), name));
@@ -583,16 +583,16 @@ test('a CMS schema adds one block after the generated one; project pages stay un
   const site = readSite(ROOT);
   const content = readContent(ROOT, 'privacy');
   const page = { slug: 'privacy', content: 'privacy' };
-  const plain = privacy.render(content, { site, newsHref: '/news/', page });
+  const plain = privacy.render(content, { site, page });
   const html = privacy.render(
     { ...content, seo: { ...content.seo, schema: '{"a":"</script>"}' } },
-    { site, newsHref: '/news/', page },
+    { site, page },
   );
   const block = '\t<script type="application/ld+json">{"a":"\\u003c/script>"}</script>\n';
   assert.ok(html.includes(`</script>\n${block}\t<!-- / Yoast SEO plugin. -->`));
   assert.equal(html.replace(block, ''), plain);
   const [entry] = loadProjects(ROOT);
-  const out = renderProject(entry, site, '/news/n/');
+  const out = renderProject(entry, site);
   assert.equal(out.match(/application\/ld\+json/g).length, 1);
   assert.ok(!out.includes('{{'));
   assert.ok(out.includes('</script>\n\t<!-- / Yoast SEO plugin. -->'));

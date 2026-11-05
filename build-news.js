@@ -321,12 +321,12 @@ function pruneProjects(root, list) {
   });
 }
 
-function writeProjects(root, list, newsHref, manifest, site) {
+function writeProjects(root, list, manifest, site) {
   list.forEach((e) => {
     const outDir = path.join(root, e.url);
     fs.mkdirSync(outDir, { recursive: true });
     const html = project.render(e, {
-      site, newsHref, manifest, projects: list,
+      site, manifest, projects: list,
     });
     fs.writeFileSync(path.join(outDir, 'index.html'), html);
   });
@@ -395,14 +395,13 @@ function build(manifest = readManifest(ROOT)) {
   refreshNewsLists(ROOT, list);
 
   const newest = posts[0];
-  const newsHref = '/news/';
   const projects = loadProjects(ROOT);
   checkUploads(ROOT, projects);
-  const pages = writePages(ROOT, newsHref, projects, posts, manifest, landing);
+  const pages = writePages(ROOT, projects, posts, manifest, landing);
   pruneLanding(ROOT, landing);
-  writeProjects(ROOT, projects, newsHref, manifest, site);
+  writeProjects(ROOT, projects, manifest, site);
   writeProjectData(ROOT, projects, manifest);
-  writePreview(ROOT, manifest, newsHref);
+  writePreview(ROOT, manifest);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson, null, 2));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages, projects));

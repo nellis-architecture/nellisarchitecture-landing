@@ -20,7 +20,7 @@ const byName = (name) => LIST.find((e) => e.name === name);
 const projectUrl = (name) => byName(name).url;
 const count = (s, sub) => s.split(sub).length - 1;
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'pages', 'site.json'), 'utf8'));
-const renderEntry = (e) => project.render(e, { site, newsHref: '/news/n/', projects: LIST });
+const renderEntry = (e) => project.render(e, { site, projects: LIST });
 
 const proj = (over = {}) => ({
   area: 'Palm Jumeirah',
@@ -203,7 +203,7 @@ test('head without OG_IMAGE renders exactly the old head', () => {
 });
 
 test('the other pages keep the default og:image', () => {
-  renderPages(ROOT, '/news/x/').filter((p) => !p.file.startsWith('projects/')).forEach((p) => {
+  renderPages(ROOT).filter((p) => !p.file.startsWith('projects/')).forEach((p) => {
     assert.equal(count(p.html, 'property="og:image"'), 1, p.file);
     assert.ok(p.html.includes(OLD_OG), p.file);
   });
@@ -327,7 +327,7 @@ test('the Home early script redirects a later #proj= hash change with replace', 
 });
 
 test('only Home has the early script, before static-backend.js', () => {
-  renderPages(ROOT, '/news/x/').forEach((p) => {
+  renderPages(ROOT).forEach((p) => {
     const at = p.html.indexOf('hashTarget(location.hash');
     if (p.file === 'index.html') {
       assert.ok(at > -1 && at < p.html.indexOf('/js/static-backend.js'));
@@ -340,7 +340,7 @@ test('only Home has the early script, before static-backend.js', () => {
 
 test('only project pages load the project switch, once, before the footer scripts', () => {
   const tag = '<script src="/js/project-switch.js"></script>';
-  renderPages(ROOT, '/news/x/').forEach((p) => {
+  renderPages(ROOT).forEach((p) => {
     assert.equal(count(p.html, tag), 0, p.file);
   });
   LIST.forEach((e) => {
@@ -357,7 +357,7 @@ const LINK = new RegExp('<div class="project__item">\\s*'
 const links = (html) => [...html.matchAll(LINK)];
 
 test('every Home grid item links to its project page', () => {
-  const { html } = renderPages(ROOT, '/news/x/').find((p) => p.file === 'index.html');
+  const { html } = renderPages(ROOT).find((p) => p.file === 'index.html');
   const found = links(html);
   assert.equal(count(html, '<div class="project__item">'), LIST.length);
   assert.equal(found.length, LIST.length);
@@ -382,7 +382,7 @@ test('every filter fragment item links to its project page', () => {
 
 const divsOpen = (html) => (html.match(/<div[\s>]/g) || []).length
   - (html.match(/<\/div>/g) || []).length;
-const HOME = renderPages(ROOT, '/news/x/').find((p) => p.file === 'index.html').html;
+const HOME = renderPages(ROOT).find((p) => p.file === 'index.html').html;
 const PROJECT_LINK = /<a class="project__link no-prefetch" href="([^"]+)"( aria-current="page")?/g;
 
 test('every project page shows its project open next to the thumbnail column', () => {

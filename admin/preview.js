@@ -1748,7 +1748,6 @@ if (require.main === module) {
 }
 };
 var PAGES = [{"content":"index","slug":"","file":"build/lib/pages/index.js","md":false},{"content":"studio","slug":"studio","file":"build/lib/pages/studio.js","md":false},{"content":"studio-architecture-design","slug":"studio/architecture-design","file":"build/lib/pages/service.js","md":true},{"content":"studio-interior-design","slug":"studio/interior-design","file":"build/lib/pages/service.js","md":true},{"content":"studio-landscape-architecture","slug":"studio/landscape-architecture","file":"build/lib/pages/service.js","md":true},{"content":"studio-master-planning","slug":"studio/master-planning","file":"build/lib/pages/service.js","md":true},{"content":"people","slug":"people","file":"build/lib/pages/people.js","md":false},{"content":"privacy","slug":"privacy","file":"build/lib/pages/privacy.js","md":true},{"content":"projects","slug":"projects","category":"all","file":"build/lib/pages/category.js","md":false},{"content":"projects-architecture","slug":"projects/architecture","category":"architecture","file":"build/lib/pages/category.js","md":false},{"content":"projects-interior-design","slug":"projects/interior-design","category":"interior-design","file":"build/lib/pages/category.js","md":false},{"content":"projects-landscape","slug":"projects/landscape","category":"landscape","file":"build/lib/pages/category.js","md":false},{"content":"projects-master-planning","slug":"projects/master-planning","category":"master-planning","file":"build/lib/pages/category.js","md":false}];
-var NEWS_HREF = "/news/";
 var SITE = {"affiliations":[{"src":"/wp-content/uploads/2025/02/partner1.png","alt":"","width":52,"height":52},{"src":"/wp-content/uploads/2025/02/partner2.png","alt":"","width":52,"height":52},{"src":"/wp-content/uploads/2026/04/riba_resized_7x_smaller.jpg","alt":"","width":123,"height":54}],"forms":{"contact":{"title":"Have a project?","description":"Please take a moment to complete the form below.","button":"Send message","email":"hello@nellisarchitecture.com"},"skills":{"title":"Got skills?","description":"Please take a moment to complete the form below.","button":"Send message","email":"people@nellisarchitecture.com"},"file_days":90},"nav":[{"label":"Projects","link":"/projects/"},{"label":"Studio","link":"/studio/"},{"label":"People","link":"/people/"},{"label":"News","link":"/news/"},{"label":"Contact","link":"/contact/"}],"follow":[{"label":"Instagram","link":"https://www.instagram.com/nellis.architecture/"},{"label":"LinkedIn","link":"https://www.linkedin.com/company/nellis-architecture/"},{"label":"YouTube","link":"https://www.youtube.com/@NellisArchitecture"}]};
 function pathShim() {
   function normalize(p) {
@@ -1821,13 +1820,12 @@ function loader(modules, builtins, shim) {
   }
   return load;
 }
-function renderPage(load, pages, newsHref, site, name, data) {
+function renderPage(load, pages, site, name, data) {
   const page = pages.find((p) => p.content === name);
   if (!page) throw new Error(`no preview for ${name}`);
   const content = page.md ? load('build/lib/markdown.js').markdownPage(data, data.body) : data;
   return load(page.file).render(content, {
     site,
-    newsHref,
     page: { slug: page.slug, category: page.category, content: page.content },
     root: '.',
     projects: load('build/lib/projects.js').loadProjects('.'),
@@ -1924,7 +1922,7 @@ var load = loader(MODULES, {
 }, path);
 var manifest = JSON.parse(FILES["build/images.json"]);
 function render(name, content) {
-  return renderPage(load, PAGES, NEWS_HREF, SITE, name, content);
+  return renderPage(load, PAGES, SITE, name, content);
 }
 window.NellisPreview = { render: render, forPreview: forPreview };
 if (window.CMS) {

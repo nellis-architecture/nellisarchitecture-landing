@@ -156,7 +156,7 @@ test('a project with only the required fields gives no "undefined"', () => {
     },
   });
   const page = project.render(e, {
-    site, newsHref: '/news/', projects: [e], manifest: {},
+    site, projects: [e], manifest: {},
   });
   const start = page.indexOf('<div class="currentProject-heroImg');
   assert.ok(start > 0);
@@ -225,7 +225,7 @@ test('a new project reaches every generated list', () => {
   const [fixture] = load({ 'fixture.json': proj() });
   const list = [...LIST, fixture];
   const page = project.render(fixture, {
-    site, newsHref: '/news/', projects: list, manifest: {},
+    site, projects: list, manifest: {},
   });
   assert.ok(page.includes('font-weight: 200;">Fixture &lt;b&gt;</h2>'));
   assert.equal(count(page, `(Projects ${list.length})`), 2);
@@ -314,7 +314,7 @@ test('the alt fields replace the project name', () => {
   assert.ok(grid([alt]).includes('alt="Card alt"'));
   assert.ok(filterFiles([alt], {}).landscape_0.includes('alt="Card alt"'));
   const html = project.render(alt, {
-    site, newsHref: '/news/', projects: [alt], manifest: {},
+    site, projects: [alt], manifest: {},
   });
   ['Hero alt', 'Slide alt', 'Image alt'].forEach((s) => assert.ok(html.includes(`alt="${s}"`), s));
   assert.ok(html.includes('src="/wp-content/uploads/t.jpg"'));
@@ -348,7 +348,7 @@ test('writeProjectData writes the filter files and data/search.json', () => {
 const pageOf = (p) => {
   const [e] = load({ 'fixture.json': p });
   return project.render(e, {
-    site, newsHref: '/news/', projects: [e], manifest: {},
+    site, projects: [e], manifest: {},
   });
 };
 const DOMAIN = 'https://nellisarchitecture.com';

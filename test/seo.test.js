@@ -48,7 +48,7 @@ const metaOf = (html, attr, key) => unHtml(
 );
 
 test('Home and Studio: the WebPage node and og tags equal the title and description', () => {
-  const pages = renderPages(ROOT, '/news/');
+  const pages = renderPages(ROOT);
   [['index', 'index.html'], ['studio', 'studio/index.html']].forEach(([name, file]) => {
     const { html } = pages.find((p) => p.file === file);
     const title = unHtml(html.match(/<title>([^<]+)<\/title>/)[1]);
@@ -91,7 +91,7 @@ test('Home canonical, og:url and URL are exactly the domain with one slash', () 
   assert.equal(t.CANONICAL, `${DOMAIN}/`);
   assert.equal(t.OG_URL, `${DOMAIN}/`);
   assert.equal(pageUrl(''), `${DOMAIN}/`);
-  const [{ html }] = renderPages(ROOT, '/news/n/');
+  const [{ html }] = renderPages(ROOT);
   assert.ok(html.includes(`<link rel="canonical" href="${DOMAIN}/" />`));
   assert.ok(html.includes(`<meta property="og:url" content="${DOMAIN}/" />`));
 });
@@ -119,14 +119,14 @@ test('noindex replaces the robots line', () => {
   const site = read('site');
   const content = { ...read('index'), seo: { ...read('index').seo, noindex: true } };
   const html = index.render(content, {
-    site, newsHref: '/n/', page: pageOf('index'), projects: loadProjects(ROOT),
+    site, page: pageOf('index'), projects: loadProjects(ROOT),
   });
   assert.ok(html.includes('  <meta name="robots" content="noindex">\n'));
   assert.ok(!html.includes("name='robots'"));
 });
 
 test('renderPages marks noindex pages for the sitemap', () => {
-  const pages = renderPages(ROOT, '/n/', undefined, null, undefined, []);
+  const pages = renderPages(ROOT, undefined, null, undefined, []);
   pages.forEach((p) => assert.equal(p.noindex, false, p.file));
 });
 
@@ -141,7 +141,7 @@ test('SEO values are escaped and $& stays literal', () => {
   assert.equal(t.OG_DESCRIPTION, t.DESCRIPTION);
   const site = read('site');
   const html = index.render({ h1: 'H', seo }, {
-    site, newsHref: '/n/', page: pageOf('index'), projects: loadProjects(ROOT),
+    site, page: pageOf('index'), projects: loadProjects(ROOT),
   });
   assert.ok(html.includes(`<title>${t.TITLE}</title>`));
   assert.ok(html.includes(`<meta property="og:title" content="${t.OG_TITLE}" />`));
@@ -152,7 +152,7 @@ test('SEO values are escaped and $& stays literal', () => {
 
 /* News posts: see test/build-news.test.js (every real post renders one og:image on disk). */
 test('og:image of the pages exists on disk', () => {
-  const pages = renderPages(ROOT, '/news/x/').map((p) => [p.file, p.html]);
+  const pages = renderPages(ROOT).map((p) => [p.file, p.html]);
   pages.forEach(([file, html]) => {
     const m = html.match(/property="og:image" content="([^"]+)"/);
     assert.ok(m, file);
@@ -198,7 +198,7 @@ test('withOrganization appends one node and keeps the Yoast escaping', () => {
 });
 
 test('Home, /studio/ and /people/ append the node to the Yoast graph', () => {
-  const pages = renderPages(ROOT, '/news/n/');
+  const pages = renderPages(ROOT);
   ['index.html', 'studio/index.html', 'people/index.html'].forEach((file) => {
     const { html } = pages.find((p) => p.file === file);
     const raw = ldRaw(html);
@@ -215,13 +215,13 @@ test('Home, /studio/ and /people/ append the node to the Yoast graph', () => {
 
 test('no other registry page carries the node', () => {
   const four = ['index.html', 'studio/index.html', 'people/index.html', 'projects/index.html'];
-  renderPages(ROOT, '/news/n/').forEach((p) => {
+  renderPages(ROOT).forEach((p) => {
     assert.equal(ldRaw(p.html).includes('"@type":"Organization"'), four.includes(p.file), p.file);
   });
 });
 
 test('the build is current and idempotent: the registry pages match a new render', () => {
-  renderPages(ROOT, '/news/').forEach((p) => {
+  renderPages(ROOT).forEach((p) => {
     assert.equal(fs.readFileSync(path.join(ROOT, p.file), 'utf8'), p.html, p.file);
   });
 });

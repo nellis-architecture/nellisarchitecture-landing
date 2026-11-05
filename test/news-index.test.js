@@ -25,7 +25,7 @@ const site = read('site');
 const content = read('news');
 const page = PAGES.find((p) => p.slug === 'news');
 const render = (posts, manifest) => news.render(content, {
-  site, newsHref: '/news/', page, posts, manifest,
+  site, page, posts, manifest,
 });
 const count = (s, sub) => s.split(sub).length - 1;
 const post = (over) => ({
@@ -141,8 +141,8 @@ test('the /news/ page throws without posts', () => {
 });
 
 test('renderPages writes news/index.html only with posts; the sitemap lists /news/ once', () => {
-  assert.ok(!renderPages(ROOT, '/news/', LIST).some((p) => p.file === 'news/index.html'));
-  const pages = renderPages(ROOT, '/news/', LIST, POSTS);
+  assert.ok(!renderPages(ROOT, LIST).some((p) => p.file === 'news/index.html'));
+  const pages = renderPages(ROOT, LIST, POSTS);
   assert.equal(pages.filter((p) => p.file === 'news/index.html').length, 1);
   const xml = sitemap(POSTS, pages, LIST);
   assert.equal(count(xml, `<url><loc>${DOMAIN}/news/</loc><priority>0.7</priority></url>`), 1);
@@ -169,7 +169,7 @@ const CATS = PAGES.filter((p) => p.slug.startsWith('news/category/'));
 const renderCat = (slug, posts = POSTS) => {
   const p = PAGES.find((x) => x.slug === `news/category/${slug}`);
   return news.render(p.data, {
-    site, newsHref: '/news/', page: p, posts, manifest: {},
+    site, page: p, posts, manifest: {},
   });
 };
 
@@ -230,7 +230,7 @@ test('the /news/ page keeps its crumbs and links the 5 category pages', () => {
 });
 
 test('the sitemap lists the 5 category pages once each', () => {
-  const xml = sitemap(POSTS, renderPages(ROOT, '/news/', LIST, POSTS), LIST);
+  const xml = sitemap(POSTS, renderPages(ROOT, LIST, POSTS), LIST);
   CATS.forEach((p) => {
     const row = `<url><loc>${DOMAIN}/${p.slug}/</loc><priority>0.6</priority></url>`;
     assert.equal(count(xml, row), 1, p.slug);

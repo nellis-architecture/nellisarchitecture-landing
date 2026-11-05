@@ -16,7 +16,7 @@ const read = (name) => JSON.parse(
 const site = read('site');
 const content = read('contact');
 const page = PAGES.find((p) => p.slug === 'contact');
-const render = (c = content) => contact.render(c, { site, newsHref: '/news/', page });
+const render = (c = content) => contact.render(c, { site, page });
 const count = (s, sub) => s.split(sub).length - 1;
 const ldJson = (html) => JSON.parse(
   html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/)[1],
@@ -100,7 +100,7 @@ test('the contact address matches the footer office address', () => {
 });
 
 test('the sitemap lists /contact/ once', () => {
-  const pages = renderPages(ROOT, '/news/', loadProjects(ROOT));
+  const pages = renderPages(ROOT, loadProjects(ROOT));
   assert.ok(pages.some((p) => p.file === 'contact/index.html'));
   assert.equal(count(sitemap([], pages), `<loc>${URL}</loc>`), 1);
 });

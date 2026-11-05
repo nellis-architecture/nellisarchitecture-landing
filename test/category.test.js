@@ -18,7 +18,7 @@ const names = (cat) => category.members(LIST, cat).map((e) => e.name);
 const count = (s, sub) => s.split(sub).length - 1;
 const pageOf = (cat) => PAGES.find((p) => p.category === cat);
 const render = (content, cat = 'landscape', projects = LIST) => category.render(content, {
-  site, newsHref: '/news/n/', page: pageOf(cat), root: ROOT, projects,
+  site, page: pageOf(cat), root: ROOT, projects,
 });
 const fixture = (seo = {}) => ({
   h1: 'H1 <a> & "q"', intro: 'Intro <b> & "q" $&', seo: { description: 'D', ...seo },
@@ -130,7 +130,7 @@ test('category JSON-LD is a CollectionPage with a Home › category breadcrumb',
 });
 
 test('sitemap lists the hub and the 4 category pages once at priority 0.7', () => {
-  const xml = sitemap([], renderPages(ROOT, '/n/', LIST), LIST);
+  const xml = sitemap([], renderPages(ROOT, LIST), LIST);
   ['', ...CATEGORY_KEYS.map((cat) => `${cat}/`)].forEach((cat) => {
     const row = `<url><loc>${DOMAIN}/projects/${cat}</loc><priority>0.7</priority></url>`;
     assert.equal(count(xml, row), 1, cat);
