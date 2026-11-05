@@ -211,7 +211,8 @@ test('the other pages keep the default og:image', () => {
 
 test('sitemap lists the project pages with priority 0.7', () => {
   const xml = sitemap([], [], LIST);
-  assert.equal(count(xml, `<loc>${DOMAIN}/projects/`), LIST.length);
+  const listed = LIST.filter((e) => !e.p.seo?.noindex);
+  assert.equal(count(xml, `<loc>${DOMAIN}/projects/`), listed.length);
   assert.ok(xml.includes(
     `<url><loc>${DOMAIN}/projects/architecture/zoya/</loc><priority>0.7</priority></url>`,
   ));

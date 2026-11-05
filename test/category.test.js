@@ -68,7 +68,7 @@ test('each item links to the project page in its primary category', () => {
   assert.ok(html.includes('href="/projects/master-planning/orel/"'));
   assert.ok(html.includes('src="/wp-content/variants/2025/07/Zoya1-scaled-f4a51325-1600.jpg"'));
   assert.equal(count(html, 'fetchpriority="high"'), 1);
-  assert.ok(html.split('fetchpriority')[0].includes('aria-label="Zoya"'));
+  assert.ok(html.split('fetchpriority')[0].includes(`aria-label="${names('landscape')[0]}"`));
   const atelier = render(fixture(), 'architecture').split('aria-label="Atelier"')[1]
     .split('</div>')[0];
   assert.ok(!atelier.includes('<br>'));
@@ -94,8 +94,8 @@ test('category page head has its own SEO tags and an absolute og:image', () => {
   assert.ok(html.includes(`<meta property="og:url" content="${url}" />`));
   assert.ok(html.includes('<meta property="og:type" content="website" />'));
   assert.equal(count(html, 'property="og:image"'), 1);
-  assert.ok(html.includes(`<meta property="og:image" content="${DOMAIN}`
-    + '/wp-content/uploads/2025/07/Zoya1-scaled.jpg">'));
+  const first = category.members(LIST, 'landscape')[0];
+  assert.ok(html.includes(`<meta property="og:image" content="${DOMAIN}${listImage(first)}">`));
   assert.ok(!html.includes('article:modified_time'));
   assert.ok(html.includes("<meta name='robots' content='index, follow"));
 });

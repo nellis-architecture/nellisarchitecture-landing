@@ -75,12 +75,31 @@ test('previewPages: the PAGES pages without news and contact', () => {
   ]);
 });
 
+/* The build reads the size of an upload that has no variants yet (before `npm run images`);
+   the preview cannot read image files. */
+const unsized = (html) => html.replace(
+  /<picture style="max-width:\d+px">(<img [^>]*?src="\/([^"]+)") width="\d+" height="\d+"/g,
+  (all, img, src) => (MANIFEST[src] ? all : `<picture>${img}`),
+);
+
 test('the preview render equals the build output for each page', () => {
   const built = renderPages(ROOT, NEWS, loadProjects(ROOT), null, MANIFEST);
   PAGES.forEach((p) => {
     const page = built.find((b) => b.slug === p.slug);
-    assert.equal(NellisPreview.render(p.content, content(p.content)), page.html, p.content);
+    const html = unsized(page.html);
+    assert.equal(NellisPreview.render(p.content, content(p.content)), html, p.content);
   });
+});
+
+test('unsized drops the read size of an upload without variants only', () => {
+  const tag = (src) => `<picture style="max-width:1536px"><img class="c" src="/${src}" `
+    + 'width="1536" height="1024" alt="">';
+  const known = Object.keys(MANIFEST)[0];
+  assert.equal(unsized(tag(known)), tag(known));
+  assert.equal(
+    unsized(tag('wp-content/uploads/new.jpg')),
+    '<picture><img class="c" src="/wp-content/uploads/new.jpg" alt="">',
+  );
 });
 
 test('edited content gives the same output in the preview and in the build', () => {
