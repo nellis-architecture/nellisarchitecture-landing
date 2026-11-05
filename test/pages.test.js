@@ -84,8 +84,7 @@ test('the 4 Studio service pages: breadcrumb, own SEO, a link to their projects'
     });
 });
 
-const NAV_PROJECTS = new RegExp('<a href="([^"]*)" class="(?:projectPage|nav-item)"[^>]*>'
-  + '\\s*(?:<li class="projectPage">)?Projects<', 'g');
+const NAV_PROJECTS = /<a href="([^"]*)" class="projectPage"[^>]*>Projects</g;
 
 function assertNav(html, name) {
   const hrefs = [...html.matchAll(NAV_PROJECTS)].map((m) => m[1]);
@@ -106,8 +105,7 @@ test('every page links the nav Projects item to /projects/ and the logo to /', (
   assertNav(news, `news/${POSTS[0].slug}/`);
 });
 
-const NAV_CONTACT = new RegExp('<a href="([^"]*)" class="(?:contactPage|nav-item)"[^>]*>'
-  + '\\s*(?:<li class="contactPage">)?Contact<', 'g');
+const NAV_CONTACT = /<a href="([^"]*)" class="contactPage"[^>]*>Contact</g;
 
 function assertContact(html, name) {
   const hrefs = [...html.matchAll(NAV_CONTACT)].map((m) => m[1]);
@@ -124,6 +122,15 @@ test('every page links the nav Contact item to /contact/ with no click handler',
   assertContact(renderProject(entry, site), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
   assertContact(news, `news/${POSTS[0].slug}/`);
+});
+
+test('no page nests an <li> inside an <a>', () => {
+  const [entry] = loadProjects(ROOT);
+  const pages = renderPages(ROOT, '/news/', undefined, POSTS).map((p) => [p.file, p.html]);
+  pages.push([entry.url, renderProject(entry, readSite(ROOT), '/news/')]);
+  const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
+  pages.push([`news/${POSTS[0].slug}/`, news]);
+  pages.forEach(([name, html]) => assert.doesNotMatch(html, /<a\b[^>]*>\s*<li\b/, name));
 });
 
 test('renderPages output has no relative asset or page links', () => {

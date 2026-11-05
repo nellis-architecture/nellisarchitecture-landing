@@ -387,21 +387,21 @@
                 <div class="burMenuMob">
                     <nav class="nav">
                         <ul class="nav__items">
-                            <a href="/projects/" class="nav-item">
-                                <li class="projectPage">Projects</li>
-                            </a>
-                            <a href="/studio/" class="nav-item">
-                                <li class="studioPage">Studio</li>
-                            </a>
-                            <a href="/people/" class="nav-item">
-                                <li class="projectPeople">People</li>
-                            </a>
-                            <a href="/news/" class="nav-item">
-                                <li class="newsPage">News</li>
-                            </a>
-                            <a href="/contact/" class="nav-item">
-                                <li class="contactPage">Contact</li>
-                            </a>
+                            <li class="nav-item">
+                                <a href="/projects/" class="projectPage">Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/studio/" class="studioPage">Studio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/people/" class="projectPeople">People</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/news/" class="newsPage">News</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/contact/" class="contactPage">Contact</a>
+                            </li>
                             <div class="search">
                                 <svg
                                     width="16"
@@ -1115,10 +1115,12 @@
             margin-top: 70px;
         }
 
-        .newsPage {
+        .leftbar .newsPage {
+            display: list-item;
             color: #002e20;
             list-style: disc;
             margin-left: 16px;
+            transition: opacity 0.4s;
         }
 
         .newsIndexItem {

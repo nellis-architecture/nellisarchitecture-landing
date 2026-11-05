@@ -43,22 +43,22 @@ test('navSite renders the shape A items with the hook class and the margin style
               </li>`);
 });
 
-test('navPlain puts nav-item on the anchor and the hook on the li', () => {
-  assert.equal(navPlain(NAV), `                            <a href="/projects/" class="nav-item">
-                                <li class="projectPage">Projects</li>
-                            </a>
-                            <a href="/studio/" class="nav-item">
-                                <li class="studioPage">Studio</li>
-                            </a>
-                            <a href="/people/" class="nav-item">
-                                <li class="projectPeople">People</li>
-                            </a>
-                            <a href="/news/" class="nav-item">
-                                <li class="newsPage">News</li>
-                            </a>
-                            <a href="/contact/" class="nav-item">
-                                <li class="contactPage">Contact</li>
-                            </a>`);
+test('navPlain puts nav-item on the li and the hook on the anchor', () => {
+  assert.equal(navPlain(NAV), `                            <li class="nav-item">
+                                <a href="/projects/" class="projectPage">Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/studio/" class="studioPage">Studio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/people/" class="projectPeople">People</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/news/" class="newsPage">News</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/contact/" class="contactPage">Contact</a>
+                            </li>`);
 });
 
 test('navPost puts the newsPage hook on the li and no class on the anchor', () => {
@@ -83,14 +83,13 @@ test('the nav renderers omit the class attribute for an unmapped link', () => {
   const item = { label: 'X', link: '/x/' };
   assert.equal(navSite([item]), `${P14}<li class="nav-item">\n`
     + `${P16}<a href="/x/" style="margin-left: 0;">X</a>\n${P14}</li>`);
-  assert.equal(navPlain([item]), `${P28}<a href="/x/" class="nav-item">\n`
-    + `${P32}<li>X</li>\n${P28}</a>`);
+  assert.equal(navPlain([item]), `${P28}<li class="nav-item">\n`
+    + `${P32}<a href="/x/">X</a>\n${P28}</li>`);
   assert.equal(navPost([item]), `${P14}<li class="nav-item">\n`
     + `${P16}<a href="/x/">X</a>\n${P14}</li>`);
-  [navSite([item]), navPost([item])].forEach((out) => {
+  [navSite([item]), navPlain([item]), navPost([item])].forEach((out) => {
     assert.ok(!out.match(/<a [^>]*class="/), out);
   });
-  assert.ok(!navPlain([item]).includes('<li class="'), navPlain([item]));
 });
 
 test('the nav renderers escape the label and the link and keep $& literal', () => {
@@ -99,8 +98,8 @@ test('the nav renderers escape the label and the link and keep $& literal', () =
   const label = 'A &lt;b&gt; &amp; $&amp;';
   assert.equal(navSite([item]), `${P14}<li class="nav-item">\n`
     + `${P16}<a href="${href}" style="margin-left: 0;">${label}</a>\n${P14}</li>`);
-  assert.equal(navPlain([item]), `${P28}<a href="${href}" class="nav-item">\n`
-    + `${P32}<li>${label}</li>\n${P28}</a>`);
+  assert.equal(navPlain([item]), `${P28}<li class="nav-item">\n`
+    + `${P32}<a href="${href}">${label}</a>\n${P28}</li>`);
   assert.equal(navPost([item]), `${P14}<li class="nav-item">\n`
     + `${P16}<a href="${href}">${label}</a>\n${P14}</li>`);
 });

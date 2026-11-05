@@ -91,11 +91,12 @@ function navSite(items) {
 }
 
 /* Shape C: page-text (privacy, services), page-news, page-contact, page-category.
-   The fixed nav-item class sits on the <a>, the hook on the <li>. */
+   Shape A without the style attribute, at the shape C indentation. */
 function navPlain(items) {
-  return items.map((it) => `${PAD.cLink}<a href="${escAttr(it.link)}" class="nav-item">\n`
-    + `${PAD.cItem}<li${classAttr(hookOf(it.link))}>${escText(it.label)}</li>\n`
-    + `${PAD.cLink}</a>`).join('\n');
+  return items.map((it) => `${PAD.cLink}<li class="nav-item">\n`
+    + `${PAD.cItem}<a href="${escAttr(it.link)}"${classAttr(hookOf(it.link))}>`
+    + `${escText(it.label)}</a>\n`
+    + `${PAD.cLink}</li>`).join('\n');
 }
 
 /* Shape D: build/news-template.html. Shape A without the style attribute, and the

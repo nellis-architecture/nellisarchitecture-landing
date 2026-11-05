@@ -108,6 +108,36 @@ VIEWPORTS.forEach(([label, viewport]) => {
   });
 });
 
+const HOOKS = [['/news/', 'newsPage'], ['/contact/', 'contactPage']];
+
+HOOKS.forEach(([where, hook]) => {
+  [['desktop', DESKTOP], ['375', { width: 375, height: 812 }]].forEach(([label, viewport]) => {
+    test(`pages: the nav marks the current item on ${where} (${label})`, async () => {
+      const v = await visit(where, viewport);
+      await check(v, `pages-nav-mark-${hook}-${label}`, async () => {
+        const nav = await v.page.evaluate((cls) => {
+          const items = [...document.querySelectorAll('header .nav__items .nav-item')];
+          const style = (el) => getComputedStyle(el);
+          const a = document.querySelector(`header .nav__items a.${cls}`);
+          return {
+            nested: document.querySelectorAll('header .nav__items a > li').length,
+            mark: [style(a).display, style(a).listStyleType, style(a).marginLeft, style(a).color],
+            others: [...document.querySelectorAll('header .nav__items .nav-item a')]
+              .filter((x) => x !== a)
+              .map((x) => [x, x.parentElement].some((el) => style(el).display === 'list-item')),
+            order: items.map((li, i) => [Number(style(li).order), i, li.textContent.trim()])
+              .sort((p, q) => p[0] - q[0] || p[1] - q[1]).map((p) => p[2]),
+          };
+        }, hook);
+        assert.equal(nav.nested, 0);
+        assert.deepEqual(nav.mark, ['list-item', 'disc', '16px', 'rgb(0, 46, 32)']);
+        assert.ok(nav.others.length > 0 && nav.others.every((m) => !m), String(nav.others));
+        assert.deepEqual(nav.order, readSite(ROOT).nav.map((it) => it.label));
+      });
+    });
+  });
+});
+
 test('pages: the menu navigates', async () => {
   const v = await visit('/', DESKTOP);
   await check(v, 'pages-menu-nav', async () => {
