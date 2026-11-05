@@ -122,6 +122,8 @@ HOOKS.forEach(([where, hook]) => {
           return {
             nested: document.querySelectorAll('header .nav__items a > li').length,
             mark: [style(a).display, style(a).listStyleType, style(a).marginLeft, style(a).color],
+            sizes: [...document.querySelectorAll('header .nav__items .nav-item a')]
+              .map((x) => style(x).fontSize === style(x.parentElement).fontSize),
             others: [...document.querySelectorAll('header .nav__items .nav-item a')]
               .filter((x) => x !== a)
               .map((x) => [x, x.parentElement].some((el) => style(el).display === 'list-item')),
@@ -131,6 +133,8 @@ HOOKS.forEach(([where, hook]) => {
         }, hook);
         assert.equal(nav.nested, 0);
         assert.deepEqual(nav.mark, ['list-item', 'disc', '16px', 'rgb(0, 46, 32)']);
+        /* The label keeps the size of the li, as before the link moved inside it. */
+        assert.ok(nav.sizes.length > 0 && nav.sizes.every(Boolean), String(nav.sizes));
         assert.ok(nav.others.length > 0 && nav.others.every((m) => !m), String(nav.others));
         assert.deepEqual(nav.order, readSite(ROOT).nav.map((it) => it.label));
       });

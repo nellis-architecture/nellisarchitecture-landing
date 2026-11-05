@@ -505,6 +505,11 @@
     </section>
 
     <style>
+        /* Keep the menu size of the old <li> label: the theme sets 12px on .leftbar a, and animates all. */
+        .leftbar .nav__items .nav-item a {
+            font-size: inherit;
+            transition: opacity 0.4s;
+        }
         h1 {
             margin-bottom: 40px !important;
             margin-top: 40px;

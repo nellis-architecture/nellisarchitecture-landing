@@ -635,6 +635,11 @@
     </main>
 
     <style>
+        /* Keep the menu size of the old <li> label: the theme sets 12px on .leftbar a, and animates all. */
+        .leftbar .nav__items .nav-item a {
+            font-size: inherit;
+            transition: opacity 0.4s;
+        }
         /* The theme makes .centerProject a full-height scroll panel for the Home grid. Show the list in the page flow. */
         .categoryPage.center,
         .categoryPage .centerProject {
