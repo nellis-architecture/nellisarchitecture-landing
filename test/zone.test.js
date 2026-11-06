@@ -147,6 +147,12 @@ test('dns.json: no apex A (the Worker domain), apex MX Proofpoint, only www prox
   assert.deepEqual(records.filter((r) => r.proxied).map((r) => r.name), [`www.${APEX}`]);
 });
 
+test('dns.json: no record points to the cancelled cPanel host (LND-110)', () => {
+  const old = readRecords().filter((r) => r.content === '92.205.147.248'
+    || /sucuriip/.test(`${r.name} ${r.content}`));
+  assert.deepEqual(old, []);
+});
+
 test('domainPlan: attach a hostname that is missing or on another Worker', () => {
   assert.deepEqual(domainPlan([], [APEX], 'landing'), [APEX]);
   assert.deepEqual(domainPlan([{ hostname: APEX, service: 'landing' }], [APEX], 'landing'), []);
