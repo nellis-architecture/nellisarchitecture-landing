@@ -61,7 +61,7 @@ test/                 # unit tests (npm test)
 
 ## Updating news (SEO team)
 
-1. Open `<site>/admin/` and click **Login with GitHub**. Before the cutover, `<site>` is <https://landing.nellisarchitecture.workers.dev>.
+1. Open <https://nellisarchitecture.com/admin/> and click **Login with GitHub**.
    Each editor needs a [GitHub](https://github.com/) account with write access to the repo `nellis-architecture/nellisarchitecture-landing` (decision D5).
    The operator adds each editor as a [collaborator](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) of the repo.
    On a shared computer, log out after you work: the login gives access to the full repo (`repo` scope).
@@ -90,7 +90,7 @@ To use the CMS on your computer, see [Local CMS](docs/workflow/development.md#co
 
 ## Updating projects
 
-1. Open `<site>/admin/`, then **Projects**. The list shows the projects by **Order**, lowest first.
+1. Open <https://nellisarchitecture.com/admin/>, then **Projects**. The list shows the projects by **Order**, lowest first.
 2. New Project. Fill the name, URL slug, category, type, order, hero and card image. All other fields are optional.
    Each upload must be smaller than 25 MB. **Text** and **Facts** show HTML as it is.
 3. Publish → the site rebuilds: the project page, the Home grid, the filter lists, the category pages, the search and the sitemap.
