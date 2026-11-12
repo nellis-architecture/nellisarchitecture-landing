@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial,
 } = require('../html');
 const {
-  head, top, contactForm, affiliations, navPlain, footer, emailTokens,
+  head, top, contactForm, affiliations, navPlain, footer, emailTokens, phoneTokens,
 } = require('../chrome');
 const {
   DOMAIN, LOGO, pageUrl, sameAs, seoTokens,
@@ -20,7 +20,7 @@ const POSTAL = {
 const MAPS = 'https://www.google.com/maps/search/?api=1&query=';
 const mapLink = (address) => `${MAPS}${encodeURIComponent(address)}`;
 
-function schema(url, name, desc, email, follow) {
+function schema(url, name, desc, email, follow, telephone) {
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -49,6 +49,7 @@ function schema(url, name, desc, email, follow) {
         name: 'Nellis Architecture',
         url: `${DOMAIN}/`,
         email,
+        telephone,
         image: LOGO,
         logo: LOGO,
         address: POSTAL,
@@ -72,6 +73,7 @@ function render(content, { site, page }) {
       seo.description || '',
       email,
       site.follow,
+      site.phone,
     ),
     ...seoTokens(content, page),
   // Shortcut: no dates, so drop the empty modified_time line (as on /news/).
@@ -84,6 +86,7 @@ function render(content, { site, page }) {
       NAV: navPlain(site.nav),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       ...emailTokens(site),
+      ...phoneTokens(site),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       ADDRESS: escText(content.address),

@@ -130,6 +130,8 @@
                         <h3 class="contactLabel">Office</h3>
                         <address class="contactAddress">{{ADDRESS}}</address>
                         <a class="contactMap" href="{{MAP_HREF}}" target="_blank" rel="noopener">Open in Google Maps</a>
+                        <h3 class="contactLabel">Phone</h3>
+                        <a class="contactPhone" href="tel:{{PHONE_HREF}}">{{PHONE}}</a>
                         <h3 class="contactLabel">Email</h3>
                         <a class="contactEmail" href="mailto:{{EMAIL_HREF}}">{{EMAIL}}</a>
                     </div>
@@ -198,6 +200,7 @@
         }
 
         .contactMap,
+        .contactPhone,
         .contactEmail {
             display: inline-block;
             margin-bottom: 30px;
@@ -207,6 +210,7 @@
         }
 
         .contactMap:hover,
+        .contactPhone:hover,
         .contactEmail:hover {
             color: #E3C78D;
         }

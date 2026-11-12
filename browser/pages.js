@@ -142,6 +142,20 @@ HOOKS.forEach(([where, hook]) => {
   });
 });
 
+VIEWPORTS.forEach(([label, viewport]) => {
+  test(`pages: the office phone on /contact/ and in the footer (${label})`, async () => {
+    const v = await visit('/contact/', viewport);
+    await check(v, `pages-phone-${label}`, async () => {
+      const { phone } = readSite(ROOT);
+      const href = `tel:+${phone.replace(/\D/g, '')}`;
+      const links = await v.page.evaluate((h) => [...document.querySelectorAll(`a[href="${h}"]`)]
+        .map((a) => [a.closest('footer') ? 'footer' : a.className, a.textContent.trim()]), href);
+      assert.deepEqual(links, [['contactPhone', phone], ['footer', phone]]);
+      assert.ok(await v.page.locator('a.contactPhone').isVisible());
+    });
+  });
+});
+
 test('pages: the menu navigates', async () => {
   const v = await visit('/', DESKTOP);
   await check(v, 'pages-menu-nav', async () => {

@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const {
-  navSite, navPlain, navPost, follow,
+  navSite, navPlain, navPost, follow, phoneTokens,
 } = require('../build/lib/chrome');
 
 const NAV = [
@@ -125,4 +125,17 @@ test('follow renders the block from the items', () => {
     mixed.split('\n')[2],
     `${P12}<a target="_blank" href="https://e.com/?a=1&amp;b=2">X &amp; Y</a>`,
   );
+});
+
+test('phoneTokens: the text as written, the tel: href digits only', () => {
+  assert.deepEqual(phoneTokens({ phone: '+971 4 834 1553' }), {
+    PHONE: '+971 4 834 1553', PHONE_HREF: '+97148341553',
+  });
+});
+
+test('phoneTokens: a missing or bad phone stops the build and names the file', () => {
+  const bad = [undefined, '', '04 834 1553', '+971-4-834-1553', '+971 4 <b>', '+971 ', '+12'];
+  bad.forEach((phone) => {
+    assert.throws(() => phoneTokens({ phone }), /content\/pages\/site\.json: phone/, String(phone));
+  });
 });

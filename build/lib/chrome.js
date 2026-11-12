@@ -131,6 +131,15 @@ function sitekey() {
   return escAttr(process.env.TURNSTILE_SITEKEY || TEST_SITEKEY);
 }
 
+const PHONE = /^\+[0-9][0-9 ]{6,18}[0-9]$/;
+
+function phoneTokens({ phone }) {
+  if (!PHONE.test(phone || '')) {
+    throw new Error(`content/pages/site.json: phone must be + and digits with spaces: "${phone}"`);
+  }
+  return { PHONE: escText(phone), PHONE_HREF: `+${phone.replace(/\D/g, '')}` };
+}
+
 function emailTokens(site) {
   const { CONTACT_EMAIL_HREF, CONTACT_EMAIL } = formTokens('CONTACT', site.forms.contact);
   const { SKILLS_EMAIL_HREF, SKILLS_EMAIL } = formTokens('SKILLS', site.forms.skills);
@@ -145,7 +154,11 @@ function year() {
 
 function footer(site) {
   return fill(loadPartial('footer'), {
-    TURNSTILE_SITEKEY: sitekey(), FOLLOW: follow(site.follow), ...emailTokens(site), YEAR: year(),
+    TURNSTILE_SITEKEY: sitekey(),
+    FOLLOW: follow(site.follow),
+    ...emailTokens(site),
+    ...phoneTokens(site),
+    YEAR: year(),
   });
 }
 
@@ -161,5 +174,6 @@ module.exports = {
   footer,
   sitekey,
   emailTokens,
+  phoneTokens,
   year,
 };

@@ -83,6 +83,11 @@ collections:
               - { label: "Title", name: "title", widget: "string", required: false, hint: *site_hint }
               - { label: "Width (px)", name: "width", widget: "number", value_type: "int", hint: *site_hint }
               - { label: "Height (px)", name: "height", widget: "number", value_type: "int", hint: *site_hint }
+          - label: "Office phone"
+            name: "phone"
+            widget: "string"
+            pattern: ['^\+[0-9][0-9 ]{6,18}[0-9]$', "Start with + and the country code; use digits and spaces only, for example +971 4 834 1553."]
+            hint: "Changes show in the footer of every page, the news articles too, and on the Contact page."
           - label: "Forms"
             name: "forms"
             widget: "object"

@@ -133,6 +133,21 @@ test('no page nests an <li> inside an <a>', () => {
   pages.forEach(([name, html]) => assert.doesNotMatch(html, /<a\b[^>]*>\s*<li\b/, name));
 });
 
+test('every footer office address has the office phone link under it (LND-120)', () => {
+  const [entry] = loadProjects(ROOT);
+  const pages = renderPages(ROOT, undefined, POSTS).map((p) => [p.file, p.html]);
+  pages.push([entry.url, renderProject(entry, readSite(ROOT))]);
+  const news = fs.readFileSync(path.join(ROOT, 'news', POSTS[0].slug, 'index.html'), 'utf8');
+  pages.push([`news/${POSTS[0].slug}/`, news]);
+  const { phone } = readSite(ROOT);
+  const link = `<a class="discription" href="tel:+${phone.replace(/\D/g, '')}">${phone}</a>`;
+  pages.forEach(([name, html]) => {
+    const offices = html.match(/<span class="name">Offices:<\/span>[\s\S]*?<\/div>/g) || [];
+    assert.ok(offices.length > 0, name);
+    offices.forEach((block) => assert.ok(block.includes(link), name));
+  });
+});
+
 test('renderPages output has no relative asset or page links', () => {
   renderPages(ROOT, undefined, POSTS).forEach((p) => {
     assert.doesNotMatch(p.html, /(src|href)=["']wp-content\//, p.file);

@@ -41,7 +41,7 @@ const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
 const { escAttr, isVideo, loadPartial } = require('./build/lib/html');
 const {
-  follow, navPost, sitekey, emailTokens, year,
+  follow, navPost, sitekey, emailTokens, phoneTokens, year,
 } = require('./build/lib/chrome');
 const {
   heroPath, categoryHref, FALLBACK_SRC, NEWS_CATEGORIES,
@@ -232,7 +232,7 @@ function renderPost(template, p, list, manifest = {}, site = readSite(ROOT)) {
 }
 
 function fillSite(template, site) {
-  return Object.entries({ ...emailTokens(site), YEAR: year() })
+  return Object.entries({ ...emailTokens(site), ...phoneTokens(site), YEAR: year() })
     .reduce((html, [key, value]) => html.replaceAll(`{{${key}}}`, () => value), template);
 }
 

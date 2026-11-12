@@ -71,7 +71,7 @@ test('the JSON-LD has the ContactPage, the breadcrumb and the LocalBusiness', ()
   assert.equal(biz.address.addressLocality, 'Dubai');
   assert.equal(biz.address.addressCountry, 'AE');
   assert.ok(content.address.startsWith(biz.address.streetAddress));
-  assert.ok(!('telephone' in biz));
+  assert.equal(biz.telephone, site.phone);
   assert.deepEqual(biz.sameAs, sameAs(site.follow));
 });
 
@@ -103,4 +103,12 @@ test('the sitemap lists /contact/ once', () => {
   const pages = renderPages(ROOT, loadProjects(ROOT));
   assert.ok(pages.some((p) => p.file === 'contact/index.html'));
   assert.equal(count(sitemap([], pages), `<loc>${URL}</loc>`), 1);
+});
+
+test('the contact block shows the office phone as a tel: link before the email', () => {
+  const html = render();
+  const start = html.indexOf('<div class="contactInfo">');
+  const info = html.slice(start, html.indexOf('<div class="contactForm">'));
+  assert.ok(info.includes('<a class="contactPhone" href="tel:+97148341553">+971 4 834 1553</a>'));
+  assert.ok(info.indexOf('contactPhone') < info.indexOf('contactEmail'));
 });

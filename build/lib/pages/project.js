@@ -2,7 +2,7 @@ const {
   escText, escAttr, fill, loadPartial, isVideo,
 } = require('../html');
 const {
-  head, top, affiliations, navSite, follow, footer, emailTokens, year,
+  head, top, affiliations, navSite, follow, footer, emailTokens, phoneTokens, year,
 } = require('../chrome');
 const { DOMAIN, seoTokens } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
@@ -156,6 +156,7 @@ function currentProject(entry, manifest, site, followHtml) {
     TYPE_SET: typeSet(p.facts),
     FOLLOW: followHtml,
     ...emailTokens(site),
+    ...phoneTokens(site),
     YEAR: year(),
   });
 }
@@ -181,6 +182,7 @@ function panel(entry, projects, manifest, site, followHtml) {
     GRID: grid(projects, { slot: 'thumb', current: entry.url, manifest }),
     FOLLOW: followHtml,
     ...emailTokens(site),
+    ...phoneTokens(site),
     YEAR: year(),
     CURRENT_PROJECT: currentProject(entry, manifest, site, followHtml),
   });

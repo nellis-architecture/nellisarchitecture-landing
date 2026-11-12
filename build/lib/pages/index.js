@@ -1,6 +1,6 @@
 const { fill, loadPartial } = require('../html');
 const {
-  head, top, affiliations, navSite, follow, footer, emailTokens, year,
+  head, top, affiliations, navSite, follow, footer, emailTokens, phoneTokens, year,
 } = require('../chrome');
 const { seoTokens, yoastPage } = require('../seo');
 const { earlyScript } = require('../projects');
@@ -53,9 +53,14 @@ function render(content, {
         GRID: grid(projects, { manifest }),
         FOLLOW: followHtml,
         ...emailTokens(site),
+        ...phoneTokens(site),
         YEAR: year(),
         CURRENT_PROJECT: fill(loadPartial('current-project'), {
-          ...CLOSED_PROJECT, FOLLOW: followHtml, ...emailTokens(site), YEAR: year(),
+          ...CLOSED_PROJECT,
+          FOLLOW: followHtml,
+          ...emailTokens(site),
+          ...phoneTokens(site),
+          YEAR: year(),
         }),
       })),
     }),

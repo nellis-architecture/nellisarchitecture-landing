@@ -645,6 +645,7 @@ test('the two short-month posts get August dates and sort in date order', () => 
 
 test('fillSite puts the site.json emails in every mailto link and the build year', () => {
   const site = {
+    phone: SITE_JSON.phone,
     forms: {
       contact: { ...SITE_JSON.forms.contact, email: 'a@x.test' },
       skills: { ...SITE_JSON.forms.skills, email: 'b@x.test' },
