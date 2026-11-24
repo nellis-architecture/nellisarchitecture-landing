@@ -114,7 +114,7 @@ test('item text is escaped and $& stays literal', () => {
 test('the /news/ page has its own title, meta, canonical and schema', () => {
   const html = render(POSTS);
   const url = `${DOMAIN}/news/`;
-  const title = 'Luxury Villa Architecture News &amp; Insights, Dubai | Nellis';
+  const title = content.seo.title.replace(/&/g, '&amp;');
   assert.ok(html.includes(`<title>${title}</title>`));
   assert.ok(html.includes(`<meta name="description" content="${content.seo.description}" />`));
   assert.ok(html.includes(`<link rel="canonical" href="${url}" />`));

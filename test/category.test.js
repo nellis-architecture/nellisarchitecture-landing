@@ -189,10 +189,9 @@ test('the hub crumb ends at Projects and its JSON-LD has Home › Projects', () 
 test('the hub head has its own SEO tags and an absolute og:image', () => {
   const url = `${DOMAIN}/projects/`;
   const html = render(hubContent, 'all');
-  assert.ok(html.includes('<title>Luxury Villa Portfolio, Dubai: All Projects | Nellis</title>'));
-  assert.ok(html.includes('<meta name="description" content="Luxury villa portfolio by Nellis '
-    + 'Architecture in Dubai: villas on Palm Jumeirah, Emirates Hills and Saadiyat, interiors, '
-    + 'landscape and master planning." />'));
+  const { title, description } = hubContent.seo;
+  assert.ok(html.includes(`<title>${title}</title>`));
+  assert.ok(html.includes(`<meta name="description" content="${description}" />`));
   assert.ok(html.includes(`<link rel="canonical" href="${url}" />`));
   assert.ok(html.includes(`<meta property="og:url" content="${url}" />`));
   assert.equal(count(html, 'property="og:image"'), 1);

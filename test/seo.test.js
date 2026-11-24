@@ -24,7 +24,7 @@ const INDEX_ROBOTS = "<meta name='robots' content='index, follow, max-image-prev
 test('an empty SEO title falls back to the page title, then to the h1', () => {
   const expected = {
     index: 'Award-Winning Architect in Dubai',
-    studio: 'Dubai Architecture Studio',
+    studio: read('studio').h1,
     people: 'People | Nellis Architecture Studio Team &amp; Experts',
     privacy: 'Privacy policy',
   };
