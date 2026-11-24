@@ -2518,6 +2518,19 @@ header {
   }
 }
 
+/* LND-122: every card fills the column and has the same 16:9 shape, also when the
+   file is narrower than the column or has another shape (the inline max-width of picture()). */
+.centerProject .project__item picture {
+  max-width: none !important;
+}
+
+@media (min-width: 1180px) {
+  .centerProject .project__item img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+}
+
 .centerProject .project__item:hover {
   opacity: 1;
 }

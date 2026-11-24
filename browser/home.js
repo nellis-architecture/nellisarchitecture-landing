@@ -129,3 +129,24 @@ test('home: /#<category> redirects to the category page', async () => {
     assert.equal(new URL(v.page.url()).pathname, '/projects/architecture/');
   });
 });
+
+test('home: every card fills the column with a 16:9 image (LND-122)', async () => {
+  const v = await visit('/', { width: 2560, height: 1300 });
+  await check(v, 'home-card-shape', async () => {
+    const boxes = await v.page.evaluate(() => [...document
+      .querySelectorAll('.center .container .project__item')].map((item) => {
+      const img = item.querySelector('img').getBoundingClientRect();
+      return {
+        name: item.querySelector('.project__name').textContent,
+        item: Math.round(item.getBoundingClientRect().width),
+        width: Math.round(img.width),
+        ratio: img.width / img.height,
+      };
+    }));
+    assert.equal(boxes.length, PROJECTS);
+    boxes.forEach((b) => {
+      assert.ok(Math.abs(b.width - b.item) <= 1, `${b.name}: image ${b.width}px, card ${b.item}px`);
+      assert.ok(Math.abs(b.ratio - 16 / 9) < 0.02, `${b.name}: ratio ${b.ratio.toFixed(2)}`);
+    });
+  });
+});
