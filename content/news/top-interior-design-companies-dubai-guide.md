@@ -7,7 +7,7 @@ seo_title: "Top Interior Design Companies in Dubai: A Guide"
 description: Learn what separates the top interior design companies in Dubai, so
   you can judge a portfolio and process for yourself.
 noindex: false
-hero: wp-content/uploads/news/271708f4d1140af2663b870ae8efa50c.jpg
+hero: wp-content/uploads/news/untitled-design-14-.jpg
 ---
 Choosing an interior designer often begins with an image.
 
@@ -49,7 +49,7 @@ Before judging anyone's portfolio, it is worth working out what you are comparin
 
 In Dubai, most interior design work falls into one of three broad categories: [residential and villa interiors](https://nellisarchitecture.com/studio/interior-design/), commercial fit-outs and hospitality or F&B interiors. Each tends to differ in material selection, project pace and how far brand guidelines shape the design versus one client's own taste. A firm whose recent work leans toward hospitality or retail may do excellent work, but that is a different skill set to a private villa, where the brief comes from one family's way of living rather than a brand standard.
 
-![](wp-content/uploads/news/strom-architects_grace-bay-villas-4.jpg)
+![](wp-content/uploads/news/photo_5424893451674785811_w.jpg)
 
 ### **The importance of understanding the client**
 
@@ -102,6 +102,8 @@ That work is often invisible in the finished photograph. And in many ways, that 
 When detailing is done well, the space should feel resolved. You should not be distracted by awkward junctions, exposed fixings or elements that appear disconnected from one another.
 
 Achieving that apparent simplicity can require an extraordinary amount of thought.
+
+![](wp-content/uploads/news/openart-image_1783062879881_874764f6_1783062880328_0d6aef10-1-.jpg)
 
 ## **Creating a home rather than a collection of rooms**
 
