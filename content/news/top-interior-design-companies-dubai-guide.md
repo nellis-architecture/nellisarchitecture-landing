@@ -49,6 +49,8 @@ Before judging anyone's portfolio, it is worth working out what you are comparin
 
 In Dubai, most interior design work falls into one of three broad categories: [residential and villa interiors](https://nellisarchitecture.com/studio/interior-design/), commercial fit-outs and hospitality or F&B interiors. Each tends to differ in material selection, project pace and how far brand guidelines shape the design versus one client's own taste. A firm whose recent work leans toward hospitality or retail may do excellent work, but that is a different skill set to a private villa, where the brief comes from one family's way of living rather than a brand standard.
 
+![](wp-content/uploads/news/strom-architects_grace-bay-villas-4.jpg)
+
 ### **The importance of understanding the client**
 
 A successful interior design project depends on communication.
