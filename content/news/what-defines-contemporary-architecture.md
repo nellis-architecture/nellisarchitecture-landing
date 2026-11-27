@@ -150,6 +150,8 @@ That responsibility does not disappear because the tools become more sophisticat
 
 The opportunity is to combine the knowledge architecture has accumulated over centuries with new ways of thinking and working. Not to abandon one for the other.
 
+![](wp-content/uploads/news/aurea.jpg)
+
 ## **What makes architecture contemporary?**
 
 When I think about the architects whose work has influenced the profession, it is difficult to single out one person.
