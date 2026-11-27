@@ -8,7 +8,7 @@ og_title: ""
 description: What finishing our own office at Expo City Dubai taught us about
   human-centred workplace design, from focus space to daylight.
 noindex: false
-hero: wp-content/uploads/news/6a3226819f9c04594570b0a2857d0a13.jpg
+hero: wp-content/uploads/news/photo_04-11-2026-_1_38_31_pm-1-.jpg
 ---
 **By Lee Nellis and Fiona Webb-Johnston**
 
@@ -53,6 +53,8 @@ Now, as those pieces finally come together, the room is starting to feel like th
 In a few months, clients will sit around that table without knowing how many drawings, conversations, deliveries, remakes and decisions went into it. That is probably how it should be.
 
 Good spaces should feel effortless once they are complete. The effort belongs in the process.
+
+![](wp-content/uploads/news/photo-04-11-2026-1-40-04-pm.jpg)
 
 ## **Designing the workplace around how people actually work**
 
@@ -137,6 +139,8 @@ The typology changes, but the principle is the same.
 Design starts with understanding how people live and work.
 
 It is the same thinking behind [Beyond Aesthetics: Designing Spaces That Last](https://nellisarchitecture.com/news/beyond-aesthetics-designing-spaces-that-last/), where design starts from how people live, rather than how a space looks in a photo.
+
+![](wp-content/uploads/news/photo-20-08-2026-9-04-16-am.jpg)
 
 ## **When does an office become finished?**
 
