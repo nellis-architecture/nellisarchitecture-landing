@@ -7,7 +7,7 @@ seo_title: "Top Interior Design Companies in Dubai: A Guide"
 description: Learn what separates the top interior design companies in Dubai, so
   you can judge a portfolio and process for yourself.
 noindex: false
-hero: /wp-content/uploads/news/strom-architects_grace-bay-villas-4.jpg
+hero: /wp-content/uploads/news/271708f4d1140af2663b870ae8efa50c.jpg
 ---
 Choosing an interior designer often begins with an image.
 
